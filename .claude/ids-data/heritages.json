@@ -1,0 +1,131 @@
+[
+  {
+    "name": "Solari",
+    "subtypes": [],
+    "appearance_requirements": "The Solari require no makeup.",
+    "disadvantages": [],
+    "heritage_skills": [
+      {
+        "name": "Adaptability",
+        "cost": 1,
+        "description": "You gain two points of Adaptability. When using skills or spells, you may spend an Adaptability point in place of an attribute, determined by your kingdom of origin. Adaptability points do not refresh when you spend Void. The Concord: Adaptability points may be spent in place of Earth. Virelle: Adaptability points may be spent in place of Air. The Grand Unity of Calvarezzo: Adaptability points may be spent in place of Water. Soleilmarche: Adaptability points may be spent in place of Fire."
+      },
+      {
+        "name": "Energetic",
+        "cost": 1,
+        "description": "Solari are an energetic folk filled with passion and impatience. Once per event, you may reduce the resting time to use Void to refresh your attributes to 1 minute."
+      }
+    ],
+    "granted_traits": [],
+    "flavor": "The firstborn, restless and adaptable folk created as vessels of possibility, ever moving forward along the Road."
+  },
+  {
+    "name": "Grelkyn",
+    "subtypes": [],
+    "appearance_requirements": "All Grelkyn bear intricate vein-like tracings of red metals—copper, bronze, or aged brass—that wind across the left side of their face only. These metallic patterns shimmer faintly in firelight and are said to pulse slightly in moments of deep emotion or insight. Some Grelkyn develop what is known as a crown of ore — a faint smudging of metallic dust across the forehead, like soot or forge-ash, tinged with red-gold hues. A single central streak of copper or bronze rises from between the brows to the hairline, as though drawn there by unseen hands. This \"crown\" is often interpreted as a sign of spiritual awakening.",
+    "disadvantages": [
+      "The Grelkyn are susceptible to Fear. Whenever you are affected by an effect with the Fear trait (including beneficial effects), you take \"1 Damage to Self\" as an additional effect. This included both beneficial and non-beneficial attacks."
+    ],
+    "heritage_skills": [
+      {
+        "name": "Grelkyn Tinkering",
+        "cost": 0,
+        "description": "You have a craft that allows you to make a living. This skill provides money at the beginning of each event. You may also sell props related to your chosen craft for in-game money."
+      },
+      {
+        "name": "Lightcraft",
+        "cost": 2,
+        "description": "Spell-like Ability. Grelkyn can channel faint flickers of Aurethiel's light. You spend 1 point of Water to make a touch attack for \"Heal 3 by Light.\""
+      }
+    ],
+    "granted_traits": [],
+    "flavor": "Metal-loving tinkerers born from a divine spark of Aurethiel's laughter, driven to question, craft, and guide others toward the light."
+  },
+  {
+    "name": "Umbrethil",
+    "subtypes": [],
+    "appearance_requirements": "Dark circles beneath the eyes in shades of blue, gray, or purple; pale or blue-tinged lips; a dark blue, gray, or purple star pattern on the forehead or temple. Optional: Pale foundation; additional blue, gray, or purple accents beneath cheekbones and around eyes to create a hollow, gaunt look.",
+    "disadvantages": [
+      "You may not receive the benefit of the Spell \"Writ of the Vaelion Door.\""
+    ],
+    "heritage_skills": [
+      {
+        "name": "The Dread Hush",
+        "cost": 4,
+        "description": "You spend 1 point of Fire to make a melee or packet attack for \"Silence by Despair.\" If you deliver this attack as a packet, it is a Spell-like Ability."
+      }
+    ],
+    "granted_traits": [],
+    "flavor": "The First to Fall — sorrowful, dusk-born echoes of those who could not walk the Road, walking beside the light but never quite in it."
+  },
+  {
+    "name": "The Blossom Elves",
+    "subtypes": [
+      "Rose Elves",
+      "Nightshade Elves",
+      "Jasmine Elves"
+    ],
+    "appearance_requirements": "All Blossom Elves have pointed ears and at least one of the following: A green leafy vine on the temple/cheek and clearly visible colorful highlights around the eyes (and optionally lips) matching their Heart Bloom color; or a blossom or petal pattern matching their Heart Bloom color that is visible at a distance, covering at least a 2\"x2\" area of the cheek or temple. Optionally, Blossom Elves may also have: Hair that is green or matches their Heart Bloom color; vines across cheeks, arms, or collarbones; glitter accents. Some Blossom Elves choose to wear floral crowns made of their Heart Bloom.",
+    "disadvantages": [
+      "Rose Elves are susceptible to Madness. Whenever you are affected by an attack with the Madness trait, you take \"1 Damage by Will\" as an additional effect. This includes both beneficial and non-beneficial attacks.",
+      "Nightshade Elves are susceptible to Confusion. Whenever you are affected by an attack with the Confusion trait, you take \"1 Damage by Will\" as an additional effect. This includes both beneficial and non-beneficial attacks.",
+      "Jasmine Elves are susceptible to Despair. Whenever you are affected by an attack with the Despair trait, you take \"1 Damage by Will\" as an additional effect. This includes both beneficial and non-beneficial attacks."
+    ],
+    "heritage_skills": [
+      {
+        "name": "Rose's Promise",
+        "cost": 2,
+        "description": "(Rose Elf subtype) You may spend 1 Earth to make a melee, missile, or Packet attack for \"4 Damage by Thorns.\" If you deliver this skill as a packet attack, this is a Spell-like Ability."
+      },
+      {
+        "name": "Nightshade's Touch",
+        "cost": 2,
+        "description": "(Nightshade Elf subtype) You spend 1 point of Air to make a melee attack, missile, or packet attack for \"Agony by Poison.\" If you deliver this skill as a packet attack, this is a Spell-like Ability."
+      },
+      {
+        "name": "Jasmine's Clarity",
+        "cost": 3,
+        "description": "(Jasmine Elf subtype) Spell-like Ability. You may spend 1 Air to make a packet or touch attack for \"Cure Mental by Inspiration.\""
+      }
+    ],
+    "granted_traits": [
+      "Elf",
+      "subtype trait (i.e. \"Rose Elf\", \"Nightshade Elf\", \"Jasmine Elf\")"
+    ],
+    "flavor": "Native children of the Kingdom of Roses, descended from Fae who took on the traits of the flowers they most resonated with."
+  },
+  {
+    "name": "The Lucent-Bound",
+    "subtypes": [],
+    "appearance_requirements": "Arcane glyphs (painted or prosthetic) in pearlescent white, white-gold, or soft violet covering at least a 2\" x 2\" area on the face. Additional options: More glyphs of the same color scheme run along the arms, neck, or collarbone; pale or luminous body highlights in pearlescent white, white-gold, or soft violet around the temples, eyes, collarbones, or fingers; contact lenses that lighten the eyes; coloring of the hair, either full or partial, in pearlescent white, white-gold, or soft violet. Note: Those who wish may change their appearance (size and shape of glyphs, colors, locations, hair coloring, eye coloring, etc.) from day to day, provided you meet the 2\" x 2\" minimum requirement and remain within the stated color scheme.",
+    "disadvantages": [
+      "Unstable Conduit. The Lucent-Bound are susceptible to Light. Whenever you are affected by an effect with the Light trait (including beneficial effects), you take \"1 Damage to Self\" as an additional effect."
+    ],
+    "heritage_skills": [
+      {
+        "name": "Lucent Flare",
+        "cost": 3,
+        "description": "You may spend 1 Fire to make a melee, ranged, or packet attack for \"3 damage by Light,\" or \"Heal 3 by Light.\" If you deliver this skill as a packet attack, this is a Spell-like Ability."
+      }
+    ],
+    "granted_traits": [],
+    "flavor": "Solari whose souls were bound to arcane radiant flame by ancient rites, walking as half-scholars, half-miracles."
+  },
+  {
+    "name": "The Aethermarked",
+    "subtypes": [],
+    "appearance_requirements": "(At least one of the following) Apparent skin marbling, veining, or fractal patterns in elemental colors (lava-cracked reds, icy blues, mossy greens). May be done via body paint, silicone overlays, or layered tattoo effects; or eyeshadow, cheek patterns reflecting a chosen elemental theme.",
+    "disadvantages": [
+      "As one of the Aethermarked, you are susceptible to Elemental attacks. Choose two of the following elemental traits: Earth, Fire, Ice, or Lightning. Whenever you are affected by a non-beneficial attack with those Elemental traits, you take \"1 Damage to Self\" as an additional effect."
+    ],
+    "heritage_skills": [
+      {
+        "name": "Elemental Fortification",
+        "cost": 3,
+        "description": "You may spend 2 Earth to call out “Resist” to negate one melee, missile, or packet attack with an Elemental trait."
+      }
+    ],
+    "granted_traits": [],
+    "flavor": "Solari mortals reshaped by raw elemental forces of earth, fire, water, or air, blessed with elemental resilience and might."
+  }
+]

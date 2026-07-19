@@ -1,0 +1,1163 @@
+[
+  {
+    "name": "Sorcerer",
+    "header_cost": 3,
+    "prerequisites": [],
+    "grants_traits": ["Arcane"],
+    "notes": "Characters with the sorcerer header gain the Arcane trait. All spells purchased under this header are arcane spells. Some skills require you to construct and use an Arcane Sanctum. This is a mystical circle you construct where you can focus your energies. The sanctum must have a circle of at least 3 feet in diameter on the floor or wall, decorated with runes and arcane symbols. To focus your energies, you sit in or touch the circle. When resting in your Arcane Sanctum, you may refresh all skills associated with it with the same rest, provided it is long enough for each of them. You may role-play with others while resting within your sanctum. Skills that require an Arcane Sanctum may only be applied to Arcane spells. If you have more than one skill requiring an ornate container with arcane stones, you may use, if you choose, one container holding stones with different colors for each skill.",
+    "skills": [
+      {
+        "name": "Arcane Flux",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "At the beginning of the event, place an ornate goblet, bowl, bag, or other container in your Cabin. Place two counters (i.e., stones, gems, or crystals) into the container for each spell you have purchased from this header. When you spend a minute resting in your Arcane Sanctum, you may take out and exhaust one counter to choose two offensive Arcane spells that cost 1 attribute point to cast. These cannot have a beneficial effect. You are empowered with the energy to cast each of these Arcane spells once without attribute cost. You can choose the same spell twice if you wish. Using this skill removes any previously empowered spells if those also came from this skill."
+      },
+      {
+        "name": "Fire Shield",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": true,
+        "description": "Once per event, you may call out “Resist By Fire” to negate a Melee attack that hits you. After resisting the attack, gesture at the person who attacked you and call out, “By my Gesture Agony by Fire.” You may not use other skills while you maintain this gesture, and you must end the gesture after 5 seconds."
+      },
+      {
+        "name": "Force Bolts",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": true,
+        "description": "You have a pool of 10 magical force bolts that you use for uncalled missile attacks. You refresh your pool to 10 by spending one minute of Focus gathering magical energy."
+      },
+      {
+        "name": "Infusion",
+        "cost": 3,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "Once per event, you may call out “Imbue by Infusion” to gain 2 Infusion points for your Air, Earth, Fire, and Water attributes. These temporary attribute points are used to cast packet-delivered Arcane spells that require the appropriate attribute. You must use up these points when casting packet-delivered Arcane spells before exhausting the underlying attributes. These points cannot be refreshed with Void, though they can be refreshed with the Spellbound skill. You lose any unused Infusion points when you become Dead or use Void to refresh your attributes."
+      },
+      {
+        "name": "Sorcerer’s Focus",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "You may spend 1 point of Fire to call “Resist” to negate one attack based on Will or Fear. You may spend 2 Fire to call out “Resist” to negate one attack that inflicts Stress."
+      },
+      {
+        "name": "Spellbound",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "Your offensive spells that fail to harm the target are not truly expended. When you throw a packet-delivered spell, if it does not hit anyone, or the target calls No Effect, Spirit, or Avoid to negate it, that spell is bound to you. If you spend one minute of Focus, gathering magical energies to you, then you regain the attributes spent to cast these bound spells. Spellbound may only be used for spells purchased under headers with this skill. These spells must be non-beneficial and cost attributes; per-event spells may not be Spellbound. When you rest to refresh Void, you lose any bound spells and can no longer regain those attributes."
+      },
+      {
+        "name": "The Sphere of Evocation",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "This skill allows you to learn spells from the Evocation sphere. These spells are purchased and used like skills."
+      },
+      {
+        "name": "The Sphere of Illusion",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "This skill allows you to learn spells from the Illusion sphere. These spells are purchased and used like skills."
+      },
+      {
+        "name": "Staff of the Arcane",
+        "cost": 3,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": ["Melee Weapon - Staff"],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "This skill allows you to hold and use any staff while you are casting spells, overriding the restriction that casting requires both hands to be empty."
+      }
+    ]
+  },
+  {
+    "name": "Storm Caller",
+    "header_cost": 4,
+    "prerequisites": ["You must be a member of The Grey Cloaks to purchase this header."],
+    "grants_traits": ["Arcane"],
+    "notes": "Characters with the Storm Caller header gain the Arcane trait. All spells purchased under this header are arcane spells. When casting an Evocation spell, you may change the trait to Lightning.",
+    "skills": [
+      {
+        "name": "Evasive",
+        "cost": 3,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": ["Celerity"],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "Celerity now provides 3 armor points."
+      },
+      {
+        "name": "Duck For Cover",
+        "cost": 4,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Water", "amount": 3}],
+        "spell_like": false,
+        "description": "You may spend 3 points of Water to call out “Avoid” to negate any one missile or packet attack."
+      },
+      {
+        "name": "Force Bolts",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": true,
+        "description": "You have a pool of 10 magical force bolts that you use for uncalled missile attacks. You refresh your pool to 10 by spending one minute of Focus gathering magical energy."
+      },
+      {
+        "name": "Lightning Struck Oak",
+        "cost": 3,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "You may hold a staff or a club weapon while you are casting spells, overriding the restriction that casting requires both hands to be empty."
+      },
+      {
+        "name": "The Sphere of Evocation",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "This skill allows you to learn spells from the Evocation sphere. These spells are purchased and used like skills."
+      },
+      {
+        "name": "Thunderclap",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Earth", "amount": 1}],
+        "spell_like": false,
+        "description": "You may spend 1 point of Earth to make a melee attack for \"Agony by Thunder.\""
+      },
+      {
+        "name": "Unleash the Storm's Fury",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": true,
+        "description": "Once per event, you may call out “By My Voice, Agony by Thunder.” Unless you have a way to negate this attack, you are also under the effect of this Agony."
+      },
+      {
+        "name": "Whirlwind Step",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Water", "amount": 1}],
+        "spell_like": false,
+        "description": "While wielding a melee weapon, you may spend 1 point of Water to call out \"Disengage by Wind.\""
+      },
+      {
+        "name": "Wind and Steel",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Earth", "amount": 2}],
+        "spell_like": false,
+        "description": "While wielding a melee weapon you are skilled with, you may spend 2 points of Earth to call out “Parry by Air” to negate a melee attack that strikes you."
+      }
+    ]
+  },
+  {
+    "name": "Sunseer",
+    "header_cost": 3,
+    "prerequisites": [],
+    "grants_traits": ["Devout"],
+    "notes": "You gain the Devout trait when you purchase this header.",
+    "skills": [
+      {
+        "name": "Armored in Faith",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "Once per event, you may call out “Resist by Will and Grant 4 Protection to Self” to negate a melee attack."
+      },
+      {
+        "name": "Aura of Vengeance",
+        "cost": 4,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "You cannot purchase this skill if you have Aura of the Herald or Aura of Healing. You may use this skill if all spells cast from a specific attribute since your last Void refresh were offensive spells purchased under this header. You may rest for one minute in an area dedicated to resting, such as the tavern or your cabin, then call out “Refresh 4 [Attribute] to Self.” You may use this skill a number of times per event equal to the number of spells you have purchased under this header."
+      },
+      {
+        "name": "Compartmentalize",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Fire", "amount": 1}],
+        "spell_like": false,
+        "description": "You may spend 1 point of Fire to call “Resist” and temporarily negate one point of stress. The next time you use Void to rest your attribute, all Inflict Stress effects negated by this skill take effect."
+      },
+      {
+        "name": "Consult the Tomes",
+        "cost": 3,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "Information Skill. You may call upon your fellow Sunseers to ask for guidance on matters of divine knowledge. You may pursue answers to a question about religious matters. This information skill does not require you to spend money. Submit a question between events as described in the Information Skills section above. If the question is appropriate for the ancestors, you may receive knowledge relevant to your question."
+      },
+      {
+        "name": "Force Bolts",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": true,
+        "description": "You have a pool of 10 magical force bolts that you use for uncalled missile attacks. You refresh your pool to 10 by spending one minute of Focus gathering magical energy."
+      },
+      {
+        "name": "Scepter of the Divine",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": ["Melee Weapon - Club"],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "You may hold a one-handed club weapon while you are casting spells, overriding the restriction that casting requires both hands to be empty."
+      },
+      {
+        "name": "Spellbound",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "Your offensive spells that fail to harm the target are not truly expended. When you throw a packet-delivered spell, if it does not hit anyone, or the target calls No Effect, Spirit, or Avoid to negate it, that spell is bound to you. If you spend one minute of Focus, regathering magical energies to you, then you regain the attributes spent to cast these bound spells. Spellbound may only be used for spells purchased under headers with this skill. These spells must be non-beneficial and cost attributes; per-event spells may not be Spellbound. When you rest to refresh Void, you lose any bound spells and can no longer regain those attributes."
+      },
+      {
+        "name": "The Sphere of Manipulation",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "You may purchase spells from the Manipulation sphere."
+      },
+      {
+        "name": "The Sphere of Conjuration",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "You may purchase spells from the Conjuration sphere."
+      },
+      {
+        "name": "With a Divine Voice",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Fire", "amount": 1}],
+        "spell_like": false,
+        "description": "You may spend 1 point of Fire to call out “Resist” to negate one Silence attack."
+      }
+    ]
+  },
+  {
+    "name": "Torchbearer",
+    "header_cost": 4,
+    "prerequisites": [],
+    "grants_traits": ["Devout"],
+    "notes": "You gain the Devout trait when you purchase this header.",
+    "skills": [
+      {
+        "name": "Armored for War",
+        "cost": 2,
+        "repeatable": true,
+        "purchase_limit": 2,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "You may purchase this skill up to 2 times. Each time you buy this skill, the number of Armor points you may gain from an armor prop is increased by 1. You must wear a proper armor prop to use this skill."
+      },
+      {
+        "name": "Back to Guard",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Water", "amount": 1}],
+        "spell_like": false,
+        "description": "While wielding a melee weapon, you may spend 1 point of Water to call out \"Disengage.\""
+      },
+      {
+        "name": "Buckler",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "You may use a buckler to block melee and missile attacks. Your primary weapon cannot be longer than 46” while using a buckler, and you can only use one buckler or shield at any time."
+      },
+      {
+        "name": "Combat Anticipation",
+        "cost": 3,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Air", "amount": 1}],
+        "spell_like": false,
+        "description": "You may spend 3 seconds and 1 point of Air to call out “Purge” to end one Agony or Maim effect."
+      },
+      {
+        "name": "Darkness, My Enemy",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Earth", "amount": 1}],
+        "spell_like": false,
+        "description": "You may exhaust a point of Earth to call \"3 Damage to Darkness\" with a melee attack up to two times. You exhaust the attribute the first time you swing using this effect. One use is consumed if the strike lands and the opponent acknowledges it with role play or negates it with a defense. You need not use the strikes consecutively. Uncalled strikes and other skills may be used between uses of this skill. Any remaining strikes are lost when the event ends or when you refresh attributes."
+      },
+      {
+        "name": "Dawn’s Light",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "When you successfully land the attack from Searing Light, and a defence does not negate it, you may call out “Heal 2 to Self.”"
+      },
+      {
+        "name": "A Desperate Defense",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Earth", "amount": 2}],
+        "spell_like": false,
+        "description": "While wielding a melee weapon you are skilled with, you may spend 2 points of Earth to call out “Parry” to negate a melee attack that strikes you."
+      },
+      {
+        "name": "Heart of the Lion",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "You may spend 1 point of Fire to call out “Resist” to negate one attack with the Fear trait. You may spend 2 Fire to call out “Resist” to negate one attack that inflicts Stress."
+      },
+      {
+        "name": "Heart of Radiance",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Fire", "amount": 1}],
+        "spell_like": false,
+        "description": "You spend 1 point of Fire to call out “Resist by Light” to negate one attack with the Darkness, Despair, or Ice traits."
+      },
+      {
+        "name": "Divine Light",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "Once per event, you may call out “Imbue by Light” to gain 4 uses of the skill “Darkness, My Enemy” delivered “by Light” rather than \"to Darkness.”"
+      },
+      {
+        "name": "Radiant Attack",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Earth", "amount": 1}],
+        "spell_like": false,
+        "description": "You may spend 1 point of Earth to make a melee or missile attack for “5 Damage by Light.”"
+      },
+      {
+        "name": "Reveal the Darkness",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Air", "amount": 1}],
+        "spell_like": false,
+        "description": "You may spend 1 point of Air to call out, \"By My Voice, Expose Darkness by Sol.\""
+      },
+      {
+        "name": "Searing Light",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Air", "amount": 1}],
+        "spell_like": false,
+        "description": "You may spend 1 point of Air to make a melee attack for \"Agony by Light.\""
+      },
+      {
+        "name": "Shield",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": ["Buckler"],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "This skill allows you to use a full-sized shield to block melee and missile attacks. You cannot throw packet-delivered effects while you have a full-sized shield in your hand. Your primary weapon cannot be longer than 46” while using a shield, and you can only use one buckler or shield at any time."
+      },
+      {
+        "name": "The Will to Live",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "Once per event, you may call out “Reduce” to a Death effect and instead become Unstable with no Vitality or Armor. This skill does not work against a Death Strike, nor does it protect you if you die from bleeding out. You may use this skill even if you are unconscious."
+      }
+    ]
+  },
+  {
+    "name": "Transmuter",
+    "header_cost": 2,
+    "prerequisites": [],
+    "grants_traits": ["Arcane"],
+    "notes": "Characters with the Transmuter header gain the Arcane trait. All spells purchased under this header are arcane spells. Skills in this header affect Transmutation, which is covered in detail later in this rulebook.",
+    "skills": [
+      {
+        "name": "Caster of Runes",
+        "cost": 0,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "You may draw up to 5 Runes when casting a Transmutation."
+      },
+      {
+        "name": "The Fountain of Power",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "Once per Transmutation, you may choose to place a Rune you just drew into the Fountain of Power instead of on The Road."
+      },
+      {
+        "name": "Internal Reserves",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "Once per event, you may use your attributes instead of components by spending 1 point of an attribute (Air, Earth, Fire, or Water) to replace 2 components of the same type. When this skill is used, the item created may only contain first-level effects, expires at the end of the event, and can only be attuned to the caster."
+      },
+      {
+        "name": "Magician’s Assistant",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": ["The Fountain of Power", "The Null", "The Void"],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "Once per event, you may declare yourself as an assistant with the permission of the primary artificer. During the course of the Transmutation, you may use one of the following abilities: The Fountain of Power, The Null, Sleight of Hand, or Upon the Road. This skill allows 2 runes to occupy The Fountain of Power and The Null positions. Note that The Void is not a usable skill as an assistant."
+      },
+      {
+        "name": "Master of Runes",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": ["Caster of Runes"],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "You may draw up to 10 Runes when casting a Transmutation."
+      },
+      {
+        "name": "The Null",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "Once per Transmutation, you may place a rune you just drew into the Null instead of on The Road."
+      },
+      {
+        "name": "Palm the Coin",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "Once per event, immediately after you draw a rune, you may choose to place that rune back into the bag and draw again. This redraw does not count towards your total number of draws."
+      },
+      {
+        "name": "Sleight of Hand",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "Once per Transmutation, you may remove 2 cards in play and move them to the discard pile."
+      },
+      {
+        "name": "The Sphere of Alteration",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "This skill allows you to learn spells from the Alteration sphere."
+      },
+      {
+        "name": "Transmuters Edge",
+        "cost": 4,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "Once per event, you may perform a Transmutation to empower your skills. Perform a Transmutation that has at least five runes drawn and achieves a positive flaw pool of at least 15. In cases of catastrophic failure, it may be possible to receive a Flaw when using this skill. If you succeed, you gain one of the following effects for the remainder of the event. ● Spell-like Ability. You gain 4 points of a pool of healing energy. You may spend a point from this pool to make a touch attack for \"Heal by Magic.” The points from your pool may be refreshed by spending 1 minute of Focus. ● Spell-like Ability. You gain 5 points of a pool of harmful energy. You may spend a point from this pool to make an uncalled missile attack. The points from your pool may be refreshed by spending 1 minute of Focus. ● You gain the ability to manifest weapons of pure light. The weapon must be a one-handed melee weapon, a buckler, or a staff. You may use your weapon to make melee attacks, if applicable, and block melee strikes. If one of these weapons takes a Destroy effect, you may Focus for one minute to Repair the weapon. Additionally, twice per event, you may call “Resist” to a Destroy or Disarm effect that targets the weapon of light."
+      },
+      {
+        "name": "Upon the Road",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "Once per Transmutation, you may swap the positions of 2 adjacent runes on The Road as long as neither of the runes is on the first step of The Road."
+      },
+      {
+        "name": "The Void",
+        "cost": 3,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "Once per Transmutation, you may choose to place a rune you just drew from the bag into the Void instead of placing it on The Road and draw again. This redraw does not count towards your total number of draws."
+      }
+    ]
+  },
+  {
+    "name": "Troubadour",
+    "header_cost": 2,
+    "prerequisites": [],
+    "grants_traits": ["Arcane"],
+    "notes": "Characters with the Troubadour header gain the Arcane trait. All spells purchased under this header are arcane spells. Your passion for music allows you to manifest magic when you perform. All spells purchased under this header are devotion spells. Spells purchased under this header do not use normal incantations. Each spell must have a unique musical incantation that is at least four times as long as a normal spell. Your songs require 16 syllables plus an additional 8 syllables for each character point of cost. This song replaces the normal incantation of the spell. This song must be appropriate to the setting, and include the Sphere and some form of the name of the spell. It must be submitted and approved by Staff in the same manner as custom spell incantations. In addition to your spells, many of your skills require a performance before you can use them. Although most Troubadours perform music, any form of performance art is considered in this context. When a skill requires a performance, it requires you to present some kind of art to a live audience. The presentation must take at least one minute, and the audience must respond with applause. When the applause comes, you have fulfilled the condition of the performance, and you may use your skill as appropriate.",
+    "skills": [
+      {
+        "name": "Act of Passion",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "Once per event, you may empower this skill with a performance, as described above. Once empowered, you gain 3 points of Passion. These points may be spent on any skill or spell in place of attribute points. You may spend them one at a time or all at once as you see fit. These extra points cannot be refreshed and fade at the end of the event."
+      },
+      {
+        "name": "Aria of Courage",
+        "cost": 4,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Fire", "amount": 2}],
+        "spell_like": true,
+        "description": "You may plant your feet, spend 2 points of Fire, and begin to sing. So long as you sing and do not move your feet, you may make a touch attack for \"Cure Fear by Inspiration\" as part of the song you have prepared. You may not interrupt the song to say the verbal, and you must have at least 8 words between each use of the verbal. The song is interrupted if any hostile melee, missile, or packet strike strikes you. Once during this song, you may make a packet attack for \"Cure Stress by Will.\" If two troubadours both have this skill, they may work in tandem so long as both are within arm's reach of each other and obey the restrictions of the skill. One may sing a verse while the other harmonizes by singing the \"Cure Fear by Inspiration\" verbal. The second troubadour may cure a person each time they sing that verbal in harmony with their partner and need not wait between uses of the skill. In this case, each troubadour may spend only 1 point of Fire."
+      },
+      {
+        "name": "Awakening the Young Heart",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Water", "amount": 1}],
+        "spell_like": false,
+        "description": "You may make a touch attack for “Diagnose [Initiate, Experienced, or Accomplished] trait.” If the target has the Initiate trait, you may inspire them with a performance. After a performance, you may spend 1 point of Water to make a touch attack for \"Refresh Void to Initiate.\" You must inform the recipient that they may be affected by this skill only once per event. If you purchase this skill, you can not be affected by it. If you receive a \"Refresh Void to Initiate\" effect, you must call “No Effect.”"
+      },
+      {
+        "name": "Bringing Music to the Hearth",
+        "cost": 4,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Fire", "amount": 2}],
+        "spell_like": true,
+        "description": "After you deliver a performance, as described above, you may spend 2 points of Fire to call out \"By My Voice, Heal 2 by Magic.\""
+      },
+      {
+        "name": "Chorus of Harmonic Focus",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": ["Song of the Arcanum"],
+        "attribute_costs": [],
+        "spell_like": true,
+        "description": "Once per event, you may deliver a performance with at least 2 others who have this skill. The performance must be at least one minute long, although most are longer. Each performer must have a part that complements the others involved. If you cannot find 2 others with this skill, you may substitute one or two other people who are willing to perform with you. Spend 1 point of Air or Song of the Arcanum for each person without this skill that you include. If you already have two others with this skill, additional participants may join at no cost if they are involved solely to enhance the performance's quality or scope. If you perform your piece and the audience applauds, then you may refresh 2 points of Harmony from Song of the Arcanum, and you are empowered with Harmonic Focus. You may spend 1 Harmonic Focus to cast a beneficial touch spell without an incantation. You need only touch the recipient with a packet and say the verbal to cast the spell. You cannot be empowered with more than one use of this skill at a time. Harmonic Focus points fade at the end of the event. You may still help others with their performance for this skill, but they can only benefit from this effect once per event."
+      },
+      {
+        "name": "Legend Lore",
+        "cost": 3,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "Information Skill. You know many of the bards and storytellers that travel the merchant's road, spreading tales and gathering bits of news and lore. You may research the legends and stories of the land to look for information on a particular subject or item. The more legendary the information is, the more information this skill provides. If you spread some money around, you often hear rumors or tales about the things other traveling troubadours have seen and legends they might have heard. This is an information skill that requires you to spread some money around to loosen lips. You submit a question between events as described in the Information Skills section above. If the question is appropriate for the troubadours who travel the merchant's road, you may receive knowledge appropriate to your question."
+      },
+      {
+        "name": "Musical Focus",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "Three times per event, you may empower this skill with a performance, as described above. Once empowered, you may call “Purge Mental” to remove all Mental effects. This empowerment fades at the end of the event."
+      },
+      {
+        "name": "Restored Will",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "You may spend 3 seconds of Focus to make a touch attack for \"Cure Will by Inspiration.\""
+      },
+      {
+        "name": "Slander",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "Information Skill. You may, between events, submit to plot small snippets of your lyrics or art that somehow slander or trash-talk a corporate, social, or political figure. You are publicly attempting to embarrass the figure. This could lead to a decline in reputation, cause an increase in those who challenge the figure, or cause others to investigate the target’s movements more carefully. This skill makes life more difficult for the target, but it is common knowledge who is doing the slander, so most powerful figures attempt to return the favor. Usually in the form of armed thugs with little concern about the time of day or night."
+      },
+      {
+        "name": "Song of the Arcanum",
+        "cost": 3,
+        "repeatable": true,
+        "purchase_limit": 2,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "You may purchase this skill up to 2 times. Each purchase of this skill gives you 1 point of Harmony. Harmony points may be spent instead of Air, Earth, Fire, or Water when casting spells from any header you have. All Harmony points are refreshed when you use Void to refresh attributes. Spells cast using Harmony points do not use normal incantations. Each spell must have a unique musical incantation that is at least four times as long as a normal spell. Your songs require 16 syllables plus an additional 8 syllables for each character point of spell cost. This song replaces the normal incantation of the spell. Music and lyrics for arcane and divine spells must be submitted and approved before you use this skill to cast them."
+      },
+      {
+        "name": "The Sphere of Restoration",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "This skill allows you to learn spells from the Restoration sphere. These spells are purchased and used like skills, except that the incantations are longer and must have a musical or performance component."
+      }
+    ]
+  },
+  {
+    "name": "Warrior",
+    "header_cost": 4,
+    "prerequisites": [],
+    "grants_traits": [],
+    "notes": "",
+    "skills": [
+      {
+        "name": "Armored for War",
+        "cost": 2,
+        "repeatable": true,
+        "purchase_limit": 2,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "You may purchase this skill up to 2 times. Each time you buy this skill, the number of Armor points you may gain from an armor prop is increased by 1. You must wear a proper armor prop to use this skill."
+      },
+      {
+        "name": "Back to Guard",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Water", "amount": 1}],
+        "spell_like": false,
+        "description": "While wielding a melee weapon, you may spend 1 point of Water to call out \"Disengage.\""
+      },
+      {
+        "name": "Buckler",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "You can use a buckler to block melee and missile attacks. Your primary weapon cannot be longer than 46” while using a buckler, and you can only use one buckler or shield at any time."
+      },
+      {
+        "name": "Evasive",
+        "cost": 3,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": ["Celerity"],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "Celerity now provides 3 armor points."
+      },
+      {
+        "name": "Combat Anticipation",
+        "cost": 3,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Air", "amount": 1}],
+        "spell_like": false,
+        "description": "You may spend 3 seconds and 1 point of Air to call out “Purge” and end one Agony or Maim effect."
+      },
+      {
+        "name": "A Crippling Blow",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Earth", "amount": 2}],
+        "spell_like": false,
+        "description": "You may spend 2 Earth to make a melee attack for \"Maim\" and strike a limb."
+      },
+      {
+        "name": "Critical Strike",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Earth", "amount": 1}],
+        "spell_like": false,
+        "description": "You spend 1 point of Earth to make a melee attack for \"5 Damage.\""
+      },
+      {
+        "name": "A Desperate Defense",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Earth", "amount": 2}],
+        "spell_like": false,
+        "description": "While wielding a melee weapon you are skilled with, you may spend 2 points of Earth to call out “Parry” to negate a melee attack that strikes you."
+      },
+      {
+        "name": "A Flurry of Strikes",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Water", "amount": 1}],
+        "spell_like": false,
+        "description": "You may spend 1 point of Water to gain 2 melee attacks for “2 Damage.” Any remaining attacks are lost when the event ends or when you refresh attributes."
+      },
+      {
+        "name": "Heart of the Lion",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "You may spend 1 point of Fire to call out “Resist” to negate one attack with the Fear trait. Alternatively, you may spend 2 Fire to call out “Resist” to negate one attack that inflicts stress."
+      },
+      {
+        "name": "Last Stand",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "Once per event, you may call out “Resist by Will” to negate a melee attack."
+      },
+      {
+        "name": "Leveraged Block",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "While wielding a two-handed melee weapon and one of your arms is affected by a Maim effect, you may call “Reduce.” You cannot attack, but you can block attacks as usual, and use game skills that allow you to call out a Defense and require you to be using a melee weapon. You cannot use this skill again until the Maim is cured. The ability to block ends if your other arm takes a Maim, or you take a second Maim to the first arm."
+      },
+      {
+        "name": "A Little Something Extra",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "You may fight with a medium melee weapon in your off-hand while fighting with a 46” weapon in your primary hand."
+      },
+      {
+        "name": "Reinforced Armaments",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "Twice per event you may resist a Destroy effect that would destroy your buckler or shield; call out “Resist” to negate the attack. If you are not using a buckler or shield you may resist a Destroy effect that would destroy a weapon you are wielding."
+      },
+      {
+        "name": "Resilience",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Water", "amount": 1}],
+        "spell_like": false,
+        "description": "You may spend 3 seconds of Focus and 1 point of Water to call out \"Heal 3 to Self.\""
+      },
+      {
+        "name": "Shield",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": ["Buckler"],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "This skill allows you to use a full-sized shield to block melee and missile attacks. You cannot throw packet-delivered effects while you have a full-sized shield in your hand. Your primary weapon cannot be longer than 46” while using a shield, and you can only use one buckler or shield at any time."
+      },
+      {
+        "name": "Shrug It Off",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "Once per event, you may call “Resist and Refresh 2 Earth to Self” to negate a melee or missile attack."
+      },
+      {
+        "name": "Steel Over Sorcery",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Fire", "amount": 2}],
+        "spell_like": false,
+        "description": "You may spend 2 points of Fire to call out \"Resist\" to negate one packet attack with an Elemental trait that strikes your weapon, buckler, or shield."
+      },
+      {
+        "name": "The Twin Threat",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": ["A Little Something Extra"],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "This skill allows you to use any one-handed melee weapon in your off-hand."
+      },
+      {
+        "name": "The Will To Live",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "Once per event, you may call out “Reduce” to a Death effect and instead become Unstable with no Vitality or Armor. This skill does not work against a Death Strike, nor does it protect you if you die from bleeding out. You may use this skill even if you are unconscious."
+      }
+    ]
+  },
+  {
+    "name": "Weaponsmith",
+    "header_cost": 4,
+    "prerequisites": [],
+    "grants_traits": [],
+    "notes": "",
+    "skills": [
+      {
+        "name": "Armored for War",
+        "cost": 2,
+        "repeatable": true,
+        "purchase_limit": 2,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "You may purchase this skill up to 2 times. Each time you buy this skill, the number of Armor points you may gain from an armor prop is increased by 1. You must wear a proper armor prop to use this skill."
+      },
+      {
+        "name": "Buckler",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "You can use a buckler to block melee and missile attacks. Your primary weapon cannot be longer than 46” while using a buckler, and you can only use one buckler or shield at any time."
+      },
+      {
+        "name": "A Desperate Defense",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Earth", "amount": 2}],
+        "spell_like": false,
+        "description": "While wielding a melee weapon you are skilled with, you may spend 2 points of Earth to call out “Parry” to negate a melee attack that strikes you."
+      },
+      {
+        "name": "Fire Hardened",
+        "cost": 3,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Fire", "amount": 2}],
+        "spell_like": false,
+        "description": "Due to your continuous exposure to the forge, you have become resistant to the elements, you may spend 2 points of Fire to resist one attack based on an Elemental trait. You must call out \"Resist\" when you use this skill."
+      },
+      {
+        "name": "Know Thine Weapon",
+        "cost": 3,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Fire", "amount": 1}],
+        "spell_like": false,
+        "description": "Your meticulous attention to your weapons has rendered them resistant to breaking, you may exhaust a point of Fire to resist one attack with the Destroy effect. You must call out \"Resist\" when you use this skill."
+      },
+      {
+        "name": "My Heart, the Forge",
+        "cost": 3,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Air", "amount": 1}],
+        "spell_like": true,
+        "description": "Spend a point of Air and deliver a touch effect for “Repair 2 Armor” to yourself, or two touch effects for “Repair 2 Armor” to other characters. It is easier to repair armor when you aren’t wearing it."
+      },
+      {
+        "name": "Sharpened Blade",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "Once per event, call out “Imbue by Forging”, Your next 3 damage melee attacks have their damage increased by 3."
+      },
+      {
+        "name": "Shield",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": ["Buckler"],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "This skill allows you to use a full-sized shield to block melee and missile attacks. You cannot throw packet-delivered effects while you have a full-sized shield in your hand. Your primary weapon cannot be longer than 46” while using a shield, and you can only use one buckler or shield at any time."
+      },
+      {
+        "name": "A Steel Shell",
+        "cost": 3,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": ["2 purchases of Armored for War"],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "When you are wearing an armor prop worth 4 points, and you spend 1 minute repairing it, you gain a “Guard” defense to negate the first melee attack with the Agony, called Damage, or Maim effect that strikes you."
+      },
+      {
+        "name": "Strengthened Armor",
+        "cost": 5,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": ["2 purchases of Armored for War"],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "The number of Armor points you may gain from an armor prop is increased by 1. You must have a proper armor prop to use this skill."
+      },
+      {
+        "name": "Stoke the Forge",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "Once per event, you may call out “Imbue by Forge,” to gain 10 touch attacks for “Repair 2 Armor by Forge.” Any remaining uses are lost when the event ends or when you refresh attributes."
+      }
+    ]
+  },
+  {
+    "name": "Wizard",
+    "header_cost": 3,
+    "prerequisites": [],
+    "grants_traits": ["Arcane"],
+    "notes": "Characters with the Wizard header gain the Arcane trait. All spells purchased under this header are arcane spells. Some skills require you to construct and use an Arcane Sanctum. This is a mystical circle you create where you can focus your energies. The sanctum must have a large 3’ circle on the floor or wall decorated with runes and arcane symbols. To focus your energies, you sit in the circle or, if space is tight and the circle is on a wall, sit under it or close enough to be able to touch it. If you have more than one skill requiring an ornate container with arcane stones you may use, if you choose, one container holding stones with different colors for each skill. When you Focus in your Arcane Sanctum, you may refresh all skills associated with it at the same time. You may role play with others while Focusing within your sanctum. Skills that require an Arcane Sanctum may only be applied to Arcane spells.",
+    "skills": [
+      {
+        "name": "Arcane Flux",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "At the beginning of the event, place an ornate goblet, bowl, bag, or other container in your Arcane Sanctum. Place two counters (i.e., stones, gems, or crystals) into the container for each spell you purchased from this header. After 1 minute of Focus in your Arcane Sanctum, you may spend one counter to gain two castings of non-beneficial Arcane spells you know that cost 1 attribute point to cast (these may be the same spell). These spells last until used, or you use Arcane Flux again."
+      },
+      {
+        "name": "Arcane Resonance",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Fire", "amount": 1}],
+        "spell_like": false,
+        "description": "You may spend 1 point of Fire to call out “Resist” to negate one Silence attack."
+      },
+      {
+        "name": "Compartmentalize",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Fire", "amount": 1}],
+        "spell_like": false,
+        "description": "You may spend 1 point of Fire to call “Resist” and temporarily negate one point of Stress. The next time you use Void to rest your attribute, all Inflict Stress effects negated by this skill take effect."
+      },
+      {
+        "name": "Force Bolts",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": true,
+        "description": "You have a pool of 10 magical force bolts that you use for uncalled missile attacks. You refresh your pool to 10 by spending one minute of Focus gathering magical energy."
+      },
+      {
+        "name": "Fortress of Earth",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Earth", "amount": 1}],
+        "spell_like": true,
+        "description": "You may spend 1 point of Earth, clasp your hands above your head, and call out “Imbue by Earth” to gain the Spirit defense for 10 seconds. Your hands and arms must be free; you cannot be holding any item or carrying a shield. Once you become a Spirit, you cannot move or choose to end this effect for the full 10 seconds. While in Spirit form, you call “Spirit” to negate any attack that does not have a Mental trait or a “to Spirit” trait, and if that attack is not beneficial, it ends the Spirit defense. You may extend the duration by 10 seconds by exhausting 1 point of Earth and calling out “Imbue by Earth.” If you do so, you cannot voluntarily end the effect for another 10 seconds. Once the effect ends, you cannot use this skill again until you rest for 1 minute in your Arcane Sanctum."
+      },
+      {
+        "name": "Infusion",
+        "cost": 3,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "Once per event, you may call out “Imbue by Infusion” to gain 2 Infusion points for your Air, Earth, Fire, and Water attributes. These temporary attribute points are used to cast packet-delivered Arcane spells that require the appropriate attribute. You must spend these points when casting packet-delivered Arcane spells before exhausting the underlying attributes. These points cannot be refreshed with Void, though they can be refreshed with the Spellbound skill."
+      },
+      {
+        "name": "Spellbound",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "Your offensive spells that fail to harm the target are not truly expended. When you throw a packet-delivered spell, if it does not hit anyone, or the target calls No Effect, Spirit, or Avoid to negate it, that spell is bound to you. If you spend one minute of Focus, regathering magical energies to you, then you regain the attributes spent to cast these bound spells. Spellbound may only be used for spells purchased under headers with this skill. These spells must be non-beneficial and cost attributes; per-event spells may not be Spellbound. When you rest to refresh Void, you lose any bound spells and can no longer regain those attributes."
+      },
+      {
+        "name": "The Sphere of Evocation",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "This skill allows you to learn spells from the Evocation sphere. These spells are purchased and used like skills."
+      },
+      {
+        "name": "The Sphere of Conjuration",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "This skill allows you to learn spells from the Conjuration sphere. These spells are purchased and used like skills."
+      },
+      {
+        "name": "Staff of the Arcane",
+        "cost": 3,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": ["Melee Weapon - Staff"],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "This skill allows you to hold and use any staff while you are casting spells, overriding the restriction that casting requires both hands to be empty."
+      },
+      {
+        "name": "With An Arcane Word",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "Once per event, you may spend one minute of Focus performing a personal ritual. At the end of the ritual, call out “By My Voice, Refresh 1 Fire to Arcane.”"
+      }
+    ]
+  }
+]

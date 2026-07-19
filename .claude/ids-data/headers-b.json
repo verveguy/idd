@@ -1,0 +1,1115 @@
+[
+  {
+    "name": "Gladiator",
+    "header_cost": 5,
+    "prerequisites": ["You must be a member of The Ashen Witness to purchase this header."],
+    "grants_traits": [],
+    "notes": "",
+    "skills": [
+      {
+        "name": "Back to Guard",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Water", "amount": 1}],
+        "spell_like": false,
+        "description": "While wielding a melee weapon, you may spend 1 point of Water to call out \"Disengage.\""
+      },
+      {
+        "name": "Blood in the Pit",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "Once per event, when you are Unstable and you are about to die because your one-minute death count is expiring, you may call “Stabilize and Refresh 2 Earth.”"
+      },
+      {
+        "name": "Buckler",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "You can use a buckler to block melee and missile attacks. Your primary weapon cannot be longer than 46” while using a buckler, and you can only use one buckler or shield at any time."
+      },
+      {
+        "name": "Combat Anticipation",
+        "cost": 3,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Air", "amount": 1}],
+        "spell_like": false,
+        "description": "You may spend 3 seconds and 1 point of Air to call out “Purge” and end one Agony or Maim effect."
+      },
+      {
+        "name": "A Crippling Blow",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Earth", "amount": 2}],
+        "spell_like": false,
+        "description": "You may spend 2 Earth to make a melee attack for \"Maim\" and strike a limb."
+      },
+      {
+        "name": "Critical Strike",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Earth", "amount": 1}],
+        "spell_like": false,
+        "description": "You spend 1 point of Earth to make a melee attack for \"5 Damage.\""
+      },
+      {
+        "name": "A Desperate Defense",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Earth", "amount": 2}],
+        "spell_like": false,
+        "description": "While wielding a melee weapon you are skilled with, you may spend 2 points of Earth to call out “Parry” to negate a melee attack that strikes you."
+      },
+      {
+        "name": "Double Glaive",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "You may use a double glaive to make melee attacks and block weapon and missile attacks. You may wield the double glaive with one hand, although you can not attack with it while using the weapon in this fashion. If you have a skill that allows you to use two weapons, you can use a weapon in your other hand so long as it is medium length or less. A double glaive is a shafted weapon with a blade on both ends. It has a minimum length of 48\" and a maximum length of 64\". A double glaive is constructed like a staff, except it has a blade at both ends, and each blade must be at least 1/3 of the entire length. The double glaive can be held in the middle, and you can choke up and hold the bladed portion if you have gauntlets to protect your hands."
+      },
+      {
+        "name": "A Flurry of Strikes",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Water", "amount": 1}],
+        "spell_like": false,
+        "description": "While wielding a melee weapon, you may spend 1 point of Water to gain 2 melee attacks for “2 Damage.” Any remaining attacks are lost when the event ends or when you refresh attributes."
+      },
+      {
+        "name": "Great Glaive",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": ["Double Glaive"],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "You can use a great glaive to make melee attacks and block weapon and missile attacks. The great glaive cannot be used in one hand. This two-handed weapon is a double-bladed polearm. The weapon must be at least 60\" and no more than 72\". Each end has a polearm blade and full 5/8\" padding that covers at least 1/3 of the total length of the blade. The middle section of the great glaive must also be padded, although you can use 3/8” padding for the grip of the staff so long as the full 5/8” is used for the striking surfaces. The great glaive can be held in the middle, and you can choke up and hold the bladed portion if you have gauntlets to protect your hands."
+      },
+      {
+        "name": "Heart of the Lion",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Fire", "amount": 1}, {"attribute": "Fire", "amount": 2}],
+        "spell_like": false,
+        "description": "You may spend 1 point of Fire to call out “Resist” to negate one attack with the Fear trait. Alternatively, you may spend 2 Fire to call out “Resist” to negate one attack that inflicts stress."
+      },
+      {
+        "name": "I Know That Tactic",
+        "cost": 5,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Fire", "amount": 3}, {"attribute": "Fire", "amount": 1}],
+        "spell_like": false,
+        "description": "You spend 3 points of Fire to call out “Avoid by Cunning” to negate any one melee attack. Afterwards, you may avoid any melee attack with that same effect, regardless of the attack trait, by spending 1 point of Fire to call out “Avoid by Cunning.” Once this ability is activated, you cannot use it on a different effect; it is locked onto that effect until the event ends or you refresh attributes with Void. You can use this skill to avoid a Damage effect, but it locks onto the exact amount of Damage you avoided, and it cannot be used on melee attacks that do a different amount of damage."
+      },
+      {
+        "name": "Last Stand",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "Once per event, you may call out “Resist by Will” to negate a melee attack."
+      },
+      {
+        "name": "Leveraged Block",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "While wielding a two-handed melee weapon and one of your arms is affected by a Maim effect, you may call “Reduce.” You cannot attack, but you can block attacks as usual, and use game skills that allow you to call out a Defense and require you to be using a melee weapon. You cannot use this skill again until the Maim is cured. The ability to block ends if your other arm takes a Maim, or you take a second Maim to the first arm."
+      },
+      {
+        "name": "A Little Something Extra",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "You may fight with a medium melee weapon in your off-hand while fighting with a 46” weapon in your primary hand."
+      },
+      {
+        "name": "Resilience",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Water", "amount": 1}],
+        "spell_like": false,
+        "description": "You may spend 3 seconds of Focus and 1 point of Water to call out \"Heal 3 to Self.\""
+      },
+      {
+        "name": "Rile Up the Crowd",
+        "cost": 3,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "Choose a unique pose and slogan that takes at least 3 seconds to perform. When you do so, you Refresh 1 point of your Air, Earth, Fire, or Water. You cannot use this skill again until you use Void to refresh your attributes. If you have the Resilience skill, you may pay its cost and use that skill in the same 3-second time as part of your role play."
+      },
+      {
+        "name": "The Twin Threat",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": ["A Little Something Extra"],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "This skill allows you to use any one-handed melee weapon in your off-hand."
+      },
+      {
+        "name": "The Will To Live",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "Once per event, you may call out “Reduce” to a Death effect and instead become Unstable with no Vitality or Armor. This skill does not work against a Death Strike, nor does it protect you if you die from bleeding out. You may use this skill even if you are unconscious."
+      }
+    ]
+  },
+  {
+    "name": "Herald",
+    "header_cost": 3,
+    "prerequisites": [],
+    "grants_traits": [],
+    "notes": "You are the voice and heart for a group of individuals called a Company. A Company is a group of people that forms for some common purpose. Many companies are military, and some form to support a personage of noble bearing. It is generally considered poor form for someone to be in more than one active company at the same time. Through years of excellence and faithful service, the Heralds of the land have developed their own magic, which enables them to inspire others and lend strength to members of their Company. Heralds also pick up skills that help groups function. You act as organizer and standard bearer for the Company. You have contacts in the Argent Accord who help you with your duties. By registering your Company name, its goals, and its colors with the Argent Accord , you help to build the legend and the reputation necessary to power your magic. The Argent Accord maintains a strict neutrality in its dealings. Many of the Herald skills enable you to support a group of individuals known as a Company. In order to do this, you must spread tales of their deeds and their goals to empower the magic in their name. You may become an official Herald for only one Company at a time, and each Company may only have one Herald at a time.. It is for this group that you work your magic. When you help to form a new Company, you must approve the Company name with the plot staff, as no two Heralds may use the same Company name. The Company name becomes a trait for members of your group. To avoid confusion, the name cannot have one of the standard traits in its title. Plot may decide that a proposed name is too close to an existing Company or group, that the name is too close to a common trait, or that the name does not fit with the flavor of the game. If a name is rejected, the Argent Accord rejects it. The Accord often rejects company names for various reasons. Although the official title for a Company is often preceded by \"The Company of...\" when formally introducing the group, the trait in verbals need not be lengthened to include this formality to keep verbals brief. You must create and maintain a standard that displays the colors of the Company in order to use standard magic. This standard must be large enough to be visible on the battlefield among the waves of violent chaos. If another Herald feels your standard is inadequate, they may file a grievance with the Argent Accord. Heralds wear the colors of their company and carry banners that are decorated with the coat of arms or symbol of their company. When using skills that affect their company, the Herald must be wearing company heraldry, and the herald's banner must be within line of sight. Heraldry must be worn in a prominent place, usually on a surcoat or tabard. The banner is presented on a pole that must be at least as tall as the Herald or attached to a combat safe staff, if the Banner is attached to a staff the weapon may only be used to block. The banner must run at least half the length of the pole and be wide enough to clearly display the heraldry. When a herald is drawn into some dangerous place that is indoors, they may instead use a full-length tabard or surcoat displaying the colors and heraldry of the company to use skills requiring a banner. A Herald is mystically linked to their company banner. If the banner poles are padded, then the Herald gains the ability to touch-cast beneficial spells while holding the company banner. Once you stop moving and plant the banner, it cannot be the target of spells and arrows unless the banner is blocking another target. You may call “Resist by Banner” to missile and packet attacks that strike it. If someone has cover behind the banner or it is blocking some other target, attacks on the banner affect you.",
+    "skills": [
+      {
+        "name": "Aid Station",
+        "cost": 3,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Water", "amount": 1}],
+        "spell_like": true,
+        "description": "You may refresh the health of allies in battle. You may spend 1 point of Water and call out “Imbue by Inspiration” to gain 2 packet attacks for “Heal 2 by Inspiration.” If you are carrying your battle standard with the colors of your company prominently displayed when you activate this ability, you gain 3 attacks instead of 2. You may use these castings while you are carrying a banner in your off hand. These castings expire when they are used, when you use Void to refresh attributes, and at the end of the event. You may only have one of these abilities active at any time."
+      },
+      {
+        "name": "At the Fore",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Fire", "amount": 1}],
+        "spell_like": true,
+        "description": "When you are going forward to negotiate or to view enemy forces, you may place your banner so that it is upright, or leave it in the hands of someone you trust, so you have a safe retreat. You may spend 1 point of Fire and call out “Protection of the Banner” to turn to a Spirit, cross your arms in front of you, and walk towards your banner. Call “Spirit” to negate melee, missile, packet, and voice attacks against you. Detrimental attacks that affect you (such as traps or other plot deliveries) or detrimental effects with “to Spirit” or “to Herald” traits take full effect and end the use of this skill. You may not use this skill if your banner is away from you on the other side of a gate. If at any time after you activate this skill your banner is moved, falls over, or somehow leaves your line of sight, you immediately come out of spirit form, lose all of your Vitality, and fall over Unstable."
+      },
+      {
+        "name": "Aura of the Herald",
+        "cost": 4,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": true,
+        "description": "You cannot purchase this skill if you have Aura of Healing or Aura of Vengeance. You gain 3 points of a pool of healing energy. You may spend a point from this pool to make a touch attack for \"Heal by Will.\" For each skill purchased under this header, the pool gains 1 point, up to a maximum of 10. The points from your pool may be refreshed by spending 1 minute of Rest in an area dedicated to resting, such as the tavern or your cabin, or an area marked safe to refresh this skill. There is no limit to the number of times you may refresh these points."
+      },
+      {
+        "name": "Battlefield First Aid",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": ["First Aid"],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "The time required for you to use First Aid to stabilize or cure a Maim effect is reduced to 30 seconds."
+      },
+      {
+        "name": "Call of Courage",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Fire", "amount": 2}],
+        "spell_like": true,
+        "description": "If you are carrying your banner, you may spend 2 points of Fire to cry out, “By My Voice, Cure Stress to [Company Name].”"
+      },
+      {
+        "name": "Call of Freedom",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": true,
+        "description": "Once per event, you may call out “By My Voice, Cure Physical and Heal 2 to [Company Name].”"
+      },
+      {
+        "name": "Call of Healing",
+        "cost": 4,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Earth", "amount": 2}],
+        "spell_like": true,
+        "description": "If you are carrying your banner, you may spend 2 points of Earth to cry out “By My Voice, Heal 2 to [Company Name]” to their wounds."
+      },
+      {
+        "name": "Call of Respite",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Air", "amount": 1}],
+        "spell_like": true,
+        "description": "If you are carrying your banner, you may spend 1 point of Air to cry out, “By My Voice, Stabilize to [Company Name]” to prevent them from bleeding out."
+      },
+      {
+        "name": "Courier",
+        "cost": 3,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "Information Skill. Between events, you may pay 1 silver to attempt to send letters to other characters in the world. You may pay the cost, and you may send an electronic copy of the physical letter to plot between events. You may also submit a physical prop to plot if its presentation has some significance. You must know where the letter must be sent. You need not attempt to deliver the letter yourself; the Argent Accord sends it along to its proper place. There is always a chance that a letter could be intercepted if you send it to a dangerous location or if someone is attempting to foil your attempts. If you believe this is the case, you may increase the amount you pay for delivery to help ensure its safety, although someone attempting to foil your attempts might also be able to pay more to intercept the letter."
+      },
+      {
+        "name": "Ears of the Company",
+        "cost": 3,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "Information Skill. You are the eyes and ears of your Company, and you are constantly gathering information with other Companies. If you spread some money around, you often hear rumors or tales about the things other groups have seen and jobs they might have been hired for. This is an information skill that requires you to spread some money around to loosen lips. You submit a question between events as described in the Information Skills section above. If the question is appropriate for the Companies, you may receive knowledge appropriate to your question."
+      },
+      {
+        "name": "The Herald's Nod",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Air", "amount": 1}],
+        "spell_like": false,
+        "description": "You may spend 1 point of Air, gesture at a target, and call out, \"By My Gesture, Expose Herald by Magic.\" This is typically done only if there is some doubt about the validity of the individual in question. If you do this in court to a prominent Herald, you might be considered a buffoon or fool, but using the skill on the road or in times of danger is certainly warranted."
+      },
+      {
+        "name": "Initiation",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "You are the keeper of your Company. 10 times per event, you may give out your Company trait to individuals who belong to your company or are allied to your Company. Touch a packet to a willing target and call out “Imbue [Company Name] by Inspiration” to add your Company Name as a trait to the target until the end of the event."
+      },
+      {
+        "name": "Now You See It, Now You Don't",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Air", "amount": 1}],
+        "spell_like": false,
+        "description": "This skill allows you to spend 1 point of Air to hide one item for five minutes on your person. The item cannot be in plain sight. If you are searched, you do not have to reveal the presence of the item. If the item is actually spotted by someone, however, this skill fails. The skill works for five minutes, even if you are killed during that time."
+      },
+      {
+        "name": "Refreshing Banner",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": ["Aura of the Herald"],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "To use this skill, you must carry a heraldic banner. You may spend a minute of Focus cleaning and repairing your banner. At the end of this focus, you refresh all of the healing pool received from Aura of the Herald. This focus is not limited to a designated area for rest."
+      },
+      {
+        "name": "Strength of the Company",
+        "cost": 3,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Air", "amount": 1}, {"attribute": "Earth", "amount": 1}, {"attribute": "Fire", "amount": 1}, {"attribute": "Water", "amount": 1}],
+        "spell_like": true,
+        "description": "You may make a touch attack for “Diagnose [Initiate, Experienced, or Accomplished] trait.” You may spend 1 point of Air, Earth, Fire, or Water to make a touch attack for \"Refresh [Attribute] to [Company].\" If you’ve Diagnosed the target as an Initiate, \"Refresh 2 [Attribute] to [Company].\" If you purchase this skill, you can not be affected by it. If another Herald tries to refresh you, politely tell them that you are unaffected."
+      },
+      {
+        "name": "Tale of Encouragement",
+        "cost": 4,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "Your tales inspire those who listen to them, and the entertainment can give them hope, strength, and ease their fatigue. Once per event, you may spend at least one minute telling an entertaining story about your Company to any in the room who would listen. When you are finished, bow or indicate in some way that the story is complete. If the crowd reacts with laughter or applause, you may choose Air, Earth, Fire, or Water and call out, \"In This Room, Refresh [Attribute] By Inspiration.\""
+      },
+      {
+        "name": "Tale of Restoration",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "Your tales inspire those who listen to them, and the entertainment can soothe their wounds. Once per event, you may spend at least one minute telling an entertaining story about your Company to any in the room who would listen. When you are finished, you bow or indicate in some way that the story is complete. If the crowd reacts with laughter or applause, you may call out \"In This Room, Heal 2 By Inspiration\" to offer your audience respite from their wounds."
+      }
+    ]
+  },
+  {
+    "name": "Highborn",
+    "header_cost": 3,
+    "prerequisites": ["You must be a member of The Gilded Hart to purchase this header."],
+    "grants_traits": ["Arcane"],
+    "notes": "Characters with the Highborn header gain the Arcane trait. All spells purchased under this header are arcane spells. The flow of social activities in the High Courts of the kingdoms has a magic of its own. You cannot use any Highborn skill if you have been inflicted with the Uncivilized trait. Once you take this header, you find yourself utterly incapable of fighting with claws of any kind. You cannot use Highborn skills unless you act and dress in a civilized and dignified manner.",
+    "skills": [
+      {
+        "name": "Courier",
+        "cost": 3,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "Information Skill. Between events, you may pay 1 silver to attempt to send letters to other characters in the world. You may pay the cost, and you may send an electronic copy of the physical letter to the Staff between events. You may also submit a physical prop to plot if its presentation has some significance. You must know where the letter must be sent. You need not attempt to deliver the letter yourself; the Argent Accord sends it along to its proper place. There is always a chance that a letter is intercepted if you send it to a dangerous location or if someone is attempting to foil your attempts. If you believe this is the case, you may increase the amount you pay for delivery to help ensure its safety, although someone attempting to foil your attempts might also be able to pay more to intercept the letter."
+      },
+      {
+        "name": "Decorum",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Earth", "amount": 1}],
+        "spell_like": true,
+        "description": "Sometimes, a Highborn is all there is between decorum and anarchy. You may spend 1 point of Earth to make a packet or touch attack for “Cure Frenzy by Inspiration,” or “Cure Madness by Inspiration.” If you are in a room, you may spend 1 point of Earth to call out “In This Room, Cure Frenzy by Inspiration” or “In This Room, Cure Madness by Inspiration.”"
+      },
+      {
+        "name": "Evasive",
+        "cost": 3,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": ["Celerity"],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "Celerity now provides 3 armor points."
+      },
+      {
+        "name": "A Gilded Carriage",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "Once per event, if you have received a formal invitation to a function and you have dressed specifically for that function, you may travel to that function as a spirit after you have spent at least one minute dressing and grooming for that purpose. Once you are dressed and prepared with the invitation in hand, you activate this skill at your dwelling to become a spirit and gain the Spirit defense. You gain the Spirit trait and the Illusion trait and become immune to most attacks. Attacks with the \"to Spirit\" or the \"to Illusion\" traits affect you, and effects that are not beneficial knock you out of spirit form and end this effect. You must travel directly to the function. You cannot tarry once you use this skill on other concerns. The protection ends when you reach your destination and enter the function. If you haven’t used a non-beneficial attack during the function, when the function is finished, you may use this skill to return to your dwelling where you first used the skill. You may use this skill a second time during the event, but only if your outfit is completely different."
+      },
+      {
+        "name": "Presence",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": true,
+        "description": "Once per event, you may call out “By My Voice, Cure Mental by Inspiration.”"
+      },
+      {
+        "name": "A Sharp Tongue",
+        "cost": 3,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Water", "amount": 1}],
+        "spell_like": false,
+        "description": "If you are affected by an attack with a Mental trait, you can shake it off if you are given the chance to interact with the attacker, either by engaging in some kind of conversation to focus or by haranguing them. You must spend at least 10 seconds saying something appropriately witty to activate this skill. If you are unsure or unsatisfied with your retort, you lack the confidence to use this skill. If your verbal banter is pleasing, and let's face it, you know if it isn't, then you may spend 1 point of Water to call out \"Purge [Mental Trait]\" and end that effect."
+      },
+      {
+        "name": "Showing Proper Appreciation",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "Twice per event, you may show your appreciation for an exceptional performance and the performance evokes a beneficial or magical effect. You must thank the performer while complimenting their performance. If they are willing to receive your praise, you may touch them and choose Air, Earth, Fire, or Water. Call out \"Refresh [Attribute] by Inspiration\" to reward their art."
+      },
+      {
+        "name": "The Sphere of Manipulation",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "You may purchase spells from the Manipulation sphere."
+      },
+      {
+        "name": "With Noble Bearing",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Fire", "amount": 1}],
+        "spell_like": false,
+        "description": "You may spend 1 point of Fire to call “Resist” to negate one attack for Frenzy. You may spend 1 point of Fire to call “Resist” to negate one attack with the Fear or Madness traits."
+      }
+    ]
+  },
+  {
+    "name": "Investigator",
+    "header_cost": 3,
+    "prerequisites": ["You must be a member of The Veilward Enclave to purchase this header."],
+    "grants_traits": ["Arcane"],
+    "notes": "Characters with the Investigator header gain the Arcane trait. All spells purchased under this header are arcane spells.",
+    "skills": [
+      {
+        "name": "Back to Guard",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Water", "amount": 1}],
+        "spell_like": false,
+        "description": "While wielding a melee weapon, you may spend 1 point of Water to call out \"Disengage.\""
+      },
+      {
+        "name": "Blade of the Arcane",
+        "cost": 3,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "This skill allows you to hold and use a one-handed sword while you are casting spells, overriding the restriction that casting requires both hands to be empty. You must have the skill with the weapon in question to use this ability."
+      },
+      {
+        "name": "Buckler",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "You can use a buckler to block melee and missile attacks. Your primary weapon cannot be longer than 46” while using a buckler, and you can only use one buckler or shield at any time."
+      },
+      {
+        "name": "Evasive",
+        "cost": 3,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": ["Celerity"],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "Celerity now provides 3 armor points."
+      },
+      {
+        "name": "Daring",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Fire", "amount": 1}, {"attribute": "Fire", "amount": 2}],
+        "spell_like": false,
+        "description": "You may spend 1 point of Fire to call “Resist” to negate one attack with the Fear or Madness traits. Alternatively, you may spend 2 Fire to call out “Resist” to negate one attack that inflicts Stress."
+      },
+      {
+        "name": "Escape Artist",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Water", "amount": 1}, {"attribute": "Water", "amount": 2}],
+        "spell_like": false,
+        "description": "You may spend 1 point of Water to call “Purge” to remove one Paralyze, Root, or Slow effect with a Physical trait. You may spend 2 points of Water and spend three seconds of Focus to slip shackle props off your body and end that effect."
+      },
+      {
+        "name": "A Flurry of Strikes",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Water", "amount": 1}],
+        "spell_like": false,
+        "description": "When fighting with a melee weapon, you may spend 1 point of Water to gain 2 melee attacks for “2 Damage.” Any remaining attacks are lost when the event ends or when you refresh attributes. One use is consumed if the strike lands and the opponent acknowledges it with role play or negates it with a defense. You need not use the strikes consecutively. Uncalled strikes and other skills may be used between uses of this skill. Any remaining strikes are lost when the event ends or when you refresh attributes."
+      },
+      {
+        "name": "Force Bolts",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": true,
+        "description": "You have a pool of 10 magical force bolts that you use for uncalled missile attacks. You refresh your pool to 10 by spending one minute of Focus gathering magical energy."
+      },
+      {
+        "name": "Hardened Psyche",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "Once per event, you may spend 3 seconds to call out “Purge Mental and Refresh 2 Fire” to remove all non-Inflict effects with a Mental trait."
+      },
+      {
+        "name": "A Little Something Extra",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "You may fight with a medium melee weapon in your off-hand while fighting with a 46” weapon in your primary hand."
+      },
+      {
+        "name": "Perfect Recall",
+        "cost": 3,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "Information Skill. If you hear or see some important information in-game, you can spend time between events to try to recall bits and pieces of that information. You submit a request to plot for clarification on something you witnessed in-game. Although you can ask for clarification about something you witnessed, you can only ask about and get information about what you actually experienced. Plot may decide to give you additional details or understanding of the event to reflect your exceptional memory. This type of information skill has a limited scope. It is not powerful enough to replace good note-taking, nor would it ever provide a transcript or long description of information after the fact, but it can provide a sentence or two of clarification, and perhaps a name and its spelling if that is part of your inquiry. Asking about information that was not freely presented in the scene always fails."
+      },
+      {
+        "name": "A Second Weapon",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": ["A Little Something Extra"],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "This skill allows you to use a long melee weapon in your off-hand."
+      },
+      {
+        "name": "The Sphere of Conjuration",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "This skill allows you to learn spells from the Conjuration sphere."
+      },
+      {
+        "name": "Too Long Studying",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Fire", "amount": 2}],
+        "spell_like": false,
+        "description": "Your hours of long study of occult tomes in a dimly lit room were not for nothing. You may spend 2 points of Fire to call out “Resist” to negate one Inflict card attached to or hidden within a book, scroll, or other text prop."
+      }
+    ]
+  },
+  {
+    "name": "Penitent",
+    "header_cost": 3,
+    "prerequisites": ["You can not have the Cupbearers Header."],
+    "grants_traits": ["Devout"],
+    "notes": "You gain the “Devout” trait when you purchase this header.",
+    "skills": [
+      {
+        "name": "Calming the Inner Self",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Air", "amount": 1}],
+        "spell_like": false,
+        "description": "You may spend 1 point of Air to call “Resist” to negate one attack with the Frenzy or Weakness effect."
+      },
+      {
+        "name": "Evasive",
+        "cost": 3,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": ["Celerity"],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "Celerity now provides 3 armor points."
+      },
+      {
+        "name": "Combat Anticipation",
+        "cost": 3,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Air", "amount": 1}],
+        "spell_like": false,
+        "description": "You may spend 3 seconds and 1 point of Air to call out “Purge” and end one Agony or Maim effect."
+      },
+      {
+        "name": "Desperate Strike",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "Once per event, you may call out “10 Damage” and make a melee attack with a staff. If the attack hits but is negated by a defense, you gain 5 packet attacks for “Heal 2 By Will.”"
+      },
+      {
+        "name": "Empathic Healing",
+        "cost": 3,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": true,
+        "description": "You may spend 1 point of Vitality to make a touch attack on another person for “Heal by Sacrifice.” If this removes your last point of Vitality, you fall Unstable."
+      },
+      {
+        "name": "Fortress of Iron Will",
+        "cost": 5,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Air", "amount": 3}],
+        "spell_like": true,
+        "description": "You may press your palms together, become motionless, and spend 3 points of Air to call “Imbue to Self” and gain the Spirit defense. So long as you do not move, respond “Spirit” to any game effect. Only game effects that specifically include \"to Spirit\" in the verbal work on you. Any attack that is not beneficial with \"to Spirit\" in the verbal that strikes you immediately ends this ability."
+      },
+      {
+        "name": "Leveraged Block",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "While wielding a two-handed melee weapon and one of your arms is affected by a Maim effect, you may call “Reduce.” You cannot attack, but you can block attacks as usual, and use game skills that allow you to call out a Defense and require you to be using a melee weapon. You cannot use this skill again until the Maim is cured. The ability to block ends if your other arm takes a Maim, or you take a second Maim to the first arm."
+      },
+      {
+        "name": "Mental Fortitude",
+        "cost": 3,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Air", "amount": 2}],
+        "spell_like": false,
+        "description": "You may spend 2 points of Air to call “Resist” to negate one attack based on a Mental trait."
+      },
+      {
+        "name": "Penitent Strike",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Earth", "amount": 1}],
+        "spell_like": false,
+        "description": "When fighting with a staff, you may spend 1 point of Earth to make a melee attack for \"5 Damage.\""
+      },
+      {
+        "name": "Setting the Blade Aside",
+        "cost": 5,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Fire", "amount": 2}],
+        "spell_like": false,
+        "description": "When fighting with a staff, you may spend 2 points of Fire to make a melee attack for “Disarm” and strike an opponent's weapon."
+      },
+      {
+        "name": "Snap out of it!",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "You may spend 3 seconds of Focus to make a touch attack for \"Cure Will by Inspiration.\""
+      },
+      {
+        "name": "Spinning Staff",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Water", "amount": 1}],
+        "spell_like": false,
+        "description": "When fighting with a staff, you may spend 1 point of Water to gain 3 melee attacks for \"2 Damage.” Any remaining strikes are lost when the event ends or when you refresh attributes."
+      },
+      {
+        "name": "A Spirit's Harmony",
+        "cost": 3,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "When you are Dead, and your 5 minutes have passed, you may wait up to an additional 5 minutes before becoming a Spirit of the Dead."
+      },
+      {
+        "name": "The Will to Live",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "Once per event, you may call out “Reduce” to a Death effect and instead become Unstable with no Vitality or Armor. This skill does not work against a Death Strike, nor does it protect you if you die from bleeding out. You may use this skill even if you are unconscious."
+      }
+    ]
+  },
+  {
+    "name": "Ranger",
+    "header_cost": 4,
+    "prerequisites": [],
+    "grants_traits": [],
+    "notes": "You are a warrior and a woodsman, adept at combat and survival. Rangers are particularly adept at using spears. You are self-sufficient and skilled in wilderness survival.",
+    "skills": [
+      {
+        "name": "Back to Guard",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Water", "amount": 1}],
+        "spell_like": false,
+        "description": "While wielding a melee weapon, you may spend 1 point of Water to call out \"Disengage.\""
+      },
+      {
+        "name": "Battlefield Triage",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": ["First Aid"],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "The time required for you to use First Aid to stabilize or cure a Maim effect is reduced to 30 seconds."
+      },
+      {
+        "name": "Buckler",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "You can use a buckler to block melee and missile attacks. Your primary weapon cannot be longer than 46” while using a buckler, and you can only use one buckler or shield at any time."
+      },
+      {
+        "name": "A Crippling Blow",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Earth", "amount": 2}],
+        "spell_like": false,
+        "description": "You may spend 2 Earth to make a melee attack for \"Maim\" and strike a limb."
+      },
+      {
+        "name": "A Desperate Defense",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Earth", "amount": 2}],
+        "spell_like": false,
+        "description": "While wielding a melee weapon you are skilled with, you may spend 2 points of Earth to call out “Parry” to negate a melee attack that strikes you."
+      },
+      {
+        "name": "Enmity",
+        "cost": 4,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Earth", "amount": 1}],
+        "spell_like": false,
+        "description": "You may spend 1 point of Earth to make a melee or missile attack for “5 Damage.” When you purchase this skill, choose one of the following as your Foe: Beast, Demon, Elemental, Fae, Solari, Infernal, or Undead. You may spend 1 point of Earth to make a melee attack for \"7 Damage to [Chosen Foe].\""
+      },
+      {
+        "name": "A Flurry of Strikes",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Water", "amount": 1}],
+        "spell_like": false,
+        "description": "You may spend 1 point of Water to gain 2 melee attacks for \"2 Damage.” Any remaining strikes are lost when the event ends or when you refresh attributes."
+      },
+      {
+        "name": "Fortitude of the Wild",
+        "cost": 3,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Water", "amount": 1}],
+        "spell_like": false,
+        "description": "You may spend 1 point of Water to call “Resist” to negate one attack with the Poison trait. If you have the Enmity skill, your Flurry of Strikes under Ranger is increased to 3 Damage."
+      },
+      {
+        "name": "Healing Herbs",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": true,
+        "description": "The use of this skill requires a medicine pouch prop. This pouch must be large enough to hold a packet. You spend a minute gathering plants and herbs into your pouch in a wild place where there are no buildings in sight. Once activated, you may touch a packet to your medicine pouch, then make a touch attack for \"Heal 2 by Nature\" on that person. You may only have one use of this skill active at any one time, and each use requires one minute of role play as you gather what you need from the woods."
+      },
+      {
+        "name": "Herbal Remedy",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": true,
+        "description": "The use of this skill requires a medicine pouch prop. This pouch must be large enough to hold a packet. You spend a minute gathering plants and herbs into your pouch in a wild place where there are no buildings in sight. Once activated, you may touch a packet to your medicine pouch, then make a touch attack for \"Cure Metabolic by Nature.” You may only have one use of this skill active at any one time, and each use requires one minute of role play as you gather what you need from the woods."
+      },
+      {
+        "name": "Last Stand",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "Once per event, you may call out “Resist by Will” to negate a melee attack."
+      },
+      {
+        "name": "A Little Something Extra",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "You may fight with a medium melee weapon in your off-hand while fighting with a 46” weapon in your primary hand."
+      },
+      {
+        "name": "Nature's Embrace",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Fire", "amount": 1}],
+        "spell_like": false,
+        "description": "This skill may only be used while cloaked by nature (you are touching a tree, or there are multiple trees between you and any visible buildings). When you fall Unstable, you may spend 1 point of Fire to become stable immediately. You may use this skill to take an extra step while falling down, so you lie down touching the roots or trunk of a tree."
+      },
+      {
+        "name": "Press the Hunt",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": ["Enmity"],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "Once per event, you may call out “Imbue by the Hunt” to gain 3 free uses of Enmity. Any remaining strikes are lost when the event ends or when you refresh attributes."
+      },
+      {
+        "name": "Restored Will",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "You may spend 3 seconds of Focus to make a touch attack for \"Cure Will by Inspiration.\""
+      },
+      {
+        "name": "Reveal the Prey",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": ["Enmity"],
+        "attribute_costs": [{"attribute": "Air", "amount": 1}],
+        "spell_like": false,
+        "description": "You may spend 1 point of Air to call out \"By My Voice, Expose [Chosen Foe] by Nature.”"
+      },
+      {
+        "name": "The Ranger’s Second Weapon",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": ["A Little Something Extra"],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "This skill allows you to use a Spear to make attacks and to block melee and missile attacks in combat without the need to purchase Melee Weapon Spear. Additionally you may use a long melee weapon in your off-hand. While wielding a Spear, the the damage you deal with Enmity is changed from “5 Damage” to “Double 3 Damage.” If you are using Enmity against your chosen enemy then the damage is changed from “7 Damage to [Chosen Foe]” to “Double 4 Damage to [Chosen Foe].”"
+      },
+      {
+        "name": "Setting the Limb",
+        "cost": 4,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Fire", "amount": 1}],
+        "spell_like": false,
+        "description": "You may spend 1 point of Fire to make a touch attack for \"Cure Maim [Limb]\" to fix the limb. You must have one free, functioning hand to perform this skill."
+      }
+    ]
+  },
+  {
+    "name": "Rogue",
+    "header_cost": 4,
+    "prerequisites": [],
+    "grants_traits": [],
+    "notes": "",
+    "skills": [
+      {
+        "name": "Better Lucky Than Good",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "Once per event, if you are unstable and you are about to die because your one-minute death count is expiring, you may choose to “Heal 1 to Self” instead. When you use this skill, you also silently refresh 2 of your Water."
+      },
+      {
+        "name": "Buckler",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "You can use a buckler to block melee and missile attacks. Your primary weapon cannot be longer than 46” while using a buckler, and you can only use one buckler or shield at any time."
+      },
+      {
+        "name": "Calculated Blows",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Water", "amount": 1}],
+        "spell_like": false,
+        "description": "You may spend a point of Water to call \"2 Damage\" with a melee attack up to two times. You exhaust the attribute the first time you swing using this effect. Any remaining strikes are lost when the event ends or when you refresh attributes. If you are behind an opponent and able to see both shoulder blades when you make this attack, you call out “3 Damage” instead of “2 damage.”"
+      },
+      {
+        "name": "A Cloak of Shadow",
+        "cost": 4,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Air", "amount": 2}],
+        "spell_like": false,
+        "description": "You may protect yourself from harm by drawing a dark, hooded cloak about you and melding with the shadows. You are empowered to seek shelter somewhere between the shadows, becoming insubstantial to the real world so long as you do not move. The skill cannot be used during the day or at any time that you can see daylight or something illuminated directly or indirectly by daylight, or if you are actively being hit with Melee attacks. Exhaust 2 points of Air, gather your cloak around you, and call out \"Imbue by Shadow\" to become a Spirit. So long as you do not move, you gain the Spirit defense. You gain the Shadow trait and the Spirit trait. Any attack that is \"to Shadow\" or \"to Spirit\" affects you and, if they are not beneficial, knocks you out of Spirit form. Otherwise, you stay in spirit form until you choose to move or dawn comes."
+      },
+      {
+        "name": "Elusive",
+        "cost": 3,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Water", "amount": 2}],
+        "spell_like": false,
+        "description": "You may enter a defensive state where you dodge and weave around attacks through sheer determination and focus. Spend a minute of concentration to activate this skill and empower your elusive state. While you remain in this defensive state, you may spend 2 points of Water and call \"Avoid\" to negate any melee, missile, or packet attack that strikes you. This defensive state ends if you become unconscious, make a melee, missile, or packet attack, or use any effect that is not beneficial."
+      },
+      {
+        "name": "Escape Artist",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Water", "amount": 1}, {"attribute": "Water", "amount": 2}],
+        "spell_like": false,
+        "description": "You may spend 1 point of Water to call out Purge to remove one Paralyze, Root, or Slow effect with a Physical trait. You may spend 2 points of Water and spend three seconds of Focus to slip shackle props off your body and end that effect."
+      },
+      {
+        "name": "A Little Something Extra",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "You may fight with a medium melee weapon in your off-hand while fighting with a 46” weapon in your primary hand."
+      },
+      {
+        "name": "Lockpicking",
+        "cost": 0,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "This skill allows you to attempt to pick game locks. For locks with keys, you must use tools and actually open the lock. Only locks approved by the staff are allowed in the game. Combination locks are marked on the back with a code. Characters with the Lockpicking skill are given the code translation, which provides the first two digits of the three-digit code. You need to determine the third number required to open it."
+      },
+      {
+        "name": "Manipulate Traps",
+        "cost": 1,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Water", "amount": 1}],
+        "spell_like": false,
+        "description": "This skill allows you to attempt to arm or disarm traps with the proper tools. Without this skill, you can avoid traps, but you cannot attempt to manipulate them without setting them off. To disarm a trap, you must actually use tools to prevent the mechanical trigger from setting off the part that makes noise and causes damage to you. When you trigger a trap, you may spend 1 Water to call out \"Avoid\" and negate the damage. The trap may still have secondary effects such as destroying containers and possibly affecting your companions."
+      },
+      {
+        "name": "Now You See It, Now You Don't",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Air", "amount": 1}, {"attribute": "Fire", "amount": 1}],
+        "spell_like": false,
+        "description": "This skill allows you to spend 1 point of Air to conceal one item on your person for five minutes. If you are searched, you do not have to reveal the presence of the item. If the item is actually spotted by someone, however, this skill fails. The skill continues to work even if you are killed during that time. Additionally, while you have an item attuned to you that grants you a Trait, you may spend 1 Fire to resist an Expose that targets that trait."
+      },
+      {
+        "name": "The Skeleton Key",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Earth", "amount": 2}],
+        "spell_like": false,
+        "description": "If, after at least a minute of trying to pick a lock, you may spend 2 points of Earth and call out, \"Inflict by Inspiration,\" to force one lock to open. You may open the box, door, or latch the lock is attached to as if the lock were open. This opens only one lock and does not disarm any traps."
+      },
+      {
+        "name": "The Twin Threat",
+        "cost": 2,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": ["A Little Something Extra"],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "This skill allows you to use any one-handed melee weapon in your off-hand."
+      },
+      {
+        "name": "Waylay",
+        "cost": 3,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [{"attribute": "Air", "amount": 2}],
+        "spell_like": false,
+        "description": "When you are behind a target, you may spend 2 points of Air to make a melee attack for “Stun.” This skill cannot be used while running; both your feet must be still. You may only use this skill once during a single Flurry."
+      },
+      {
+        "name": "The Walls Have Ears",
+        "cost": 3,
+        "repeatable": false,
+        "purchase_limit": null,
+        "prerequisites": [],
+        "attribute_costs": [],
+        "spell_like": false,
+        "description": "Information Skill. You have learned how to utilize the darker side of society to uncover rumors and information that people may have acquired in the course of their \"normal\" business. If you spread some money around, you may hear rumors or tales about the things other groups have seen and jobs they might have been hired for. This is an information skill that requires you to spread money around to loosen lips. You submit a question between events as described in the Information Skills section above. If the question is appropriate for this dangerous element, you may receive knowledge appropriate to your question."
+      }
+    ]
+  }
+]

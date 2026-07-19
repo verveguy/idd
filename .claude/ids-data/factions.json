@@ -1,0 +1,53 @@
+[
+  {
+    "name": "The Ashen Witness",
+    "benefits": [
+      "Offers three unique headers exclusive to its members (players are not required to purchase these headers to join the faction or engage in its storyline)."
+    ],
+    "requirements": [
+      "New recruits haven't been truly accepted until they earn a nickname: informal, irreverent, often ironic.",
+      "Fully initiated members burn all their former possessions - except for a single item - in a symbolic reenactment of the burning of the sacred library.",
+      "That single item becomes their Token and must be carried at all times and protected with their lives.",
+      "When a member falls, their Token is retrieved and carried for them by another, for it is their legacy and how they are remembered.",
+      "A player may only be part of one faction."
+    ],
+    "grants_trait": "The Ashen Witness",
+    "flavor": "A once-noble band of ash-sworn mercenaries and outcasts, risen from the survivors who burned their own city's sacred library, now feared for their ruthlessness, loyalty to their own, and guardianship of secrets."
+  },
+  {
+    "name": "The Grey Cloaks",
+    "benefits": [
+      "Offers three unique headers exclusive to its members (players are not required to purchase these headers to join the faction or engage in its storyline)."
+    ],
+    "requirements": [
+      "A player may only be part of one faction."
+    ],
+    "grants_trait": "The Grey Cloaks",
+    "flavor": "Wandering guardians of the wilds and highlands who ride ahead of the primal magic Storms to warn villages and cull the twisted beasts and growths left in their wake."
+  },
+  {
+    "name": "The Gilded Hart",
+    "benefits": [
+      "Offers three unique headers exclusive to its members (players are not required to purchase these headers to join the faction or engage in its storyline)."
+    ],
+    "requirements": [
+      "Uphold the Code of the Gilded Hart: \"Be the flame where darkness lingers, the light where hope is lost.\"",
+      "Uphold the Code of the Gilded Hart: \"Take no coin for cruelty, no rest while the wronged cry out.\"",
+      "Uphold the Code of the Gilded Hart: \"Shield the meek, challenge the ruthless, speak truth unbroken.\"",
+      "A player may only be part of one faction."
+    ],
+    "grants_trait": "The Gilded Hart",
+    "flavor": "Free-riding chivalric knights and healers who cast aside their noble titles to defend the common folk and safeguard the customs, rites, and bonds that hold civilization together."
+  },
+  {
+    "name": "The Veilward Enclave",
+    "benefits": [
+      "Offers three unique headers exclusive to its members (players are not required to purchase these headers to join the faction or engage in its storyline)."
+    ],
+    "requirements": [
+      "A player may only be part of one faction."
+    ],
+    "grants_trait": "The Veilward Enclave",
+    "flavor": "A secretive order of part-mercenary, part-arcane-scholar sentinels, forever altered by hidden rituals and eldritch lore, who guard the light against the dark and hold back the encroaching void."
+  }
+]

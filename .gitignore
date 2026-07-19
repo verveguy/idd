@@ -1,0 +1,17 @@
+# Copyrighted source rulebook — each player keeps their own copy.
+# The tool does NOT need the PDF at runtime (data is extracted into .claude/ids-data/).
+in-darkened-dreams-rules-v*.pdf
+
+# Other players' personal spreadsheets / builds shared for reference
+*.ods
+
+# Python
+__pycache__/
+*.pyc
+
+# macOS
+.DS_Store
+
+# Scratch / temp
+*.tmp
+scratch/

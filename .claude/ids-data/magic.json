@@ -1,0 +1,68 @@
+{
+  "spheres": [
+    "Restoration",
+    "Evocation",
+    "Illusion",
+    "Conjuration",
+    "Alteration",
+    "Manipulation"
+  ],
+  "gaining_magic_rules": [
+    "Certain skill headers allow you to purchase specific spheres of magic.",
+    "When you purchase a sphere of magic, you can purchase any of the spells available under that sphere.",
+    "All spells purchased within a sphere are also considered to be purchased within the header under which the sphere was purchased.",
+    "Each spell is purchased using character points and can be used in the same manner as a normal skill.",
+    "Individual spells are purchased separately; each spell has its own character-point cost (shown as the number after the spell name).",
+    "Spells cost attribute points (Air, Earth, Fire, or Water) to cast during play."
+  ],
+  "casting_requirements": [
+    "Spells require a good deal of concentration to invoke.",
+    "Both hands must be empty and both arms must be free to move to cast spells.",
+    "Specific skills allow you to hold a weapon in your off hand while casting, but the hand and arm delivering the spell must be free.",
+    "You cannot invoke spells while you are being struck by an attack that damages you.",
+    "You cannot deliver spells with an arm that cannot use game skills.",
+    "You must be able to speak to cast a spell, unless you can cast that spell without an incantation (so effects that prevent speaking normally stop you from casting).",
+    "Spells delivered by packet have all of the restrictions of that attack form.",
+    "Casting a spell requires you to recite a short in-game phrase called an incantation, then call out the verbal, and only after both are completed can you throw the packet.",
+    "If you are damaged or rendered unable to cast during the incantation or the verbal, the spell is ruined; you do not exhaust attributes (or the equivalent) if a spell is interrupted.",
+    "Incantations must be personalized and approved as part of the learning process; mages cannot make up incantations freely.",
+    "The incantation should contain the sphere of the spell and some form of the spell's name (the name need not be incanted exactly, but at least part of it should be indicated).",
+    "Cupbearers and other Divine characters must include the name of Aurethiel in the incantation instead of the sphere of the spell.",
+    "An incantation must have a number of syllables equal to twice the cost of the spell plus 4 (e.g. a 2-point spell requires at least 8 syllables).",
+    "Powerful casters can eventually use spells without incantations (arch-magic); this requires acquiring the necessary knowledge and skills throughout the game."
+  ],
+  "spell_types": [
+    {
+      "name": "Packet-attack spell",
+      "description": "You spend a set number of attribute points to make a packet attack delivering a called effect (e.g. Curse of Age: spend 1 Air for a packet attack 'Agony by Aging'). Most direct-effect spells work this way."
+    },
+    {
+      "name": "Touch or packet spell",
+      "description": "You spend attribute points to make either a packet or a touch attack delivering an effect, typically curative (e.g. On Your Feet Again: spend 1 Fire for a packet or touch attack 'Cure 1 Maim [Limb] by Magic')."
+    },
+    {
+      "name": "Imbue-to-Self / Spell-like Ability spell",
+      "description": "You spend attribute points and call an 'Imbue ... to Self', gaining a Spell-like Ability that grants a fixed pool of attacks or a repeatable at-will effect (e.g. Contagion, Fire Storm, A Blessing of Health). This ability is lost if you cast the spell again, when you refresh attributes with Void, or when the event ends."
+    },
+    {
+      "name": "Imbued Spell (cannot be cast on others)",
+      "description": "Some spells use an Imbue effect but specify they cannot be cast on others. Because the person receiving them must already know the spell, no Imbue card is needed; the Imbue description is the spell description itself (e.g. The Smile of Good Fortune, which can only affect the caster)."
+    },
+    {
+      "name": "Utility / ritual / roleplay spell",
+      "description": "Spells with special extended effects rather than a simple attack, such as travel (Seven Mile Step), information gathering (The Unseen Hand, Speak with Manipulation), character-card swapping (Dreams of Another), or between-event effects (Send Dreams, Writ of the Vaelion Door)."
+    }
+  ],
+  "arcane_trait_note": "The read range (lines 4877-5228) does not contain an explicit definition of the 'Arcane' trait or a list of headers that grant it. What it does state: skill headers allow you to purchase spheres of arcane magic, and incantations for arcane spells must contain the sphere of the spell. Divine casters (Cupbearers and other Divine characters) are contrasted with arcane mages: they must include the name of Aurethiel in the incantation instead of the sphere. A full definition of the Arcane trait and the specific headers that grant it must come from a skill/header chapter elsewhere in the rulebook, not from this Magic chapter.",
+  "other_notes": [
+    "Spell costs shown in this chapter (the number after each spell name) are the character-point purchase costs. Observed costs range from 1 to 5 CP.",
+    "Casting costs are paid in attributes: Air, Earth, Fire, or Water, in the amount specified by each spell (usually 1-3 points).",
+    "Spell-like Abilities and other granted effects are generally lost when you refresh attributes with Void, or when the event ends (and often also if you cast the granting spell again).",
+    "Some spells appear in more than one sphere with the same mechanics (e.g. Freedom of Movement and On Your Feet Again appear under both Alteration and Restoration; The Soothing Touch appears under both Conjuration and Restoration; A Moment of Clarity under Illusion mirrors Free the Mind under Manipulation).",
+    "Some Imbue effects carry the Illusion or Spirit trait while active (e.g. The Displaced Image, The World Is an Illusion, Seven Mile Step), which changes what attacks affect the caster.",
+    "Certain spells are once-per-event (e.g. The Unseen Hand, Dreams of Another) or between-event only (e.g. Send Dreams may send one dream between events).",
+    "Some spells have prop requirements (e.g. Seven Mile Step needs a gold/yellow ring prop; Claw Shape needs legal claw props; Writ of the Vaelion Door needs a sealed written request; Send Dreams needs prepared parchment).",
+    "Mystic Armor (Alteration) has a Prerequisite: Celerity, and modifies that skill (Celerity now provides 3 armor points) - an example of a spell with a skill prerequisite that upgrades another skill rather than producing an attack.",
+    "This range does not state a numeric limit on how many spheres a single header may grant; the context note that a sphere 'typically costs 2 CP' is not restated in these lines, so the per-sphere CP cost is not confirmed by this excerpt."
+  ]
+}

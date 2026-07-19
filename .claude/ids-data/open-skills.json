@@ -1,0 +1,110 @@
+[
+  {
+    "name": "Archery",
+    "cost": 1,
+    "repeatable": false,
+    "purchase_limit": null,
+    "prerequisites": [],
+    "attribute_costs": [],
+    "description": "You are skilled in the use of bows and crossbows. You have a quiver of 10 arrows that you use for uncalled missile attacks. You refresh your quiver to 10 by spending one minute of Focus cleaning and fletching another set of arrows. Arrow attacks that have a verbal due to a skill or enhancement do not count against your quiver of uncalled attacks.\nIf an attack strikes the bow prop, you take the effect as if the attack had struck your limb. This hit also snaps the bow string and makes the bow unable to fire arrows until you spend 3 seconds of Focus to replace the bow string.\nYou may not, under any circumstances, strike an opponent with your bow."
+  },
+  {
+    "name": "Celerity",
+    "cost": 2,
+    "repeatable": false,
+    "purchase_limit": null,
+    "prerequisites": [],
+    "attribute_costs": [],
+    "description": "You may Focus for 1 minute to gain 2 non-physical armor points. You may also Focus for 1 minute to refresh all your armor points.\nYou cannot use this skill if you are already protected by armor points, and these points are lost if you put on or activate any other armor or ability that gives you armor points."
+  },
+  {
+    "name": "Clubs",
+    "cost": 0,
+    "repeatable": false,
+    "purchase_limit": null,
+    "prerequisites": [],
+    "attribute_costs": [],
+    "description": "You may use Club melee weapons to make attacks and to block melee and missile attacks in combat."
+  },
+  {
+    "name": "Combat Momentum",
+    "cost": 2,
+    "repeatable": false,
+    "purchase_limit": null,
+    "prerequisites": [],
+    "attribute_costs": [],
+    "description": "When making an called damage attack of 4 or more using an Ax or Hammer, you may increase the damage of the attack by 1."
+  },
+  {
+    "name": "Craftsman",
+    "cost": 1,
+    "repeatable": true,
+    "purchase_limit": null,
+    "prerequisites": [],
+    "attribute_costs": [],
+    "description": "You may purchase this skill multiple times, specifying a different craft for each purchase.\nYou have a craft that allows you to make a living. This skill provides money at the beginning of each event. You may also sell props related to your chosen craft for in-game money."
+  },
+  {
+    "name": "Diagnose",
+    "cost": 0,
+    "repeatable": false,
+    "purchase_limit": null,
+    "prerequisites": [],
+    "attribute_costs": [],
+    "description": "You may touch a recipient with a packet and call Diagnose for any Elemental, Metabolic, Mental, or Physical group or any of their underlying traits. You may also use Diagnose on any effect except Imbue and Inflict. You may also use Diagnose to determine if the recipient is currently Stable, Unstable, Dead, Stress, or Damage."
+  },
+  {
+    "name": "First Aid",
+    "cost": 1,
+    "repeatable": false,
+    "purchase_limit": null,
+    "prerequisites": [],
+    "attribute_costs": [],
+    "description": "This skill requires one minute of Focus on a willing or helpless target. You role-play administering medicines and bandaging wounds to prevent someone from dying of blood loss or repair their Maimed limb. You must have both arms free to use this skill.\nWhen you begin to use this skill, call \"First Aid\" (if they are Unstable, this pauses their count between Unstable and Death). When the 1 minute of Focus is complete, say either:\n    ●​ “Stabilize.\"\n    ●​ \"Cure Maim [Limb]\" to remove the Maim from the indicated limb.\nThis skill can be used for either effect, but you cannot perform both effects at the same time.\nThis skill requires the use of both arms, but, you may use this skill with one arm to fix your other arm."
+  },
+  {
+    "name": "Fumble",
+    "cost": 0,
+    "repeatable": false,
+    "purchase_limit": null,
+    "prerequisites": [],
+    "attribute_costs": [],
+    "description": "When you take a Disarm effect, you may call “Reduce” and spend 3 seconds of roleplay trying to keep control of the item instead of dropping the item on the ground. You may not attack or block with the item during this time."
+  },
+  {
+    "name": "Light Armor",
+    "cost": 0,
+    "repeatable": false,
+    "purchase_limit": null,
+    "prerequisites": [],
+    "attribute_costs": [],
+    "description": "You may wear physical armor and gain 2 points of Armor. You may also Focus for 1 minute to repair all your Armor points."
+  },
+  {
+    "name": "Melee Weapon",
+    "cost": 1,
+    "repeatable": true,
+    "purchase_limit": null,
+    "prerequisites": [],
+    "attribute_costs": [],
+    "description": "You may use one type of melee weapon to make attacks and to block melee and missile attacks in combat. You may purchase this skill additional times to use a different weapon type.\nThe weapon types are Axes, Hammers, Polearms, Spears, Staves, and Swords.\nNOTE: Some exotic melee weapon types are not included in these groups (i.e., Claws, Glaives)."
+  },
+  {
+    "name": "Thrown Weapon",
+    "cost": 1,
+    "repeatable": false,
+    "purchase_limit": null,
+    "prerequisites": [],
+    "attribute_costs": [],
+    "description": "You are skilled in the use of thrown weapons. You may carry up to 3 thrown weapons on your person. You use thrown weapons to make Missile (Props) attacks.\nWhen you pick up a thrown weapon after it has been used, you must spend 10 seconds cleaning the dirt and blood off the weapon, sharpening it, and checking the balance before you use it again. You may, however, clean all your thrown weapons in one 10-second session."
+  },
+  {
+    "name": "“With Desperation….”",
+    "cost": 0,
+    "repeatable": false,
+    "purchase_limit": 2,
+    "prerequisites": [],
+    "attribute_costs": [],
+    "description": "Twice per event, you can ignore the attribute cost of a skill when you use it. Add “With Desperation…” before the verbal. You gain a point of Stress regardless of whether the skill succeeds. This skill does not give you extra uses of skills that are limited to once per event. If your stress is already at 5, you cannot use this skill."
+  }
+]

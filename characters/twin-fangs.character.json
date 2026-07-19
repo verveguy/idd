@@ -1,0 +1,20 @@
+{
+  "name": "Twin Fangs",
+  "heritage": "Solari",
+  "faction": "The Veilward Enclave",
+  "cp_sources": {"starting": 30, "history": 5},
+  "attributes": {"Air": 2, "Earth": 4, "Fire": 2, "Water": 4, "Void": 3},
+  "headers": ["Warrior"],
+  "skills": [
+    {"name": "Melee Weapon"},
+    {"name": "A Little Something Extra"},
+    {"name": "Critical Strike"},
+    {"name": "A Flurry of Strikes"},
+    {"name": "A Crippling Blow"},
+    {"name": "Resilience"},
+    {"name": "Last Stand"},
+    {"name": "Shrug It Off"},
+    {"name": "The Will To Live"},
+    {"name": "Heart of the Lion"}
+  ]
+}
