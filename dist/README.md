@@ -10,10 +10,14 @@ not need Python installed** on your computer.
 
 ## Requirements
 
-- A **Claude Pro, Max, Team, or Enterprise** plan (custom Skills aren't available
-  on Free).
-- **Code execution** enabled: Settings → Capabilities → "Code execution and file
-  creation" → ON.
+- **Code execution enabled** — this is the real requirement. Turn it on at
+  Settings → Capabilities → "Code execution and file creation" → ON. The bundled
+  validator runs in Claude's sandbox, so **you do not need Python on your own
+  computer.**
+- **Plan:** works on **Free** plans too, as long as code execution is enabled
+  (confirmed in a Claude Desktop session). Pro / Max / Team / Enterprise work as
+  well. If you don't see the Skills upload option, make sure code execution is
+  turned on first.
 
 ## Install (each player does this once)
 
