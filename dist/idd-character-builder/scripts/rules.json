@@ -1,0 +1,63 @@
+{
+  "_notice": {
+    "source": "Derived from 'In Darkened Dreams Rules v1.0.3' (built on the Accelerant LARP system).",
+    "copyright": "Game rules, setting, and content © their respective creators — all rights reserved.",
+    "dataset": "Unofficial, fan-made transcription created as a character-building aid for the In Darkened Dreams play group. Not affiliated with or endorsed by the game's creators. Offered in good faith as transformative, non-commercial fair use.",
+    "tool_software": "© 2026 verveguy.",
+    "see": "NOTICE.md",
+    "contact": "Rights holders with concerns may contact the maintainer to amend or remove this project."
+  },
+  "game": "In Darkened Dreams",
+  "system": "Accelerant",
+  "ruleset_version": "1.0.3",
+  "character_points": {
+    "starting_cp": 30,
+    "history_approval_bonus": 5,
+    "note": "You start with 30 CP. You gain an additional 5 CP when your character history / new-player survey is approved. More CP is earned through play."
+  },
+  "attributes": {
+    "list": ["Air", "Earth", "Fire", "Water", "Void"],
+    "starting_value": 2,
+    "cost_rule": "To raise an attribute to level N, spend CP equal to N. (e.g. 2->3 costs 3 CP, 3->4 costs 4 CP.)",
+    "descriptions": {
+      "Air": "Your mind and awareness.",
+      "Earth": "Your physical resilience and stamina.",
+      "Fire": "Your passion and drive.",
+      "Water": "Your mobility and agility.",
+      "Void": "Your ability to refocus and restore spent resources. Can be exhausted to refresh Air/Earth/Fire/Water and heal all Vitality after 5 minutes of rest."
+    }
+  },
+  "derived": {
+    "vitality_formula": "ceil((Earth + Void) / 2)",
+    "vitality_note": "Vitality is your physical health, equal to the total of Earth and Void divided by 2, rounded up."
+  },
+  "armor": {
+    "max_physical_without_skill": 2,
+    "note": "All characters may wear up to two points of physical armor. Wearing more than two points effectively requires an armor skill. Light armor = 2, Medium = 3, Heavy = 4+."
+  },
+  "stress": {
+    "min": 0,
+    "max": 5,
+    "note": "Stress tracks psychological toll. Effects are cumulative from 1+ through 5. Not a build-time choice; tracked during play."
+  },
+  "experience_tiers": [
+    {"trait": "Initiate", "min_cp_spent_on_skills": 0, "max_cp_spent_on_skills_exclusive": 50},
+    {"trait": "Experienced", "min_cp_spent_on_skills": 50, "max_cp_spent_on_skills_exclusive": 100},
+    {"trait": "Accomplished", "min_cp_spent_on_skills": 100, "max_cp_spent_on_skills_exclusive": null}
+  ],
+  "automatic_traits": [
+    "Living (unless dead)",
+    "Your Heritage (and specific sub-heritage if applicable)",
+    "Your Faction",
+    "Each skill header you purchase (e.g. buying the Rogue header grants the Rogue trait)"
+  ],
+  "build_rules": [
+    "You must purchase a Header before purchasing any skill under that header.",
+    "Open skills have no header prerequisite and may be purchased by anyone.",
+    "You cannot purchase the same skill or spell twice, even if it appears under multiple headers. A duplicated skill counts as purchased under the first header for prerequisite purposes.",
+    "Skills marked with an asterisk (*) are repeatable; pay the full cost each time. Some have a purchase limit noted in their description.",
+    "Some skills have prerequisites (other skills) listed in their descriptions.",
+    "Some headers have prerequisites, such as membership in a specific faction.",
+    "Attribute costs listed on a skill are points spent to USE the skill during play; they are refreshed each event and are NOT part of the CP build cost."
+  ]
+}

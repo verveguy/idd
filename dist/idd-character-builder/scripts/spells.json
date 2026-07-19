@@ -1,0 +1,406 @@
+{
+  "Conjuration": [
+    {
+      "name": "Ash Storm",
+      "cost": 4,
+      "repeatable": false,
+      "attribute_costs": [{"attribute": "Fire", "amount": 2}],
+      "spell_like": false,
+      "description": "You may spend 2 points of Fire to make a packet attack for \"Drain by Earth.\""
+    },
+    {
+      "name": "Break Bones",
+      "cost": 2,
+      "repeatable": false,
+      "attribute_costs": [{"attribute": "Earth", "amount": 1}],
+      "spell_like": false,
+      "description": "You may spend 1 point of Earth to make a packet attack for \"Maim [Limb] by Force.\""
+    },
+    {
+      "name": "Claw Shape",
+      "cost": 1,
+      "repeatable": false,
+      "attribute_costs": [{"attribute": "Fire", "amount": 1}],
+      "spell_like": false,
+      "description": "You may spend 1 point of Fire to prepare your legal claw props. You gain the ability to fight with a long claw in each hand to make melee attacks and block melee and missile attacks.\nFor skills, Claws are a type of melee weapon. You may not fight with claws and other weapons or a buckler or shield. The time it takes to prepare the claws or put them away is the same as the time it takes to grow or retract the claws.\nThis ability is lost when you refresh attributes with Void, or when the event ends."
+    },
+    {
+      "name": "Crushing Bonds",
+      "cost": 1,
+      "repeatable": false,
+      "attribute_costs": [{"attribute": "Earth", "amount": 1}],
+      "spell_like": false,
+      "description": "You may spend 1 point of Earth to make a packet attack for \"Root by Force.\""
+    },
+    {
+      "name": "Life Steal",
+      "cost": 3,
+      "repeatable": false,
+      "attribute_costs": [{"attribute": "Earth", "amount": 1}],
+      "spell_like": true,
+      "description": "You may spend 1 point of Earth to make a packet attack for \"2 Damage by Cold.\"\nIf the target is affected by the damage, you gain 1 mote of Life Force. You may spend Life Force to call out \"Heal 2 to Self\" or make the Spell-like Ability to make a touch attack for \"Heal 2 by Will.\"\nThis ability is lost if you cast this spell again, when you refresh attributes with Void, or when the event ends."
+    },
+    {
+      "name": "Seven Mile Step",
+      "cost": 4,
+      "repeatable": false,
+      "attribute_costs": [{"attribute": "Water", "amount": 2}],
+      "spell_like": false,
+      "description": "You can slip into the spirit realm and travel for a short distance safely before you are forced back into the real world. The spell requires a small gold or yellow ring to represent a portal. The ring is a throwing weapon that is 6\" across, although the prop for the \"ring\" can also be a disk or a ball. Mark the ring with a red circle to show that others cannot touch your ring.\nYou may spend 2 points of Water and call out, \"Imbue by Seven Mile Step” then throw your ring. You gain the Spirit defense and begin walking slowly towards your ring. Any effect with the \"to Spirit\" trait that is not beneficial knocks you out of spirit form and ends this effect wherever you were struck. Upon arriving, call out \"Imbue to Spirit\" to step back into this world to end the effect.\nSo long as people engaged in combat does not bar your way, travel as directly to your ring as possible. If there are too many combatants in your way, you may pause until a safe opening appears for you to continue. While traveling, you cannot attempt to interfere with any actions by blocking or catching attacks. If the ring passes through any kind of Gate, the spell ends immediately.\nIf you cannot find the ring or cannot reach the ring within 5 minutes, then your spirit is lost to the spirit realm. You become a Spirit of the Dead and travel to the Vaelion Doors."
+    },
+    {
+      "name": "The Soothing Touch",
+      "cost": 2,
+      "repeatable": false,
+      "attribute_costs": [{"attribute": "Water", "amount": 1}],
+      "spell_like": true,
+      "description": "You may spend 1 point of Water, and call out \"Imbue by Magic to Self” to gain the Spell-like Ability to make a touch attack for \"Stabilize\" at will.\nThis ability is lost when you refresh attributes with Void, or when the event ends."
+    },
+    {
+      "name": "Thorn Lash",
+      "cost": 2,
+      "repeatable": false,
+      "attribute_costs": [{"attribute": "Air", "amount": 1}],
+      "spell_like": false,
+      "description": "You may spend 1 point of Air to make a packet attack for \"5 Damage by Thorns.\""
+    }
+  ],
+  "Restoration": [
+    {
+      "name": "A Blessing of Health",
+      "cost": 1,
+      "repeatable": false,
+      "attribute_costs": [{"attribute": "Water", "amount": 1}],
+      "spell_like": true,
+      "description": "You may spend 1 point of Water to call out “Imbue by Magic to Self.” You gain the Spell-like Ability to make 2 packet attacks for \"Heal 2 by Magic.\"\nThis ability is lost if you cast this spell again, when you refresh attributes with Void, or when the event ends."
+    },
+    {
+      "name": "The Clear Road",
+      "cost": 1,
+      "repeatable": false,
+      "attribute_costs": [{"attribute": "Fire", "amount": 1}],
+      "spell_like": false,
+      "description": "You may spend 1 point of Fire to make a packet or touch attack for \"Cure Root by Magic.\""
+    },
+    {
+      "name": "Freedom of Movement",
+      "cost": 5,
+      "repeatable": false,
+      "attribute_costs": [{"attribute": "Earth", "amount": 1}],
+      "spell_like": false,
+      "description": "You may spend 1 point of Earth to make a packet or touch attack for \"Cure Physical by Magic.\""
+    },
+    {
+      "name": "On Your Feet Again",
+      "cost": 1,
+      "repeatable": false,
+      "attribute_costs": [{"attribute": "Fire", "amount": 1}],
+      "spell_like": false,
+      "description": "You may spend 1 point of Fire to make a packet or touch attack for \"Cure 1 Maim [Limb] by Magic.\""
+    },
+    {
+      "name": "Purity of Form",
+      "cost": 4,
+      "repeatable": false,
+      "attribute_costs": [{"attribute": "Earth", "amount": 1}],
+      "spell_like": false,
+      "description": "You may spend 1 point of Earth to make a packet or touch attack for \"Cure Metabolic by Magic.\""
+    },
+    {
+      "name": "The Smile of Good Fortune",
+      "cost": 2,
+      "repeatable": false,
+      "attribute_costs": [{"attribute": "Fire", "amount": 2}],
+      "spell_like": false,
+      "description": "You call the blessings of Fate down upon you to protect you from untimely death. You may only have one of these spells active at any time, and you cannot cast this spell on others.\nYou may spend 2 points of Fire and call out \"Imbue by Magic to Self” to gain the ability to save your life in one of two ways.\nYou may use this ability to call out “Reduce” to a Death effect and instead become Unstable with no Vitality or Armor.\nAlternatively, if you are unstable for a minute and are about to die due to blood loss, you may use this ability to become Stable.\nThis ability is lost if you cast this spell again, when you refresh attributes with Void, or when the event ends."
+    },
+    {
+      "name": "The Soothing Touch",
+      "cost": 2,
+      "repeatable": false,
+      "attribute_costs": [{"attribute": "Water", "amount": 1}],
+      "spell_like": true,
+      "description": "You may spend 1 point of Water, and call out \"Imbue by Magic to Self” to gain the Spell-like Ability to make a touch attack for \"Stabilize\" at will.\nThis ability is lost when you refresh attributes with Void, or when the event ends."
+    },
+    {
+      "name": "Writ of the Vaelion Door",
+      "cost": 2,
+      "repeatable": false,
+      "attribute_costs": [{"attribute": "Air", "amount": 1}],
+      "spell_like": false,
+      "description": "You attempt to manipulate Fate by giving your blessing to a Spirit of the Dead who has begun the journey to the Vaelion Doors. Before casting this spell, you must prepare a written request to the keeper of the Vaelion Doors that the spirit be returned safely. The request must be rolled or neatly folded and sealed with wax or ribbon.\nWhen the target is a Spirit of the Dead, before they reach the Vaelion Door, you may spend 1 point of Air to make a touch attack for \"Imbue to Spirit,\" and hand them the scroll. Instruct the spirit that they must read the scroll to the Keeper of the Vaelion Door if requested to do so, and their passion in this reading may affect the decision of the Keeper.\nIf nothing removes the spell and the request pleases the Keeper, the spirit may negate the effects of one draw if they wish to do so and take a second draw to replace it from the Vaelion Deck. The spirit must abide by the results of the second draw if they choose to do this, regardless of the result of the first draw."
+    }
+  ],
+  "Evocation": [
+    {
+      "name": "Barrage",
+      "cost": 1,
+      "repeatable": false,
+      "attribute_costs": [{"attribute": "Air", "amount": 1}],
+      "spell_like": false,
+      "description": "You may spend 1 point of Air and call out “Imbue by Evocation” to instantly refresh your Force Bolts pool of attacks."
+    },
+    {
+      "name": "The Drowning Foe",
+      "cost": 1,
+      "repeatable": false,
+      "attribute_costs": [{"attribute": "Water", "amount": 1}],
+      "spell_like": false,
+      "description": "You may spend 1 point of Water to make a packet attack for \"Agony by Water.\""
+    },
+    {
+      "name": "Engulf",
+      "cost": 3,
+      "repeatable": false,
+      "attribute_costs": [{"attribute": "Earth", "amount": 2}],
+      "spell_like": false,
+      "description": "You may spend 2 points of Earth to make a packet attack for \"Paralyze by Earth.\""
+    },
+    {
+      "name": "Fire Storm",
+      "cost": 4,
+      "repeatable": false,
+      "attribute_costs": [{"attribute": "Fire", "amount": 2}],
+      "spell_like": true,
+      "description": "You may spend 2 points of Fire and call out \"Imbue by Evocation to Self.” You gain the Spell-like Ability to make 5 packet attacks for \"2 Damage by Fire.”\nThis ability is lost if you cast this spell again, when you refresh attributes with Void, or when the event ends."
+    },
+    {
+      "name": "Roots Run Deep",
+      "cost": 1,
+      "repeatable": false,
+      "attribute_costs": [{"attribute": "Earth", "amount": 1}],
+      "spell_like": false,
+      "description": "You may spend 1 point of Earth to make a packet attack for \"Root by Earth.\""
+    },
+    {
+      "name": "Winter's Breath",
+      "cost": 2,
+      "repeatable": false,
+      "attribute_costs": [{"attribute": "Air", "amount": 1}],
+      "spell_like": false,
+      "description": "You may spend 1 point of Air to make a packet attack for \"5 Damage by Ice.\""
+    },
+    {
+      "name": "Unravel the Elements",
+      "cost": 3,
+      "repeatable": false,
+      "attribute_costs": [{"attribute": "Water", "amount": 1}],
+      "spell_like": false,
+      "description": "You may spend 1 point of Water to make a packet attack for \"Cure Elemental by Magic.\""
+    }
+  ],
+  "Illusion": [
+    {
+      "name": "The Displaced Image",
+      "cost": 3,
+      "repeatable": false,
+      "attribute_costs": [{"attribute": "Water", "amount": 2}],
+      "spell_like": false,
+      "description": "You may spend 2 points of Water, and call out \"Imbue by Illusion to Self” to gain the ability to call “Elude” to negate the first called melee, missile, or packet attack that strikes you. You the Illusion trait while it is active.\nThis ability is lost if you cast this spell again, when you refresh attributes with Void, or when the event ends."
+    },
+    {
+      "name": "Dreams of Another",
+      "cost": 2,
+      "repeatable": false,
+      "attribute_costs": [],
+      "spell_like": false,
+      "description": "Once per event, you may call out the dreams, perceptions, and passions of another willing character who is familiar with this spell and understands its effect. Both of you must be fully refreshed; no attributes except Void can be spent. You speak the incantation, Focus for one minute, and say \"Imbue by Illusion.\" Any ability that ends when you refresh attributes with Void ends when you use this ability.\nYou both switch character cards and gain the Illusion trait. You gain the skills and attributes of the recipient, and they gain your skills and attributes. It is common for characters under this effect to demonstrate quirks and passions of the personality of the character they have swapped with. While active, you cannot refresh attributes using Void, and you are unaffected by Refresh effects.\nHeritage skills and traits, manifest headers, Imbues, Inflicts, and active effects are not swapped. Per Event skills and spells cannot be used. If you are unfamiliar with a skill on the card, it cannot be used.\nThis effect is lost when the event ends. You may end the effect early by spending one minute of Focus with the recipient and calling out \"Imbue by Illusion\" to swap back your character cards. When the effect ends, the attributes of both characters are fully exhausted, as well as any effects granted by one of the swapped skills."
+    },
+    {
+      "name": "Hallucinatory Terrain",
+      "cost": 1,
+      "repeatable": false,
+      "attribute_costs": [{"attribute": "Earth", "amount": 1}],
+      "spell_like": false,
+      "description": "You may spend 1 point of Earth to make a packet attack for \"Slow by Confusion.\""
+    },
+    {
+      "name": "The Illusion Exposed",
+      "cost": 1,
+      "repeatable": false,
+      "attribute_costs": [{"attribute": "Air", "amount": 1}],
+      "spell_like": false,
+      "description": "You may spend 1 point of Air and call out, \"By My Voice, Expose Illusion by Magic.\""
+    },
+    {
+      "name": "A Mask of Fright",
+      "cost": 1,
+      "repeatable": false,
+      "attribute_costs": [{"attribute": "Fire", "amount": 1}],
+      "spell_like": false,
+      "description": "You may spend 1 point of Fire to make a packet attack for \"Repel by Fear.\""
+    },
+    {
+      "name": "A Moment of Clarity",
+      "cost": 3,
+      "repeatable": false,
+      "attribute_costs": [],
+      "spell_like": false,
+      "description": "You may spend 1 point of Air to make a packet attack for \"Cure Mental by Will.\"\nYou may spend 2 points of Air to make a packet attack for \"Cure 1 Stress by Will.\""
+    },
+    {
+      "name": "Send Dreams",
+      "cost": 1,
+      "repeatable": false,
+      "attribute_costs": [],
+      "spell_like": false,
+      "description": "You conjure dreams and send them forth into the Dream Realm to find their way to others. If you use this skill between events, you may prepare a description of the dream to be sent to a specific recipient you know by name. This description is not a letter, but instead must be written as one might experience a dream. This dream is sent, along with the recipient's name and description, to the plot staff. A spirit of the Dream Realm attempts to visit the recipient and deliver the dream to them. You may send one dream between events.\nThere are certain characters who, through powerful magic or natural gifts, attract energies and spirits of the Dream Realm. If you convince these characters to help, you can cast this spell during an event. Prepare a physical manifestation of your dream on parchment. You must include the name and description of the recipient at the top of the dream and a description of the dream underneath. The parchment and writing must be of reasonable quality. Spend 1 point of Air and cast this spell in the presence of a willing character so infused with the Dream Realm. You may hand the manifestation of the dream to them to complete the spell. In time, the dream is sent forth into the Dream Realm and finds its way to the recipient.\nThere may be creatures and effects that can block or intercept attempts to Send Dreams."
+    },
+    {
+      "name": "The Shattered Mirror",
+      "cost": 3,
+      "repeatable": false,
+      "attribute_costs": [{"attribute": "Air", "amount": 2}],
+      "spell_like": false,
+      "description": "You may spend 2 points of Air to make a packet attack for \"Drain by Confusion.\""
+    },
+    {
+      "name": "The Tearing of the Dream",
+      "cost": 1,
+      "repeatable": false,
+      "attribute_costs": [{"attribute": "Fire", "amount": 1}],
+      "spell_like": false,
+      "description": "You may spend 1 point of Fire to make a packet attack for \"10 Damage to Illusion.\""
+    },
+    {
+      "name": "The World Is an Illusion",
+      "cost": 5,
+      "repeatable": false,
+      "attribute_costs": [{"attribute": "Earth", "amount": 2}],
+      "spell_like": true,
+      "description": "You may spend 2 points of Earth and call out \"Imbue by Illusion\" to gain the Illusion trait and the Spell-like Ability to call out \"Imbue by Illusion,\" clasp your hands in front of you, and gain the Spirit defense so long as you do not move. Any attack that is \"to Illusion\" or \"to Spirit\" affects you and, if it is not beneficial, knocks you out of Spirit form. Otherwise, you stay in spirit form until you choose to move. When you leave the spirit form, the spell ends, and you lose the Spirit and Illusion traits.\nThis ability is lost if you cast this spell again, when you refresh attributes with Void, or when the event ends."
+    }
+  ],
+  "Alteration": [
+    {
+      "name": "The Broken Path",
+      "cost": 3,
+      "repeatable": false,
+      "attribute_costs": [{"attribute": "Earth", "amount": 1}],
+      "spell_like": false,
+      "description": "You may spend 1 point of Earth to make a packet attack for \"Slow by Earth.\""
+    },
+    {
+      "name": "Contagion",
+      "cost": 3,
+      "repeatable": false,
+      "attribute_costs": [{"attribute": "Fire", "amount": 1}],
+      "spell_like": true,
+      "description": "You may spend 1 point of Fire, and call out \"Imbue by Alteration to Self.” You gain the Spell-like Ability to make 2 packet attacks for \"2 Damage by Disease.”\nThis ability is lost if you cast this spell again, when you refresh attributes with Void, or when the event ends."
+    },
+    {
+      "name": "Curse of Age",
+      "cost": 1,
+      "repeatable": false,
+      "attribute_costs": [{"attribute": "Air", "amount": 1}],
+      "spell_like": false,
+      "description": "You may spend 1 point of Air to make a packet attack for \"Agony by Aging.\""
+    },
+    {
+      "name": "Freedom of Movement",
+      "cost": 5,
+      "repeatable": false,
+      "attribute_costs": [{"attribute": "Earth", "amount": 1}],
+      "spell_like": false,
+      "description": "You may spend 1 point of Earth to make a packet attack for \"Cure Physical by Magic.\""
+    },
+    {
+      "name": "Imprison",
+      "cost": 3,
+      "repeatable": false,
+      "attribute_costs": [{"attribute": "Earth", "amount": 2}],
+      "spell_like": false,
+      "description": "You may spend 2 points of Earth to make a packet attack for \"Paralyze by Earth.\""
+    },
+    {
+      "name": "Mystic Armor",
+      "cost": 2,
+      "repeatable": false,
+      "attribute_costs": [],
+      "spell_like": false,
+      "description": "Prerequisite: Celerity\nCelerity now provides 3 armor points."
+    },
+    {
+      "name": "On Your Feet Again",
+      "cost": 1,
+      "repeatable": false,
+      "attribute_costs": [{"attribute": "Fire", "amount": 1}],
+      "spell_like": false,
+      "description": "You may spend 1 point of Fire to make a packet or touch attack for \"Cure 1 Maim [Limb] by Magic.\""
+    },
+    {
+      "name": "Stolen Voice",
+      "cost": 3,
+      "repeatable": false,
+      "attribute_costs": [{"attribute": "Air", "amount": 1}],
+      "spell_like": true,
+      "description": "You may spend 1 point of Air to make a packet attack for \"Silence by Cold.\"\nIf your opponent roleplays taking this effect, you gain a Spell-like Ability to make a packet attack for “Cure Silence by Cold.”\nThis ability is lost if you cast this spell again, when you refresh attributes with Void, or when the event ends."
+    }
+  ],
+  "Manipulation": [
+    {
+      "name": "All Hope is Gone",
+      "cost": 3,
+      "repeatable": false,
+      "attribute_costs": [{"attribute": "Earth", "amount": 2}],
+      "spell_like": false,
+      "description": "You may spend 2 points of Earth to make a packet attack for \"Drain by Despair.\""
+    },
+    {
+      "name": "A Command to Step Aside",
+      "cost": 2,
+      "repeatable": false,
+      "attribute_costs": [{"attribute": "Air", "amount": 1}],
+      "spell_like": false,
+      "description": "You may spend 1 point of Air to make a packet attack for \"Repel by Will.\""
+    },
+    {
+      "name": "Disarm",
+      "cost": 3,
+      "repeatable": false,
+      "attribute_costs": [{"attribute": "Air", "amount": 1}],
+      "spell_like": false,
+      "description": "You may spend 1 point of Air to make a packet attack for \"Disarm [Hand] by Will.\""
+    },
+    {
+      "name": "Free the Mind",
+      "cost": 3,
+      "repeatable": false,
+      "attribute_costs": [],
+      "spell_like": false,
+      "description": "You may spend 1 point of Air to make a packet attack for \"Cure Mental by Will.”\nYou may spend 2 points of Air to make a packet attack for \"Cure 1 Stress by Will.\""
+    },
+    {
+      "name": "Spare Not the Rod",
+      "cost": 3,
+      "repeatable": false,
+      "attribute_costs": [{"attribute": "Fire", "amount": 1}],
+      "spell_like": true,
+      "description": "You may spend 1 point of Fire and call out \"Imbue by Manipulation to Self.” You gain the Spell-like Ability to make 2 packet attacks for \"2 Damage by Will.”\nThis ability is lost if you cast this spell again, when you refresh attributes with Void, or when the event ends."
+    },
+    {
+      "name": "Struck Silent",
+      "cost": 2,
+      "repeatable": false,
+      "attribute_costs": [{"attribute": "Air", "amount": 1}],
+      "spell_like": false,
+      "description": "You may spend 1 point of Air to make a packet attack for \"Silence by Will.\""
+    },
+    {
+      "name": "The Swift Hand of Vengeance",
+      "cost": 4,
+      "repeatable": false,
+      "attribute_costs": [{"attribute": "Fire", "amount": 3}],
+      "spell_like": false,
+      "description": "You may spend 3 points of Fire to make a packet attack for \"Death by Will.\""
+    },
+    {
+      "name": "The Unseen Hand",
+      "cost": 1,
+      "repeatable": false,
+      "attribute_costs": [],
+      "spell_like": false,
+      "description": "Many beings are touched by the strands of Manipulation as they make deals and receive orders from someone with more purpose. You attempt to identify those strands and read them, gaining insights into who might ultimately be responsible for their actions.\nOnce per event, when an enemy has been defeated, you may attempt to find strands that reveal those plans. Touch a helpless, unconscious, or dead subject, and call out \"Speak with Manipulation\" to whisper \"Who is responsible for this?\" to that individual. If you receive a call of “No Effect,” you do not lose the use of this skill.\nThis is a difficult spell to use. Mindless creatures and minions that have not dealt directly with the enemy may lack strong enough strands of Manipulation. More intelligent foes are more likely to understand the plans in motion and therefore make better targets. For some enemies, the strands of Manipulation are empowered, and spirits enter the individual and whisper some bit of knowledge to you about who might be leading, hiring, or empowering your enemies."
+    }
+  ]
+}
