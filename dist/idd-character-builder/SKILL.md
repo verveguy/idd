@@ -21,9 +21,9 @@ The ruleset data and a deterministic validator are bundled with this skill under
 `scripts/`. **Legality is decided by the validator — never hand-compute CP or
 eyeball prerequisites.** Run it with the code-execution tool:
 
-- `python scripts/validate.py --catalog` — list heritages, factions, all 27 headers with costs.
-- `python scripts/validate.py --sheet <build.json>` — validate a build and print a sheet.
-- `python scripts/validate.py <build.json>` — validate only (exit 0 = legal, 2 = illegal).
+- `python3 scripts/validate.py --catalog` — list heritages, factions, all 27 headers with costs.
+- `python3 scripts/validate.py --sheet <build.json>` — validate a build and print a sheet.
+- `python3 scripts/validate.py <build.json>` — validate only (exit 0 = legal, 2 = illegal).
 
 The data JSON lives beside the script (`scripts/*.json`); read those files
 directly when you need skill descriptions or the full list of options. Write the
@@ -88,7 +88,7 @@ Pick the one that fits the request:
 8. **Deliver** the validated sheet; offer to save it as `<name>.character.json`.
 
 ### Validate an existing character
-Transcribe their sheet into the build JSON, run `python scripts/validate.py
+Transcribe their sheet into the build JSON, run `python3 scripts/validate.py
 --sheet <build.json>`, then explain each ERROR (with a concrete fix) and each
 warning (things to check manually, e.g. prose prerequisites).
 
