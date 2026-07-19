@@ -151,7 +151,7 @@ func toolDefs() []any {
 	return []any{
 		map[string]any{
 			"name": "open_character_builder",
-			"description": "Open the interactive character-builder panel. Call this AT MOST ONCE per conversation, and only when the user wants to build visually. The panel then stays open and the user drives it, sending builds back when they click \"Send to Claude\". Do NOT call this again to show changes or seed a build — use get_catalog, get_header, and validate_character to reason about builds in text.",
+			"description": "Open the interactive character-builder panel. Call this AT MOST ONCE per conversation. Once it is open, the panel exposes its own tools — set_heritage, set_faction, set_attribute, add_header/remove_header, add_skill/remove_skill, get_character, validate_build — use THOSE to change or read the live panel (they update the one open panel; they never open a new one). Do NOT call open_character_builder again to show changes. The user can also drive the panel directly and click \"Send to Claude\".",
 			"inputSchema": map[string]any{"type": "object", "properties": map[string]any{"build": buildObj}},
 			"_meta":       uiMeta,
 		},

@@ -600,45 +600,95 @@ if(!loadSeed()) render();
 </script>
 
 <script>
-/* ext-apps bridge (2026-01-26): connect to the host, receive seeded builds,
-   send the build to the model on demand, and save via the server tool. */
+/* ext-apps bridge (2026-01-26): one persistent panel. The panel registers its
+   own MCP tools so the MODEL drives THIS panel (no re-render), plus the explicit
+   Send-to-Claude / Save actions. State mutations reuse the app's own functions. */
 (function(){
   var rpcId=1, pending={};
-  function send(m){ m.jsonrpc="2.0"; parent.postMessage(m, "*"); }
-  function call(method, params){ return new Promise(function(res,rej){
+  function send(m){ m.jsonrpc="2.0"; parent.postMessage(m,"*"); }
+  function call(method,params){ return new Promise(function(res,rej){
     var id=rpcId++; pending[id]={res:res,rej:rej}; send({id:id,method:method,params:params||{}}); }); }
-  function notify(method, params){ send({method:method,params:params||{}}); }
+  function notify(method,params){ send({method:method,params:params||{}}); }
+  function reply(id,result){ send({id:id,result:result}); }
+  function txt(s){ return {content:[{type:"text",text:s}]}; }
+  function findName(list,name){ name=(name||"").toLowerCase();
+    for(var i=0;i<list.length;i++){ if(String(list[i]).toLowerCase()===name) return list[i]; } return null; }
+  function summary(){ var r=compute();
+    return (r.errors.length?("INVALID — "+r.errors.join(" | ")):"LEGAL")
+      +" · "+r.total+"/"+r.available+" CP ("+r.remaining+" left) · Vitality "+r.vit+" · "+r.tier; }
+
+  var TOOLS=[
+    {name:"set_name",description:"Set the character's name in the open builder.",inputSchema:{type:"object",properties:{name:{type:"string"}},required:["name"]}},
+    {name:"set_heritage",description:"Set the heritage in the open builder (free choice).",inputSchema:{type:"object",properties:{name:{type:"string"}},required:["name"]}},
+    {name:"set_faction",description:"Set the faction in the open builder (free; exactly one per character).",inputSchema:{type:"object",properties:{name:{type:"string"}},required:["name"]}},
+    {name:"set_attribute",description:"Set one attribute (Air/Earth/Fire/Water/Void) to a value (min 2) in the open builder.",inputSchema:{type:"object",properties:{attribute:{type:"string"},value:{type:"number"}},required:["attribute","value"]}},
+    {name:"add_header",description:"Purchase a header in the open builder (buy before its skills).",inputSchema:{type:"object",properties:{name:{type:"string"}},required:["name"]}},
+    {name:"remove_header",description:"Remove a header (and its skills) from the open builder.",inputSchema:{type:"object",properties:{name:{type:"string"}},required:["name"]}},
+    {name:"add_skill",description:"Add a skill or spell in the open builder (must be reachable from an owned header/heritage/open list).",inputSchema:{type:"object",properties:{name:{type:"string"}},required:["name"]}},
+    {name:"remove_skill",description:"Remove a skill from the open builder.",inputSchema:{type:"object",properties:{name:{type:"string"}},required:["name"]}},
+    {name:"get_character",description:"Read the character currently in the open builder (full build JSON).",inputSchema:{type:"object",properties:{}}},
+    {name:"validate_build",description:"Validate the character currently in the open builder; report legality, CP, and issues.",inputSchema:{type:"object",properties:{}}}
+  ];
+  var H={
+    set_name:function(a){ state.name=String(a.name||""); render(); return txt("Name set to \""+state.name+"\". "+summary()); },
+    set_heritage:function(a){ var n=findName(DATA.heritages.map(function(x){return x.n}),a.name);
+      if(!n) return txt("No heritage \""+a.name+"\". Options: "+DATA.heritages.map(function(x){return x.n}).join(", "));
+      state.heritage=n; render(); return txt("Heritage set to "+n+". "+summary()); },
+    set_faction:function(a){ var n=findName(DATA.factions,a.name);
+      if(!n) return txt("No faction \""+a.name+"\". Options: "+DATA.factions.join(", "));
+      state.faction=n; state.headers=state.headers.filter(function(hn){ var h=HDR[hn]; return !(h&&h.fac&&norm(h.fac)!==norm(state.faction)); });
+      render(); return txt("Faction set to "+n+". "+summary()); },
+    set_attribute:function(a){ var k=findName(ATTRS,a.attribute); if(!k) return txt("Attribute must be one of "+ATTRS.join(", "));
+      var v=Math.max(2,Math.min(10,parseInt(a.value,10)||2)); state.attributes[k]=v; render(); return txt(k+" set to "+v+". "+summary()); },
+    add_header:function(a){ var found=null; DATA.headers.forEach(function(h){ if(h.n.toLowerCase()===(a.name||"").toLowerCase()) found=h; });
+      if(!found) return txt("No header \""+a.name+"\".");
+      if(found.fac&&norm(found.fac)!==norm(state.faction)) return txt("\""+found.n+"\" requires faction "+found.fac+" — set that faction first.");
+      if(state.headers.indexOf(found.n)<0) state.headers.push(found.n); render(); return txt("Added header "+found.n+" ("+found.c+" CP). "+summary()); },
+    remove_header:function(a){ var nm=a.name; DATA.headers.forEach(function(h){ if(h.n.toLowerCase()===(a.name||"").toLowerCase()) nm=h.n; });
+      state.headers=state.headers.filter(function(x){return x!==nm}); render(); return txt("Removed header "+nm+". "+summary()); },
+    add_skill:function(a){ var rec=catalog()[norm(a.name)]; if(!rec) return txt("\""+a.name+"\" isn't available yet — buy the header/heritage/sphere that grants it first.");
+      state.skills[norm(a.name)]={name:rec.name,count:1}; render(); return txt("Added "+rec.name+" ("+rec.c+" CP). "+summary()); },
+    remove_skill:function(a){ delete state.skills[norm(a.name)]; render(); return txt("Removed "+a.name+". "+summary()); },
+    get_character:function(){ return txt(JSON.stringify(buildJSON(),null,2)); },
+    validate_build:function(){ var r=compute(); var L=[summary()];
+      r.errors.forEach(function(e){L.push("ERROR: "+e)}); r.warnings.forEach(function(w){L.push("warning: "+w)});
+      L.push("Traits: "+r.traits.join(", ")); return txt(L.join("\n")); }
+  };
+
   window.addEventListener("message", function(ev){
-    var m=ev.data; if(!m || m.jsonrpc!=="2.0") return;
-    if(m.id!==undefined && (m.result!==undefined || m.error!==undefined)){
-      var p=pending[m.id]; if(p){ delete pending[m.id]; m.error?p.rej(m.error):p.res(m.result); } return;
+    var m=ev.data; if(!m||m.jsonrpc!=="2.0") return;
+    if(m.id!==undefined&&(m.result!==undefined||m.error!==undefined)){
+      var p=pending[m.id]; if(p){ delete pending[m.id]; m.error?p.rej(m.error):p.res(m.result); } return; }
+    switch(m.method){
+      case "ui/notifications/tool-result":
+        try{ var sc=m.params&&m.params.structuredContent; if(sc&&sc.build) importBuild(sc.build); }catch(e){} break;
+      case "tools/list": reply(m.id,{tools:TOOLS}); break;
+      case "tools/call":
+        try{ var fn=H[m.params&&m.params.name];
+          reply(m.id, fn?fn(m.params.arguments||{}):{content:[{type:"text",text:"unknown tool"}],isError:true}); }
+        catch(e){ reply(m.id,{content:[{type:"text",text:"error: "+e.message}],isError:true}); } break;
+      case "ui/resource-teardown": if(m.id!==undefined) reply(m.id,{}); break;
+      default: if(m.id!==undefined) reply(m.id,{});
     }
-    if(m.method==="ui/notifications/tool-result"){
-      try{ var sc=m.params&&m.params.structuredContent; if(sc&&sc.build) importBuild(sc.build); }catch(e){}
-    } else if(m.method==="ui/resource-teardown" && m.id!==undefined){ send({id:m.id,result:{}}); }
-    else if(m.id!==undefined){ send({id:m.id,result:{}}); }
   });
+
   function wire(){
     var sb=document.getElementById("sendBtn"), sv=document.getElementById("saveBtn");
-    if(sb) sb.addEventListener("click", async function(e){
-      var b=buildJSON();
-      try{ await call("ui/update-model-context",{structuredContent:{build:b}}); }catch(_){}
-      try{ await call("ui/message",{role:"user",content:[{type:"text",
-        text:"Here's my current In Darkened Dreams build from the builder — please review it."}]}); }catch(_){}
-      flash(e.currentTarget,"✓ Sent to Claude");
-    });
+    if(sb) sb.addEventListener("click", async function(e){ var b=buildJSON();
+      try{ await call("ui/update-model-context",{structuredContent:{build:b},content:[{type:"text",text:"Current build:\n"+JSON.stringify(b,null,2)}]}); }catch(_){}
+      try{ await call("ui/message",{role:"user",content:[{type:"text",text:"Here's my current In Darkened Dreams build from the builder — please review it."}]}); }catch(_){}
+      flash(e.currentTarget,"✓ Sent to Claude"); });
     if(sv) sv.addEventListener("click", async function(e){
       try{ await call("tools/call",{name:"save_character",arguments:{build:buildJSON()}}); flash(e.currentTarget,"✓ Saved"); }
-      catch(_){ flash(e.currentTarget,"⚠ Save failed"); }
-    });
+      catch(_){ flash(e.currentTarget,"⚠ Save failed"); } });
   }
   (async function connect(){
     try{
       await call("ui/initialize",{appInfo:{name:"IDD Character Builder",version:"1.0.0"},
-        appCapabilities:{}, protocolVersion:"2026-01-26"});
+        appCapabilities:{tools:{listChanged:true}}, protocolVersion:"2026-01-26"});
       notify("ui/notifications/initialized",{});
       document.body.classList.add("mcp"); wire();
-    }catch(e){ /* not inside an MCP host: stay in standalone mode */ }
+    }catch(e){}
   })();
 })();
 </script>
