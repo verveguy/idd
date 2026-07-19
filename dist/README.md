@@ -36,6 +36,21 @@ Claude will run the bundled validator, enforce all the rules, and hand you a
 finished, rules-legal character sheet. It also validates existing characters and
 levels them up when you earn CP.
 
+## Companion builder app (`character-builder-app.html`)
+
+A standalone, offline interactive builder — a visual companion to the skill.
+Open it in any browser (or as a Claude artifact): pick heritage/faction from
+dropdowns, step attributes up and down, toggle headers and skills, and watch the
+**CP ledger, Vitality, tier, traits, and legality update live**. It embeds the
+full ruleset and a JavaScript port of the validator (verified to match the Python
+validator's CP math), so it needs no server and no Python.
+
+- **Copy build JSON** → paste into a chat with the skill for the authoritative check / to save.
+- **Save sheet as PDF** → prints just the character sheet, one clean page.
+
+The app's embedded ruleset is regenerated from the master by `dist/build-app.py`
+(run automatically by `./build.sh`), so it never drifts from the validator.
+
 ## Rebuilding the ZIP (maintainers)
 
 The master copy of the validator + data lives in `plugins/idd/ids-data/`. Never

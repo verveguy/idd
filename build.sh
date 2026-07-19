@@ -54,6 +54,10 @@ diff -q "$SRC/validate.py" "$SCRIPTS/validate.py" >/dev/null \
   && echo "==> validator in sync (master == bundle)" \
   || { echo "error: validator copies differ"; exit 1; }
 
+# 3b. Refresh the companion builder app's embedded ruleset data (keeps the
+#     offline web app in sync with the master data / validator).
+python3 dist/build-app.py
+
 # 4. Build the ZIP (top-level folder must match the skill name).
 rm -f "$ZIP"
 ( cd dist && zip -rq "$(basename "$ZIP")" idd-character-builder -x '*.DS_Store' )

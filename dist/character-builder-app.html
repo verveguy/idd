@@ -1,0 +1,519 @@
+<title>In Darkened Dreams — Character Builder</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root{
+    color-scheme:light;
+    --desk:#141019; --desk-2:#1d1826;
+    --vellum:#efedf4; --panel:#e7e4ee; --panel-2:#eae7f1; --field:#f6f5fa;
+    --ink:#211a2e; --ink-soft:#574f68; --ink-faint:#8b8499;
+    --rule:#d6d1e1; --rule-strong:#c3bcd4;
+    --accent:#5a4a8c; --accent-2:#6a57a3; --gold:#8f7327;
+    --good:#2f7d55; --warn:#9a6a1e; --bad:#a5352f;
+    --air:#3e6591; --earth:#77632f; --fire:#a83f24; --water:#1d7178; --void:#6a559c;
+    --serif:"Iowan Old Style","Palatino Linotype","Book Antiqua",Palatino,Georgia,serif;
+    --mono:ui-monospace,"SF Mono","Cascadia Mono",Menlo,"Roboto Mono",monospace;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0; font-family:var(--serif); color:var(--ink);
+    background:radial-gradient(120% 70% at 50% -10%, #241d33 0%, var(--desk) 62%) fixed;
+    padding:22px 18px 60px;}
+  .wrap{max-width:1180px; margin:0 auto}
+  .topbar{display:flex; align-items:flex-end; justify-content:space-between; gap:16px;
+    color:#cfc7e0; margin-bottom:18px; flex-wrap:wrap}
+  .topbar h1{font-size:23px; margin:0; font-weight:600; letter-spacing:.01em; color:#efe9fb}
+  .topbar .eyebrow{font-family:var(--mono); font-size:10px; letter-spacing:.36em;
+    text-transform:uppercase; color:#9b90bd; display:block; margin-bottom:5px}
+  .topbar p{margin:4px 0 0; font-style:italic; color:#8177a0; font-size:13px}
+  .actions{display:flex; gap:8px; flex-wrap:wrap}
+  button.act{font-family:var(--mono); font-size:11px; letter-spacing:.06em; text-transform:uppercase;
+    color:#efedf4; background:var(--accent); border:1px solid var(--accent-2); border-radius:4px;
+    padding:9px 13px; cursor:pointer}
+  button.act.ghost{background:transparent; color:#b8aede; border-color:#4a3f6a}
+  button.act:hover{background:var(--accent-2)}
+  button.act.ghost:hover{background:#241d33}
+  button.act:focus-visible{outline:2px solid #cfc7e0; outline-offset:2px}
+
+  .grid{display:grid; grid-template-columns:1.15fr 1fr; gap:20px; align-items:start}
+  @media (max-width:920px){.grid{grid-template-columns:1fr}}
+
+  .card{background:var(--vellum); border:1px solid var(--rule-strong);
+    box-shadow:0 20px 50px -30px #000; padding:20px 22px}
+  .card + .card{margin-top:18px}
+  .sect{font-family:var(--mono); font-size:10px; letter-spacing:.2em; text-transform:uppercase;
+    color:var(--ink-faint); margin:0 0 12px; padding-bottom:6px; border-bottom:1px solid var(--rule)}
+  .sect .hint{float:right; text-transform:none; letter-spacing:0; font-family:var(--serif);
+    font-style:italic; color:var(--ink-faint); font-size:11px}
+
+  label.fl{display:block; font-family:var(--mono); font-size:9.5px; letter-spacing:.12em;
+    text-transform:uppercase; color:var(--ink-faint); margin:0 0 4px}
+  .row{display:flex; gap:12px; flex-wrap:wrap}
+  .row > .f{flex:1 1 0; min-width:120px}
+  input[type=text], select{width:100%; font-family:var(--serif); font-size:14px; color:var(--ink);
+    background:var(--field); border:1px solid var(--rule-strong); border-radius:3px; padding:8px 9px}
+  select{cursor:pointer}
+  input:focus, select:focus{outline:2px solid var(--accent); outline-offset:0; border-color:var(--accent)}
+
+  /* cp sources */
+  .cpsrc{display:grid; grid-template-columns:repeat(3,1fr); gap:10px}
+  .cpsrc .f label{font-size:9px}
+  .cpsrc input{font-family:var(--mono); text-align:right; font-variant-numeric:tabular-nums; padding:6px 8px}
+  .cpsum{margin-top:10px; font-family:var(--mono); font-size:12px; color:var(--ink-soft);
+    display:flex; justify-content:space-between; border-top:1px solid var(--rule); padding-top:8px}
+  .cpsum b{color:var(--ink)}
+
+  /* attributes */
+  .attrs{display:grid; grid-template-columns:repeat(5,1fr); gap:10px}
+  .attr{border-top:2.5px solid var(--el); padding-top:7px; text-align:center}
+  .attr .an{font-family:var(--mono); font-size:9.5px; letter-spacing:.1em; text-transform:uppercase;
+    color:var(--el); font-weight:600}
+  .attr .as{font-size:9.5px; color:var(--ink-faint); font-style:italic}
+  .stp{display:flex; align-items:center; justify-content:center; gap:8px; margin-top:5px}
+  .stp button{width:24px; height:24px; border-radius:3px; border:1px solid var(--rule-strong);
+    background:var(--panel); color:var(--ink); font-family:var(--mono); font-size:15px; cursor:pointer; line-height:1}
+  .stp button:hover{background:#ded9ea} .stp button:disabled{opacity:.35; cursor:default}
+  .stp .v{font-family:var(--mono); font-size:22px; min-width:20px; font-variant-numeric:tabular-nums}
+  .attr .cpc{font-family:var(--mono); font-size:9px; color:var(--ink-faint); margin-top:3px}
+
+  /* toggles (headers) */
+  .toggles{display:flex; flex-direction:column; gap:6px}
+  .tg{display:flex; align-items:center; gap:9px; padding:7px 9px; border:1px solid var(--rule);
+    border-radius:4px; background:var(--field); cursor:pointer}
+  .tg:hover{border-color:var(--rule-strong)}
+  .tg.on{border-color:var(--accent); background:color-mix(in srgb,var(--accent) 8%,transparent)}
+  .tg.locked{opacity:.5; cursor:not-allowed; background:var(--panel)}
+  .tg .box{width:15px; height:15px; border:1.5px solid var(--rule-strong); border-radius:3px; flex:0 0 auto;
+    display:grid; place-items:center; font-size:11px; color:#fff}
+  .tg.on .box{background:var(--accent); border-color:var(--accent)}
+  .tg .nm{font-size:14px; font-weight:600}
+  .tg .meta{margin-left:auto; font-family:var(--mono); font-size:9.5px; color:var(--ink-faint);
+    text-transform:uppercase; letter-spacing:.04em; text-align:right}
+  .tg .tag{font-family:var(--mono); font-size:8.5px; color:var(--accent); border:1px solid var(--accent);
+    border-radius:2px; padding:1px 4px; margin-left:6px}
+
+  /* skill groups */
+  .grp{border:1px solid var(--rule); border-radius:5px; margin-bottom:9px; overflow:hidden; background:var(--field)}
+  .grp > summary{list-style:none; cursor:pointer; padding:9px 11px; display:flex; align-items:center; gap:8px;
+    font-family:var(--mono); font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-soft);
+    background:var(--panel-2)}
+  .grp > summary::-webkit-details-marker{display:none}
+  .grp > summary .chev{transition:transform .15s} .grp[open] > summary .chev{transform:rotate(90deg)}
+  .grp > summary .cnt{margin-left:auto; color:var(--accent); font-weight:600}
+  .sk{display:flex; align-items:flex-start; gap:9px; padding:8px 11px; border-top:1px solid var(--rule)}
+  .sk .box{width:15px;height:15px;border:1.5px solid var(--rule-strong);border-radius:3px;flex:0 0 auto;margin-top:2px;
+    display:grid;place-items:center;font-size:11px;color:#fff;cursor:pointer}
+  .sk.on .box{background:var(--accent);border-color:var(--accent)}
+  .sk .info{flex:1 1 auto; min-width:0}
+  .sk .snm{font-size:13.5px; font-weight:600}
+  .sk .sig{color:var(--gold); margin-left:2px}
+  .sk .se{font-size:11.5px; color:var(--ink-soft); line-height:1.35; margin-top:2px}
+  .sk .right{display:flex; align-items:center; gap:7px; flex:0 0 auto}
+  .chip{font-family:var(--mono); font-size:9px; letter-spacing:.03em; padding:2px 5px; border:1px solid var(--el);
+    color:var(--el); border-radius:2px; white-space:nowrap; text-transform:uppercase;
+    background:color-mix(in srgb,var(--el) 8%,transparent)}
+  .cpc2{font-family:var(--mono); font-size:9.5px; color:var(--ink-faint); font-variant-numeric:tabular-nums}
+  .rep{display:flex; align-items:center; gap:5px}
+  .rep button{width:19px;height:19px;border:1px solid var(--rule-strong);border-radius:3px;background:var(--panel);
+    font-family:var(--mono);cursor:pointer;line-height:1} .rep .rv{font-family:var(--mono);font-size:11px;min-width:9px;text-align:center}
+
+  /* ===== right pane: sheet ===== */
+  .ledger .lrow{display:flex; justify-content:space-between; font-family:var(--mono); font-size:12.5px;
+    padding:4px 0; color:var(--ink-soft); font-variant-numeric:tabular-nums}
+  .ledger .lrow.big{font-size:15px}
+  .ledger .lrow .n{color:var(--ink)}
+  .ledger .lrow.tot{border-top:1px solid var(--rule-strong); margin-top:5px; padding-top:8px; color:var(--ink); font-weight:600}
+  .ledger .lrow.tot.over .n{color:var(--bad)}
+  .ledger .lrow.tot.over{color:var(--bad)}
+  .pill{display:inline-flex; align-items:baseline; gap:6px; font-family:var(--mono); font-variant-numeric:tabular-nums}
+  .vitrow{display:flex; gap:18px; margin-top:12px; padding-top:12px; border-top:1px solid var(--rule)}
+  .vitrow .stat{text-align:center; flex:1}
+  .vitrow .stat .k{font-family:var(--mono); font-size:9px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-faint)}
+  .vitrow .stat .val{font-size:26px; font-weight:600; font-variant-numeric:tabular-nums; margin-top:2px}
+  .vitrow .stat.vit .val{color:var(--fire)}
+
+  .val-ok{font-family:var(--mono); font-size:11px; letter-spacing:.04em; color:var(--good); text-transform:uppercase}
+  .msg{font-size:12.5px; padding:7px 10px; border-radius:4px; margin-top:7px; line-height:1.4}
+  .msg.err{background:color-mix(in srgb,var(--bad) 11%,transparent); border-left:3px solid var(--bad); color:#7d2822}
+  .msg.warn{background:color-mix(in srgb,var(--warn) 13%,transparent); border-left:3px solid var(--warn); color:#6f4c14}
+
+  .tags{display:flex; flex-wrap:wrap; gap:6px}
+  .tag2{font-family:var(--mono); font-size:10px; padding:3px 8px; border-radius:2px; background:var(--panel);
+    border:1px solid var(--rule-strong); color:var(--ink-soft)}
+  .tag2.hdr{border-color:var(--accent); color:var(--accent); background:color-mix(in srgb,var(--accent) 8%,transparent)}
+
+  .sheet-name{font-size:24px; font-weight:600; margin:0; text-wrap:balance}
+  .sheet-eyebrow{font-family:var(--mono); font-size:10px; letter-spacing:.2em; text-transform:uppercase; color:var(--accent)}
+  .sheet-sk{padding:6px 0; border-bottom:1px solid var(--rule)}
+  .sheet-sk:last-child{border-bottom:0}
+  .sheet-sk .st{display:flex; align-items:baseline; gap:7px}
+  .sheet-sk .st .nm{font-size:13.5px; font-weight:600}
+  .sheet-sk .st .cp{margin-left:auto; font-family:var(--mono); font-size:9.5px; color:var(--ink-faint)}
+  .sheet-sk .ee{font-size:11.5px; color:var(--ink-soft); margin-top:2px; line-height:1.35}
+  .empty{color:var(--ink-faint); font-style:italic; font-size:13px}
+
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+  /* ===== print: only the sheet, as a clean card ===== */
+  @media print{
+    @page{size:letter portrait; margin:0.35in}
+    html,body{background:#fff!important}
+    body{padding:0}
+    .topbar,.builder,.actions,.no-print{display:none!important}
+    .grid{grid-template-columns:1fr; gap:0}
+    .sheet{margin:0}
+    .card{box-shadow:none; border:1px solid #bbb; -webkit-print-color-adjust:exact; print-color-adjust:exact}
+    .card + .card{margin-top:10px}
+  }
+</style>
+
+<div class="wrap">
+  <div class="topbar">
+    <div>
+      <span class="eyebrow">In Darkened Dreams</span>
+      <h1>Character Builder</h1>
+      <p>Pick, spend, and see it tally — a companion to the builder skill.</p>
+    </div>
+    <div class="actions">
+      <button class="act" id="copyBtn">⧉ Copy build JSON</button>
+      <button class="act ghost" id="printBtn">⎙ Save sheet as PDF</button>
+      <button class="act ghost" id="resetBtn">↺ Reset</button>
+    </div>
+  </div>
+
+  <div class="grid">
+    <!-- ============ BUILDER ============ -->
+    <div class="builder">
+      <div class="card">
+        <h2 class="sect">Identity</h2>
+        <div class="row" style="margin-bottom:12px">
+          <div class="f"><label class="fl" for="cname">Character name</label>
+            <input type="text" id="cname" placeholder="Name your character…"></div>
+        </div>
+        <div class="row">
+          <div class="f"><label class="fl" for="her">Heritage <span style="color:var(--good)">· free</span></label>
+            <select id="her"></select></div>
+          <div class="f"><label class="fl" for="fac">Faction <span style="color:var(--good)">· free</span></label>
+            <select id="fac"></select></div>
+        </div>
+        <div id="herNote" class="msg warn" style="display:none"></div>
+      </div>
+
+      <div class="card">
+        <h2 class="sect">Character Points <span class="hint">what you have to spend</span></h2>
+        <div class="cpsrc" id="cpsrc"></div>
+        <div class="cpsum"><span>Available CP</span><b id="cpAvail">35</b></div>
+      </div>
+
+      <div class="card">
+        <h2 class="sect">Attributes <span class="hint">all start at 2 · raise to N costs N</span></h2>
+        <div class="attrs" id="attrs"></div>
+      </div>
+
+      <div class="card">
+        <h2 class="sect">Headers <span class="hint">buy before their skills</span></h2>
+        <div class="toggles" id="headers"></div>
+      </div>
+
+      <div class="card">
+        <h2 class="sect">Skills &amp; Spells <span class="hint">from open, heritage &amp; your headers</span></h2>
+        <div id="skills"></div>
+      </div>
+    </div>
+
+    <!-- ============ SHEET ============ -->
+    <div class="sheet">
+      <div class="card no-print">
+        <h2 class="sect">Ledger</h2>
+        <div class="ledger" id="ledger"></div>
+        <div class="vitrow" id="vitrow"></div>
+      </div>
+      <div class="card no-print" id="valCard">
+        <h2 class="sect">Validation</h2>
+        <div id="validation"></div>
+      </div>
+      <div class="card" id="sheetCard">
+        <!-- printable character sheet rendered here -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<script id="idd-data" type="application/json">{"rules":{"start":30,"history":5,"attrs":["Air","Earth","Fire","Water","Void"],"base":2},"heritages":[{"n":"Solari","skills":[{"n":"Adaptability","c":1,"e":"You gain two points of Adaptability."},{"n":"Energetic","c":1,"e":"Solari are an energetic folk filled with passion and impatience."}],"disadv":""},{"n":"Grelkyn","skills":[{"n":"Grelkyn Tinkering","c":0,"e":"You have a craft that allows you to make a living."},{"n":"Lightcraft","c":2,"e":"Spell-like Ability."}],"disadv":"The Grelkyn are susceptible to Fear."},{"n":"Umbrethil","skills":[{"n":"The Dread Hush","c":4,"e":"You spend 1 point of Fire to make a melee or packet attack for \"Silence by Despair.\""}],"disadv":"You may not receive the benefit of the Spell \"Writ of the Vaelion Door.\""},{"n":"The Blossom Elves","skills":[{"n":"Rose's Promise","c":2,"e":"(Rose Elf subtype) You may spend 1 Earth to make a melee, missile, or Packet attack for \"4 Damage by Thorns.\""},{"n":"Nightshade's Touch","c":2,"e":"(Nightshade Elf subtype) You spend 1 point of Air to make a melee attack, missile, or packet attack for \"Agony by Poiso…"},{"n":"Jasmine's Clarity","c":3,"e":"(Jasmine Elf subtype) Spell-like Ability."}],"disadv":"Rose Elves are susceptible to Madness."},{"n":"The Lucent-Bound","skills":[{"n":"Lucent Flare","c":3,"e":"You may spend 1 Fire to make a melee, ranged, or packet attack for \"3 damage by Light,\""}],"disadv":"Unstable Conduit."},{"n":"The Aethermarked","skills":[{"n":"Elemental Fortification","c":3,"e":"You may spend 2 Earth to call out “Resist”"}],"disadv":"As one of the Aethermarked, you are susceptible to Elemental attacks."}],"factions":["The Ashen Witness","The Grey Cloaks","The Gilded Hart","The Veilward Enclave"],"headers":[{"n":"Acrobat","c":4,"fac":null,"grants":[],"excl":[],"skills":[{"n":"Back to Guard","c":2,"a":"1 Water","e":"While wielding a melee weapon, you may spend 1 point of Water to call out \"Disengage.\""},{"n":"Daring","c":2,"a":"1 Fire","e":"You may spend 1 point of Fire to call “Resist”"},{"n":"Death Defying","c":2,"e":"Twice per event, when you have no Vitality, you may call out \"Heal to Self.\""},{"n":"Duck For Cover","c":4,"a":"3 Water","e":"You may spend 3 points of Water to call out “Avoid”"},{"n":"Escape Artist","c":2,"a":"1 Water","e":"You may spend 3 seconds and 1 point of Water to call out “Purge”"},{"n":"Evasive","c":3,"pre":["Celerity"],"e":"Celerity now provides 3 armor points."},{"n":"Juggler's Dexterity","c":2,"e":"If you catch a missile attack (arrow or thrown weapon) with an empty hand, you may call \"Avoid\""},{"n":"Improved Evasive","c":3,"pre":["Evasive","Mystic Armor"],"e":"Celerity now provides 4 armor points."},{"n":"Leveraged Block","c":1,"e":"While wielding a two-handed melee weapon and one of your arms is affected by a Maim effect, you may call “Reduce.”"},{"n":"Limber","c":3,"a":"1 Earth","e":"You spend 1 point of Earth to call “Avoid”"},{"n":"Spinning Strike","c":2,"a":"1 Water","e":"While fighting with a staff or one-handed club, you may spend 1 point of Water to gain 3 melee attacks for \"2 Damage.”"},{"n":"Staggering Strike","c":4,"a":"2 Earth","e":"While wielding a staff or one-handed club, you may spend 2 points of Earth to make a melee attack for \"Weakness.”"},{"n":"Tumbling","c":1,"pre":["Duck for Cover"],"a":"3 Water","e":"You may spend 3 points of Water to call out “Avoid”"},{"n":"Side Step","c":1,"e":"Once per event, you may call “Avoid and Refresh 2 Water to Self”"}]},{"n":"Apothecary","c":4,"fac":"The Gilded Hart","grants":["Arcane"],"excl":[],"skills":[{"n":"Aura of Healing","c":4,"sp":1,"x":["Aura of the Herald","Aura of Vengeance"],"e":"You cannot purchase this skill if you have Aura of the Herald or Aura of Vengeance."},{"n":"Apothecary’s Blade","c":2,"e":"This skill allows you to hold and use a one-handed sword while you are casting spells, overriding the restriction that…"},{"n":"Battlefield First Aid","c":1,"pre":["First Aid"],"e":"The time required for you to use First Aid to stabilize or cure a Maim effect is reduced to 30 seconds."},{"n":"Battlefield Medicine","c":1,"pre":["Aura of Healing"],"e":"To use this skill, you must carry a Medicine bag that contains vials and bandages."},{"n":"Bottled Toxin","c":4,"a":"1 Earth","e":"You may spend 10 seconds of Focus applying poison to your weapon, spend 1 point of Earth to call \"Imbue by Toxin,\""},{"n":"Buckler","c":2,"e":"You can use a buckler to block melee and missile attacks."},{"n":"Evasive","c":3,"pre":["Celerity"],"e":"Celerity now provides 3 armor points."},{"n":"Compartmentalize","c":1,"a":"1 Fire","e":"You may spend 1 point of Fire to call “Resist”"},{"n":"The Dose Makes the Poison","c":1,"sp":1,"e":"Once per event, call out “Imbue by Poison”"},{"n":"Elixir Vitae","c":3,"a":"1 Air","sp":1,"e":"You may spend 1 point of Air to make a touch attack for \"Heal 3 by Vapor.\""},{"n":"A Little Something Extra","c":2,"e":"You may fight with a medium melee weapon in your off-hand while fighting with a 46”"},{"n":"Preventive Medicine","c":1,"e":"Once per event, you may call out “Resist”"},{"n":"The Sphere of Restoration","c":2,"sphere":"Restoration","e":"You may purchase spells from the Restoration sphere."},{"n":"Toxic Exposure","c":4,"a":"2 Fire","e":"You may spend 2 points of Fire to call “Resist and Heal 1 to Self”"}]},{"n":"Arcanist","c":4,"fac":"The Veilward Enclave","grants":["Arcane"],"excl":[],"skills":[{"n":"Arcane Conduit","c":1,"sp":1,"e":"Once per event, you may call out “Imbue by Arcane.”"},{"n":"Arcane Flux","c":1,"e":"At the beginning of the event, place an ornate goblet, bowl, bag, or other container in your Cabin."},{"n":"Duck For Cover","c":4,"a":"3 Water","e":"You may spend 3 points of Water to call out “Avoid”"},{"n":"Force Bolts","c":1,"sp":1,"e":"You have a pool of 10 magical force bolts that you use for uncalled missile attacks."},{"n":"Force Shield","c":3,"a":"2 Fire","e":"You may spend 2 points of Fire to call out “Resist”"},{"n":"Leveraged Block","c":1,"e":"While wielding a two-handed melee weapon and one of your arms is affected by a Maim effect, you may call “Reduce.”"},{"n":"Spellbound","c":1,"e":"Your offensive spells that fail to harm the target are not truly expended."},{"n":"The Sphere of Manipulation","c":2,"sphere":"Manipulation","e":"You may purchase spells from the Manipulation sphere."},{"n":"The Sphere of Evocation","c":2,"sphere":"Evocation","e":"You may purchase spells from the Evocation sphere"},{"n":"Strong Willed","c":1,"a":"1 Fire","e":"You may spend 1 point of Fire to call out “Resist”"},{"n":"Weapon of the Arcane","c":2,"pre":["any Melee Weapon skill"],"e":"You may hold a two-handed weapon while you are casting spells, overriding the restriction that casting requires both ha…"}]},{"n":"Archer","c":3,"fac":null,"grants":[],"excl":[],"skills":[{"n":"Evasive","c":3,"pre":["Celerity"],"e":"Celerity now provides 3 armor points."},{"n":"The Crucial Shot","c":1,"a":"1 Air","e":"You may spend 1 point of Air to make a missile attack for \"5 Damage.”"},{"n":"A Disarming Shot","c":2,"a":"1 Water","e":"You may spend 1 point of Water to make a missile attack for \"Disarm [Limb].”"},{"n":"Duck For Cover","c":4,"a":"3 Water","e":"You may spend 3 points of Water to call out “Avoid”"},{"n":"Exploited Opening","c":1,"e":"Once per event, you may call out “Imbue by Precision.”"},{"n":"A Flurry of Arrows","c":2,"a":"1 Fire","e":"While wielding a bow, you may spend 1 point of Fire to gain 2 missile attacks for \"2 Damage.”"},{"n":"From Ash To Iron","c":4,"e":"You may block melee attacks with the bow."},{"n":"Improved Quiver","c":1,"e":"Your quiver size is increased to 20 arrows that you use for uncalled missile attacks."},{"n":"Last Line of Defense","c":2,"pre":["From Ash to Iron"],"a":"2 Earth","e":"While wielding your bow, you may spend 2 points of Earth to call out “Parry”"},{"n":"Refresh Quiver","c":1,"a":"1 Earth","e":"You may spend 1 point of Earth to call out “Refresh Arrows by Inspiration”"},{"n":"Shooting the Nerve","c":2,"a":"1 Air","e":"You may spend 1 point of Air to make a missile attack for \"Agony.\""},{"n":"Threatening Aim","c":4,"a":"1 Fire","e":"You may prepare an arrow and point at an opponent with the index finger of your bow hand, spend 1 point of Fire to call…"},{"n":"The Wind's Edge","c":2,"pre":["From Ash to Iron"],"e":"While wielding your bow in one hand, in your other hand, you may use up to a long one-handed melee weapon you are skill…"}]},{"n":"Assassin","c":5,"fac":"The Ashen Witness","grants":[],"excl":[],"skills":[{"n":"Ambush","c":1,"e":"Once per event, you may make a melee attack from behind the target for “Stun.”"},{"n":"Back to Guard","c":2,"a":"1 Water","e":"While wielding a melee weapon, you may spend 1 point of Water to call out \"Disengage.\""},{"n":"Evasive","c":3,"pre":["Celerity"],"e":"Celerity now provides 3 armor points."},{"n":"Cheap Shot","c":2,"e":"If you see an Agony strike an opponent, and they are role-playing the effect, you may deliver a single attack using the…"},{"n":"A Crippling Blow","c":1,"a":"2 Earth","e":"You may spend 2 points of Earth to make a melee attack for \"Maim\""},{"n":"Improved Evasive","c":3,"pre":["Evasive","Mystic Armor"],"e":"Celerity now provides 4 armor points."},{"n":"A Knife in the Back","c":1,"a":"1 Water","e":"You may spend 1 point of Water to make a melee attack from behind a target for “6 Damage.”"},{"n":"Know Your Tools","c":1,"e":"Twice per event, you may call out “Resist”"},{"n":"A Little Something Extra","c":2,"e":"You may fight with a medium melee weapon in your off-hand while fighting with a 46”"},{"n":"The Twin Threat","c":2,"pre":["A Little Something Extra"],"e":"This skill allows you to use any one-handed melee weapon in your off-hand."},{"n":"Mask of Deception","c":3,"a":"1 Fire","e":"While wearing dark clothing and masked or hooded, you may spend 1 point of Fire to Resist an Expose effect silently."},{"n":"Shiv","c":5,"e":"You may perform 1 minute of Focus to enter an offensive stance, making you deadlier when behind enemies."},{"n":"Striking the Nerve","c":2,"a":"1 Air","e":"You may spend 1 point of Air to make a melee attack for \"Agony.\""},{"n":"Throat Slit","c":3,"a":"1 Fire","e":"You may spend 1 point of Fire to make a melee attack from behind your target for “Silence.”"},{"n":"The Walls Have Ears","c":3,"e":"Information Skill You have learned how to use the darker side of society to dig up rumors and information that people m…"}]},{"n":"Beastmaster","c":4,"fac":"The Grey Cloaks","grants":[],"excl":[],"skills":[{"n":"Armed as the Hunter","c":2,"e":"This skill allows you to grow and retract claws from both hands."},{"n":"Back to Guard","c":2,"a":"1 Water","e":"While wielding claws, you may spend 1 point of Water to call out \"Disengage.\""},{"n":"Evasive","c":3,"pre":["Celerity"],"e":"Celerity now provides 3 armor points."},{"n":"Claw Frenzy","c":2,"a":"1 Earth","e":"While wielding claws, you may spend 1 point of Earth to make a melee attack for \"6 Damage.”"},{"n":"Claws Like Lightning","c":2,"a":"1 Water","e":"While wielding claws, you may spend 1 point of Water to gain 2 melee attacks for \"2 Damage.”"},{"n":"Combat Anticipation","c":3,"a":"1 Air","e":"You may spend 3 seconds and 1 point of Air to call out “Purge”"},{"n":"Heart of the Lion","c":1,"a":"1 Fire","e":"You may spend 1 point of Fire to call out “Resist”"},{"n":"Invigorated","c":1,"e":"Once per event, when you are affected by an attack with the Poison, Lightning, or Thunder trait, you may call out “Refr…"},{"n":"Last Stand","c":1,"e":"Once per event, you may call out “Resist by Will”"},{"n":"Mark for Death","c":4,"a":"3 Earth","e":"While wielding claws, you may spend 3 points of Earth to make a melee attack for \"Stricken.\""},{"n":"Nature's Renewal","c":1,"e":"While cloaked in nature (touching a tree or there are multiple trees between you and any visible buildings), you may us…"},{"n":"No Escaping the Hunt","c":3,"a":"1 Water","e":"While wielding claws, you may spend 1 point of Water to make a melee attack for \"Slow”"},{"n":"Resilience","c":2,"a":"1 Water","e":"You may spend 3 seconds of Focus and 1 point of Water to call out \"Heal 3 to Self.\""}]},{"n":"Berserker","c":4,"fac":"The Grey Cloaks","grants":[],"excl":[],"skills":[{"n":"Back to Guard","c":2,"a":"1 Water","e":"While wielding a melee weapon, you may spend 1 point of Water to call out \"Disengage.\""},{"n":"Evasive","c":3,"pre":["Celerity"],"e":"Celerity now provides 3 armor points."},{"n":"Combat Anticipation","c":3,"a":"1 Air","e":"You may spend 3 seconds and 1 point of Air to call out “Purge”"},{"n":"Critical Strike","c":2,"a":"1 Earth","e":"You spend 1 point of Earth to make a melee attack for \"5 Damage.\""},{"n":"Crushing the Shield","c":1,"e":"Once per event, while wielding a two-handed sword, axe, or hammer, you may strike an opponent's shield and call \"Shield…"},{"n":"Empowered By Storm","c":1,"e":"Once per event, you may call out “Reduce”"},{"n":"A Flurry of Strikes","c":2,"a":"1 Water","e":"You may spend 1 point of Water to gain 2 melee attacks for “2 Damage.”"},{"n":"Got No Time to Bleed","c":3,"pre":["Just That Tough"],"a":"1 Earth","e":"While wielding a two-handed weapon, you may spend 1 point of Earth to call out “Resist”"},{"n":"Heart of the Lion","c":1,"a":"1 Fire","e":"You may spend 1 point of Fire to call out “Resist”"},{"n":"Just That Tough","c":2,"a":"2 Earth","e":"You may spend 2 points of Earth to call out “Resist”"},{"n":"Last Stand","c":1,"e":"Once per event, you may call out “Resist by Will”"},{"n":"Leveraged Block","c":1,"e":"While wielding a two-handed melee weapon and one of your arms is affected by a Maim effect, you may call “Reduce.”"},{"n":"Mindless Rage","c":3,"a":"2 Fire","e":"You may spend 2 points of Fire to call out “Resist”"},{"n":"Resilience","c":2,"a":"1 Water","e":"You may spend 3 seconds of Focus and 1 point of Water to call out \"Heal 3 to Self.\""},{"n":"Strength of the Bear","c":5,"a":"2 Water","e":"If you are using a two-handed melee weapon to deliver a called damaging attack purchased under this header, you may inc…"},{"n":"Strike of Fury","c":2,"e":"Once per event, while wielding a two-handed weapon, you may make a melee attack for \"10 Damage.\""},{"n":"The Will To Live","c":1,"e":"Once per event, you may call out “Reduce”"}]},{"n":"Cataphract","c":5,"fac":"The Ashen Witness","grants":[],"excl":[],"skills":[{"n":"Armored for War","c":2,"rep":1,"lim":2,"e":"You may purchase this skill up to 2 times."},{"n":"Back to Guard","c":2,"a":"1 Water","e":"While wielding a melee weapon, you may spend 1 point of Water to call out \"Disengage.\""},{"n":"Battlefield Repair","c":3,"a":"1 Water","e":"You may spend 3 seconds of Focus and 1 point of Water to call out \"Repair 3 Armor to Self.”"},{"n":"Buckler","c":2,"e":"You can use a buckler to block melee and missile attacks."},{"n":"Combat Anticipation","c":3,"a":"1 Air","e":"You may spend 3 seconds and 1 point of Air to call out “Purge”"},{"n":"A Desperate Defense","c":2,"a":"2 Earth","e":"While wielding a melee weapon you are skilled with, you may spend 2 points of Earth to call out “Parry”"},{"n":"Enrage","c":4,"a":"2 Fire","e":"You may spend 2 Fire to make a melee attack for “Short Frenzy.”"},{"n":"Meticulous Upkeep","c":4,"a":"1 Fire","e":"You may spend 1 point of Fire to call “Resist”"},{"n":"Press the Attack","c":3,"e":"When receiving a “Heal”"},{"n":"Push the Room","c":1,"e":"Once per event, call out “Imbue by Strength”"},{"n":"Shield","c":2,"pre":["Buckler"],"e":"This skill allows you to use a full-sized shield to block melee and missile attacks."},{"n":"A Steel Shell","c":3,"pre":["2 purchases of Armored for War"],"e":"When you are wearing an armor prop worth 4 points, and you spend 1 minute repairing it, you gain a “Guard”"},{"n":"Strengthened Armor","c":5,"pre":["2 purchases of Armored for War"],"e":"The number of Armor points you may gain from an armor prop is increased by 1."}]},{"n":"Cavalier","c":4,"fac":"The Gilded Hart","grants":[],"excl":[],"skills":[{"n":"Always Prepared to Fight","c":3,"a":"1 Fire","e":"When you are about to engage in a formal duel that all participants have accepted, you may spend 1 point of Fire to ref…"},{"n":"Armored for War","c":2,"rep":1,"lim":2,"e":"You may purchase this skill up to 2 times."},{"n":"Back to Guard","c":2,"a":"1 Water","e":"While wielding a melee weapon, you may spend 1 point of Water to call out \"Disengage.\""},{"n":"Buckler","c":2,"e":"You can use a buckler to block melee and missile attacks."},{"n":"The Clumsy Shield","c":2,"pre":["Always Prepared to Fight"],"e":"To use this skill, you must be in a formal duel where you have used Always Prepared to Fight, and you must not be fight…"},{"n":"Combat Anticipation","c":3,"a":"1 Air","e":"You may spend 3 seconds and 1 point of Air to call out “Purge”"},{"n":"A Crippling Blow","c":1,"a":"2 Earth","e":"You may spend 2 Earth to make a melee attack for \"Maim\""},{"n":"A Desperate Defense","c":2,"a":"2 Earth","e":"While wielding a melee weapon you are skilled with, you may spend 2 points of Earth to call out “Parry”"},{"n":"Evasive","c":3,"pre":["Celerity"],"e":"Celerity now provides 3 armor points."},{"n":"Flashing Blades","c":2,"a":"1 Water","e":"While wielding a sword, you may spend 1 point of Water to gain 2 melee attacks for “2 Damage.”"},{"n":"A Glancing Blow","c":1,"e":"Once per event, you may call out “Imbue by Resilience”"},{"n":"Heart of the Lion","c":1,"a":"1 Fire","e":"You may spend 1 point of Fire to call out “Resist”"},{"n":"Improved Evasive","c":3,"pre":["Evasive","Mystic Armor"],"e":"Celerity now provides 4 armor points."},{"n":"Last Stand","c":1,"e":"Once per event, you may call out “Resist by Will”"},{"n":"A Little Something Extra","c":2,"e":"You may fight with a medium melee weapon in your off-hand while fighting with a 46”"},{"n":"Mastering the Deadly Stroke","c":2,"a":"1 Earth","e":"While wielding a sword, you may spend 1 point of Earth to make a melee attack for “5 Damage.”"},{"n":"A Steel Shell","c":3,"pre":["2 purchases of Armored for War"],"e":"When you are wearing an armor prop worth 4 points, and you spend 1 minute repairing it, you gain a “Guard”"},{"n":"Strengthened Armor","c":5,"pre":["2 purchases of Armored for War"],"e":"The number of Armor points you may gain from an armor prop is increased by 1."},{"n":"A Sword's Shadow","c":2,"pre":["A Little Something Extra"],"e":"This skill allows you to use any one-handed blade in your off-hand."},{"n":"Unanswered","c":1,"e":"One should not give insult to a duelist and back away when confronted with the prospect of a duel."},{"n":"With a Twist of the Wrist","c":3,"a":"2 Water","e":"While fighting with a sword, you may spend 2 points of Water to make a melee attack for \"Disarm.”"},{"n":"Witty Repartee","c":2,"pre":["Always Prepared to Fight"],"e":"Once per duel where you have used Always Prepared to Fight, you may call out your Witty Repartee incantation to refresh…"}]},{"n":"Chimera","c":4,"fac":"The Veilward Enclave","grants":["Arcane"],"excl":[],"skills":[{"n":"Combat Anticipation","c":3,"a":"1 Air","e":"You may spend 3 seconds and 1 point of Air to call out “Purge”"},{"n":"The Dose Makes the Medicine","c":1,"sp":1,"e":"Once per event, you may call out “Imbue by Poison”"},{"n":"Envenomed Strike","c":2,"a":"1 Earth","e":"You may spend 1 point of Earth to make a melee attack for \"5 Damage by Poison.\""},{"n":"Evasive","c":3,"pre":["Celerity"],"e":"Celerity now provides 3 armor points."},{"n":"Force Bolts","c":1,"sp":1,"e":"You have a pool of 10 magical force bolts that you use for uncalled missile attacks."},{"n":"Leveraged Block","c":1,"e":"While wielding a two-handed melee weapon and one of your arms is affected by a Maim effect, you may call “Reduce.”"},{"n":"Paralytic Venom","c":4,"a":"2 Earth","e":"You may spend 2 points of Earth to make a melee attack for \"Short Paralyze by Poison.\""},{"n":"Scorpion Sting Venom","c":2,"a":"1 Air","e":"You may spend 1 point of Air to make a melee attack for \"Agony by Poison.\""},{"n":"Spinning Staff","c":2,"a":"1 Water","e":"While wielding a staff, you may spend 1 point of Water to gain 3 melee attacks for \"2 Damage.”"},{"n":"Spellbound","c":1,"e":"Your offensive spells that fail to harm the target are not truly expended."},{"n":"The Sphere of Illusion","c":2,"sphere":"Illusion","e":"You may purchase spells from the Illusion sphere."},{"n":"Staff of the Arcane","c":3,"pre":["Melee Weapon - Staff"],"e":"You may hold a staff while you are casting spells, overriding the restriction that casting requires both hands to be em…"}]},{"n":"Cupbearer","c":3,"fac":null,"grants":["Devout"],"excl":[],"skills":[{"n":"Agent of Fate","c":1,"pre":["Aura of Healing"],"sp":1,"e":"Once per event, you may call out “Imbue by Fate”"},{"n":"Aura of Healing","c":4,"sp":1,"x":["Aura of the Herald","Aura of Vengeance"],"e":"You cannot purchase this skill if you have Aura of the Herald or Aura of Vengeance."},{"n":"Battlefield Centering","c":1,"pre":["Aura of Healing"],"e":"To use this skill, you must carry a mat or rug that is at least four square feet in area, and it must be decorated with…"},{"n":"Blessings of the Faithful","c":4,"e":"Information Skill."},{"n":"Buckler","c":2,"e":"You can use a buckler to block melee and missile attacks."},{"n":"The Divine Choir","c":5,"a":"3 Fire","sp":1,"e":"This skill enables you to revive individuals who have died but have not yet become spirits of the dead."},{"n":"Divine Vestments","c":2,"e":"You may wear up to 3 points of physical armor."},{"n":"Empowered by Faith","c":4,"a":"2 Fire","e":"You may spend 2 points of Fire to call out “Purge,”"},{"n":"Evasive","c":3,"pre":["Celerity"],"e":"Celerity now provides 3 armor points."},{"n":"Gift of Healing","c":3,"pre":["Blessing of Health"],"e":"When you cast the Blessing of Health spell from this header, you may invoke three healing effects instead of the two ef…"},{"n":"Preventive Medicine","c":1,"e":"Once per event, when you are struck by an attack with an effect or a trait that you could cure with a divine spell, cal…"},{"n":"The Sphere of Restoration","c":2,"sphere":"Restoration","e":"This skill allows you to learn spells from the Restoration sphere."},{"n":"Temple Fortress","c":1,"a":"2 Water","e":"You may protect yourself within a temple consecrated to your patron."},{"n":"Wisdom of the Faithful","c":3,"e":"Information Skill You have developed trusted contacts and advisors who offer guidance on matters of faith and religion."}]},{"n":"Gladiator","c":5,"fac":"The Ashen Witness","grants":[],"excl":[],"skills":[{"n":"Back to Guard","c":2,"a":"1 Water","e":"While wielding a melee weapon, you may spend 1 point of Water to call out \"Disengage.\""},{"n":"Blood in the Pit","c":1,"e":"Once per event, when you are Unstable and you are about to die because your one-minute death count is expiring, you may…"},{"n":"Buckler","c":2,"e":"You can use a buckler to block melee and missile attacks."},{"n":"Combat Anticipation","c":3,"a":"1 Air","e":"You may spend 3 seconds and 1 point of Air to call out “Purge”"},{"n":"A Crippling Blow","c":1,"a":"2 Earth","e":"You may spend 2 Earth to make a melee attack for \"Maim\""},{"n":"Critical Strike","c":2,"a":"1 Earth","e":"You spend 1 point of Earth to make a melee attack for \"5 Damage.\""},{"n":"A Desperate Defense","c":2,"a":"2 Earth","e":"While wielding a melee weapon you are skilled with, you may spend 2 points of Earth to call out “Parry”"},{"n":"Double Glaive","c":2,"e":"You may use a double glaive to make melee attacks and block weapon and missile attacks."},{"n":"A Flurry of Strikes","c":2,"a":"1 Water","e":"While wielding a melee weapon, you may spend 1 point of Water to gain 2 melee attacks for “2 Damage.”"},{"n":"Great Glaive","c":2,"pre":["Double Glaive"],"e":"You can use a great glaive to make melee attacks and block weapon and missile attacks."},{"n":"Heart of the Lion","c":1,"a":"1 Fire, 2 Fire","e":"You may spend 1 point of Fire to call out “Resist”"},{"n":"I Know That Tactic","c":5,"a":"3 Fire, 1 Fire","e":"You spend 3 points of Fire to call out “Avoid by Cunning”"},{"n":"Last Stand","c":1,"e":"Once per event, you may call out “Resist by Will”"},{"n":"Leveraged Block","c":1,"e":"While wielding a two-handed melee weapon and one of your arms is affected by a Maim effect, you may call “Reduce.”"},{"n":"A Little Something Extra","c":2,"e":"You may fight with a medium melee weapon in your off-hand while fighting with a 46”"},{"n":"Resilience","c":2,"a":"1 Water","e":"You may spend 3 seconds of Focus and 1 point of Water to call out \"Heal 3 to Self.\""},{"n":"Rile Up the Crowd","c":3,"e":"Choose a unique pose and slogan that takes at least 3 seconds to perform."},{"n":"The Twin Threat","c":2,"pre":["A Little Something Extra"],"e":"This skill allows you to use any one-handed melee weapon in your off-hand."},{"n":"The Will To Live","c":1,"e":"Once per event, you may call out “Reduce”"}]},{"n":"Herald","c":3,"fac":null,"grants":[],"excl":[],"skills":[{"n":"Aid Station","c":3,"a":"1 Water","sp":1,"e":"You may refresh the health of allies in battle."},{"n":"At the Fore","c":1,"a":"1 Fire","sp":1,"e":"When you are going forward to negotiate or to view enemy forces, you may place your banner so that it is upright, or le…"},{"n":"Aura of the Herald","c":4,"sp":1,"x":["Aura of Healing","Aura of Vengeance"],"e":"You cannot purchase this skill if you have Aura of Healing or Aura of Vengeance."},{"n":"Battlefield First Aid","c":1,"pre":["First Aid"],"e":"The time required for you to use First Aid to stabilize or cure a Maim effect is reduced to 30 seconds."},{"n":"Call of Courage","c":2,"a":"2 Fire","sp":1,"e":"If you are carrying your banner, you may spend 2 points of Fire to cry out, “By My Voice, Cure Stress to [Company Name]…"},{"n":"Call of Freedom","c":1,"sp":1,"e":"Once per event, you may call out “By My Voice, Cure Physical and Heal 2 to [Company Name].”"},{"n":"Call of Healing","c":4,"a":"2 Earth","sp":1,"e":"If you are carrying your banner, you may spend 2 points of Earth to cry out “By My Voice, Heal 2 to [Company Name]”"},{"n":"Call of Respite","c":2,"a":"1 Air","sp":1,"e":"If you are carrying your banner, you may spend 1 point of Air to cry out, “By My Voice, Stabilize to [Company Name]”"},{"n":"Courier","c":3,"e":"Information Skill."},{"n":"Ears of the Company","c":3,"e":"Information Skill."},{"n":"The Herald's Nod","c":1,"a":"1 Air","e":"You may spend 1 point of Air, gesture at a target, and call out, \"By My Gesture, Expose Herald by Magic.\""},{"n":"Initiation","c":1,"e":"You are the keeper of your Company."},{"n":"Now You See It, Now You Don't","c":2,"a":"1 Air","e":"This skill allows you to spend 1 point of Air to hide one item for five minutes on your person."},{"n":"Refreshing Banner","c":1,"pre":["Aura of the Herald"],"e":"To use this skill, you must carry a heraldic banner."},{"n":"Strength of the Company","c":3,"a":"1 Air, 1 Earth, 1 Fire, 1 Water","sp":1,"e":"You may make a touch attack for “Diagnose [Initiate, Experienced, or Accomplished] trait.”"},{"n":"Tale of Encouragement","c":4,"e":"Your tales inspire those who listen to them, and the entertainment can give them hope, strength, and ease their fatigue."},{"n":"Tale of Restoration","c":1,"e":"Your tales inspire those who listen to them, and the entertainment can soothe their wounds."}]},{"n":"Highborn","c":3,"fac":"The Gilded Hart","grants":["Arcane"],"excl":[],"skills":[{"n":"Courier","c":3,"e":"Information Skill."},{"n":"Decorum","c":2,"a":"1 Earth","sp":1,"e":"Sometimes, a Highborn is all there is between decorum and anarchy."},{"n":"Evasive","c":3,"pre":["Celerity"],"e":"Celerity now provides 3 armor points."},{"n":"A Gilded Carriage","c":1,"e":"Once per event, if you have received a formal invitation to a function and you have dressed specifically for that funct…"},{"n":"Presence","c":1,"sp":1,"e":"Once per event, you may call out “By My Voice, Cure Mental by Inspiration.”"},{"n":"A Sharp Tongue","c":3,"a":"1 Water","e":"If you are affected by an attack with a Mental trait, you can shake it off if you are given the chance to interact with…"},{"n":"Showing Proper Appreciation","c":1,"e":"Twice per event, you may show your appreciation for an exceptional performance and the performance evokes a beneficial…"},{"n":"The Sphere of Manipulation","c":2,"sphere":"Manipulation","e":"You may purchase spells from the Manipulation sphere."},{"n":"With Noble Bearing","c":2,"a":"1 Fire","e":"You may spend 1 point of Fire to call “Resist”"}]},{"n":"Investigator","c":3,"fac":"The Veilward Enclave","grants":["Arcane"],"excl":[],"skills":[{"n":"Back to Guard","c":2,"a":"1 Water","e":"While wielding a melee weapon, you may spend 1 point of Water to call out \"Disengage.\""},{"n":"Blade of the Arcane","c":3,"e":"This skill allows you to hold and use a one-handed sword while you are casting spells, overriding the restriction that…"},{"n":"Buckler","c":2,"e":"You can use a buckler to block melee and missile attacks."},{"n":"Evasive","c":3,"pre":["Celerity"],"e":"Celerity now provides 3 armor points."},{"n":"Daring","c":2,"a":"1 Fire, 2 Fire","e":"You may spend 1 point of Fire to call “Resist”"},{"n":"Escape Artist","c":2,"a":"1 Water, 2 Water","e":"You may spend 1 point of Water to call “Purge”"},{"n":"A Flurry of Strikes","c":2,"a":"1 Water","e":"When fighting with a melee weapon, you may spend 1 point of Water to gain 2 melee attacks for “2 Damage.”"},{"n":"Force Bolts","c":1,"sp":1,"e":"You have a pool of 10 magical force bolts that you use for uncalled missile attacks."},{"n":"Hardened Psyche","c":1,"e":"Once per event, you may spend 3 seconds to call out “Purge Mental and Refresh 2 Fire”"},{"n":"A Little Something Extra","c":2,"e":"You may fight with a medium melee weapon in your off-hand while fighting with a 46”"},{"n":"Perfect Recall","c":3,"e":"Information Skill."},{"n":"A Second Weapon","c":2,"pre":["A Little Something Extra"],"e":"This skill allows you to use a long melee weapon in your off-hand."},{"n":"The Sphere of Conjuration","c":2,"sphere":"Conjuration","e":"This skill allows you to learn spells from the Conjuration sphere."},{"n":"Too Long Studying","c":1,"a":"2 Fire","e":"Your hours of long study of occult tomes in a dimly lit room were not for nothing."}]},{"n":"Penitent","c":3,"fac":null,"grants":["Devout"],"excl":["Cupbearers"],"skills":[{"n":"Calming the Inner Self","c":2,"a":"1 Air","e":"You may spend 1 point of Air to call “Resist”"},{"n":"Evasive","c":3,"pre":["Celerity"],"e":"Celerity now provides 3 armor points."},{"n":"Combat Anticipation","c":3,"a":"1 Air","e":"You may spend 3 seconds and 1 point of Air to call out “Purge”"},{"n":"Desperate Strike","c":1,"e":"Once per event, you may call out “10 Damage”"},{"n":"Empathic Healing","c":3,"sp":1,"e":"You may spend 1 point of Vitality to make a touch attack on another person for “Heal by Sacrifice.”"},{"n":"Fortress of Iron Will","c":5,"a":"3 Air","sp":1,"e":"You may press your palms together, become motionless, and spend 3 points of Air to call “Imbue to Self”"},{"n":"Leveraged Block","c":1,"e":"While wielding a two-handed melee weapon and one of your arms is affected by a Maim effect, you may call “Reduce.”"},{"n":"Mental Fortitude","c":3,"a":"2 Air","e":"You may spend 2 points of Air to call “Resist”"},{"n":"Penitent Strike","c":2,"a":"1 Earth","e":"When fighting with a staff, you may spend 1 point of Earth to make a melee attack for \"5 Damage.\""},{"n":"Setting the Blade Aside","c":5,"a":"2 Fire","e":"When fighting with a staff, you may spend 2 points of Fire to make a melee attack for “Disarm”"},{"n":"Snap out of it!","c":2,"e":"You may spend 3 seconds of Focus to make a touch attack for \"Cure Will by Inspiration.\""},{"n":"Spinning Staff","c":2,"a":"1 Water","e":"When fighting with a staff, you may spend 1 point of Water to gain 3 melee attacks for \"2 Damage.”"},{"n":"A Spirit's Harmony","c":3,"e":"When you are Dead, and your 5 minutes have passed, you may wait up to an additional 5 minutes before becoming a Spirit…"},{"n":"The Will to Live","c":1,"e":"Once per event, you may call out “Reduce”"}]},{"n":"Ranger","c":4,"fac":null,"grants":[],"excl":[],"skills":[{"n":"Back to Guard","c":2,"a":"1 Water","e":"While wielding a melee weapon, you may spend 1 point of Water to call out \"Disengage.\""},{"n":"Battlefield Triage","c":1,"pre":["First Aid"],"e":"The time required for you to use First Aid to stabilize or cure a Maim effect is reduced to 30 seconds."},{"n":"Buckler","c":2,"e":"You can use a buckler to block melee and missile attacks."},{"n":"A Crippling Blow","c":1,"a":"2 Earth","e":"You may spend 2 Earth to make a melee attack for \"Maim\""},{"n":"A Desperate Defense","c":2,"a":"2 Earth","e":"While wielding a melee weapon you are skilled with, you may spend 2 points of Earth to call out “Parry”"},{"n":"Enmity","c":4,"a":"1 Earth","e":"You may spend 1 point of Earth to make a melee or missile attack for “5 Damage.”"},{"n":"A Flurry of Strikes","c":2,"a":"1 Water","e":"You may spend 1 point of Water to gain 2 melee attacks for \"2 Damage.”"},{"n":"Fortitude of the Wild","c":3,"a":"1 Water","e":"You may spend 1 point of Water to call “Resist”"},{"n":"Healing Herbs","c":2,"sp":1,"e":"The use of this skill requires a medicine pouch prop."},{"n":"Herbal Remedy","c":1,"sp":1,"e":"The use of this skill requires a medicine pouch prop."},{"n":"Last Stand","c":1,"e":"Once per event, you may call out “Resist by Will”"},{"n":"A Little Something Extra","c":2,"e":"You may fight with a medium melee weapon in your off-hand while fighting with a 46”"},{"n":"Nature's Embrace","c":2,"a":"1 Fire","e":"This skill may only be used while cloaked by nature (you are touching a tree, or there are multiple trees between you a…"},{"n":"Press the Hunt","c":1,"pre":["Enmity"],"e":"Once per event, you may call out “Imbue by the Hunt”"},{"n":"Restored Will","c":2,"e":"You may spend 3 seconds of Focus to make a touch attack for \"Cure Will by Inspiration.\""},{"n":"Reveal the Prey","c":1,"pre":["Enmity"],"a":"1 Air","e":"You may spend 1 point of Air to call out \"By My Voice, Expose [Chosen Foe] by Nature.”"},{"n":"The Ranger’s Second Weapon","c":2,"pre":["A Little Something Extra"],"e":"This skill allows you to use a Spear to make attacks and to block melee and missile attacks in combat without the need…"},{"n":"Setting the Limb","c":4,"a":"1 Fire","e":"You may spend 1 point of Fire to make a touch attack for \"Cure Maim [Limb]\""}]},{"n":"Rogue","c":4,"fac":null,"grants":[],"excl":[],"skills":[{"n":"Better Lucky Than Good","c":1,"e":"Once per event, if you are unstable and you are about to die because your one-minute death count is expiring, you may c…"},{"n":"Buckler","c":2,"e":"You can use a buckler to block melee and missile attacks."},{"n":"Calculated Blows","c":2,"a":"1 Water","e":"You may spend a point of Water to call \"2 Damage\""},{"n":"A Cloak of Shadow","c":4,"a":"2 Air","e":"You may protect yourself from harm by drawing a dark, hooded cloak about you and melding with the shadows."},{"n":"Elusive","c":3,"a":"2 Water","e":"You may enter a defensive state where you dodge and weave around attacks through sheer determination and focus."},{"n":"Escape Artist","c":2,"a":"1 Water, 2 Water","e":"You may spend 1 point of Water to call out Purge to remove one Paralyze, Root, or Slow effect with a Physical trait."},{"n":"A Little Something Extra","c":2,"e":"You may fight with a medium melee weapon in your off-hand while fighting with a 46”"},{"n":"Lockpicking","c":0,"e":"This skill allows you to attempt to pick game locks."},{"n":"Manipulate Traps","c":1,"a":"1 Water","e":"This skill allows you to attempt to arm or disarm traps with the proper tools."},{"n":"Now You See It, Now You Don't","c":2,"a":"1 Air, 1 Fire","e":"This skill allows you to spend 1 point of Air to conceal one item on your person for five minutes."},{"n":"The Skeleton Key","c":2,"a":"2 Earth","e":"If, after at least a minute of trying to pick a lock, you may spend 2 points of Earth and call out, \"Inflict by Inspira…"},{"n":"The Twin Threat","c":2,"pre":["A Little Something Extra"],"e":"This skill allows you to use any one-handed melee weapon in your off-hand."},{"n":"Waylay","c":3,"a":"2 Air","e":"When you are behind a target, you may spend 2 points of Air to make a melee attack for “Stun.”"},{"n":"The Walls Have Ears","c":3,"e":"Information Skill."}]},{"n":"Sorcerer","c":3,"fac":null,"grants":["Arcane"],"excl":[],"skills":[{"n":"Arcane Flux","c":1,"e":"At the beginning of the event, place an ornate goblet, bowl, bag, or other container in your Cabin."},{"n":"Fire Shield","c":1,"sp":1,"e":"Once per event, you may call out “Resist By Fire”"},{"n":"Force Bolts","c":1,"sp":1,"e":"You have a pool of 10 magical force bolts that you use for uncalled missile attacks."},{"n":"Infusion","c":3,"e":"Once per event, you may call out “Imbue by Infusion”"},{"n":"Sorcerer’s Focus","c":2,"e":"You may spend 1 point of Fire to call “Resist”"},{"n":"Spellbound","c":1,"e":"Your offensive spells that fail to harm the target are not truly expended."},{"n":"The Sphere of Evocation","c":2,"sphere":"Evocation","e":"This skill allows you to learn spells from the Evocation sphere."},{"n":"The Sphere of Illusion","c":2,"sphere":"Illusion","e":"This skill allows you to learn spells from the Illusion sphere."},{"n":"Staff of the Arcane","c":3,"pre":["Melee Weapon - Staff"],"e":"This skill allows you to hold and use any staff while you are casting spells, overriding the restriction that casting r…"}]},{"n":"Storm Caller","c":4,"fac":"The Grey Cloaks","grants":["Arcane"],"excl":[],"skills":[{"n":"Evasive","c":3,"pre":["Celerity"],"e":"Celerity now provides 3 armor points."},{"n":"Duck For Cover","c":4,"a":"3 Water","e":"You may spend 3 points of Water to call out “Avoid”"},{"n":"Force Bolts","c":1,"sp":1,"e":"You have a pool of 10 magical force bolts that you use for uncalled missile attacks."},{"n":"Lightning Struck Oak","c":3,"e":"You may hold a staff or a club weapon while you are casting spells, overriding the restriction that casting requires bo…"},{"n":"The Sphere of Evocation","c":2,"sphere":"Evocation","e":"This skill allows you to learn spells from the Evocation sphere."},{"n":"Thunderclap","c":1,"a":"1 Earth","e":"You may spend 1 point of Earth to make a melee attack for \"Agony by Thunder.\""},{"n":"Unleash the Storm's Fury","c":1,"sp":1,"e":"Once per event, you may call out “By My Voice, Agony by Thunder.”"},{"n":"Whirlwind Step","c":2,"a":"1 Water","e":"While wielding a melee weapon, you may spend 1 point of Water to call out \"Disengage by Wind.\""},{"n":"Wind and Steel","c":2,"a":"2 Earth","e":"While wielding a melee weapon you are skilled with, you may spend 2 points of Earth to call out “Parry by Air”"}]},{"n":"Sunseer","c":3,"fac":null,"grants":["Devout"],"excl":[],"skills":[{"n":"Armored in Faith","c":1,"e":"Once per event, you may call out “Resist by Will and Grant 4 Protection to Self”"},{"n":"Aura of Vengeance","c":4,"x":["Aura of the Herald","Aura of Healing"],"e":"You cannot purchase this skill if you have Aura of the Herald or Aura of Healing."},{"n":"Compartmentalize","c":1,"a":"1 Fire","e":"You may spend 1 point of Fire to call “Resist”"},{"n":"Consult the Tomes","c":3,"e":"Information Skill."},{"n":"Force Bolts","c":1,"sp":1,"e":"You have a pool of 10 magical force bolts that you use for uncalled missile attacks."},{"n":"Scepter of the Divine","c":2,"pre":["Melee Weapon - Club"],"e":"You may hold a one-handed club weapon while you are casting spells, overriding the restriction that casting requires bo…"},{"n":"Spellbound","c":1,"e":"Your offensive spells that fail to harm the target are not truly expended."},{"n":"The Sphere of Manipulation","c":2,"sphere":"Manipulation","e":"You may purchase spells from the Manipulation sphere."},{"n":"The Sphere of Conjuration","c":2,"sphere":"Conjuration","e":"You may purchase spells from the Conjuration sphere."},{"n":"With a Divine Voice","c":2,"a":"1 Fire","e":"You may spend 1 point of Fire to call out “Resist”"}]},{"n":"Torchbearer","c":4,"fac":null,"grants":["Devout"],"excl":[],"skills":[{"n":"Armored for War","c":2,"rep":1,"lim":2,"e":"You may purchase this skill up to 2 times."},{"n":"Back to Guard","c":2,"a":"1 Water","e":"While wielding a melee weapon, you may spend 1 point of Water to call out \"Disengage.\""},{"n":"Buckler","c":2,"e":"You may use a buckler to block melee and missile attacks."},{"n":"Combat Anticipation","c":3,"a":"1 Air","e":"You may spend 3 seconds and 1 point of Air to call out “Purge”"},{"n":"Darkness, My Enemy","c":2,"a":"1 Earth","e":"You may exhaust a point of Earth to call \"3 Damage to Darkness\""},{"n":"Dawn’s Light","c":2,"e":"When you successfully land the attack from Searing Light, and a defence does not negate it, you may call out “Heal 2 to…"},{"n":"A Desperate Defense","c":2,"a":"2 Earth","e":"While wielding a melee weapon you are skilled with, you may spend 2 points of Earth to call out “Parry”"},{"n":"Heart of the Lion","c":1,"e":"You may spend 1 point of Fire to call out “Resist”"},{"n":"Heart of Radiance","c":2,"a":"1 Fire","e":"You spend 1 point of Fire to call out “Resist by Light”"},{"n":"Divine Light","c":1,"e":"Once per event, you may call out “Imbue by Light”"},{"n":"Radiant Attack","c":1,"a":"1 Earth","e":"You may spend 1 point of Earth to make a melee or missile attack for “5 Damage by Light.”"},{"n":"Reveal the Darkness","c":2,"a":"1 Air","e":"You may spend 1 point of Air to call out, \"By My Voice, Expose Darkness by Sol.\""},{"n":"Searing Light","c":1,"a":"1 Air","e":"You may spend 1 point of Air to make a melee attack for \"Agony by Light.\""},{"n":"Shield","c":2,"pre":["Buckler"],"e":"This skill allows you to use a full-sized shield to block melee and missile attacks."},{"n":"The Will to Live","c":1,"e":"Once per event, you may call out “Reduce”"}]},{"n":"Transmuter","c":2,"fac":null,"grants":["Arcane"],"excl":[],"skills":[{"n":"Caster of Runes","c":0,"e":"You may draw up to 5 Runes when casting a Transmutation."},{"n":"The Fountain of Power","c":2,"e":"Once per Transmutation, you may choose to place a Rune you just drew into the Fountain of Power instead of on The Road."},{"n":"Internal Reserves","c":1,"e":"Once per event, you may use your attributes instead of components by spending 1 point of an attribute (Air, Earth, Fire…"},{"n":"Magician’s Assistant","c":1,"pre":["The Fountain of Power","The Null","The Void"],"e":"Once per event, you may declare yourself as an assistant with the permission of the primary artificer."},{"n":"Master of Runes","c":2,"pre":["Caster of Runes"],"e":"You may draw up to 10 Runes when casting a Transmutation."},{"n":"The Null","c":1,"e":"Once per Transmutation, you may place a rune you just drew into the Null instead of on The Road."},{"n":"Palm the Coin","c":1,"e":"Once per event, immediately after you draw a rune, you may choose to place that rune back into the bag and draw again."},{"n":"Sleight of Hand","c":2,"e":"Once per Transmutation, you may remove 2 cards in play and move them to the discard pile."},{"n":"The Sphere of Alteration","c":2,"sphere":"Alteration","e":"This skill allows you to learn spells from the Alteration sphere."},{"n":"Transmuters Edge","c":4,"e":"Once per event, you may perform a Transmutation to empower your skills."},{"n":"Upon the Road","c":2,"e":"Once per Transmutation, you may swap the positions of 2 adjacent runes on The Road as long as neither of the runes is o…"},{"n":"The Void","c":3,"e":"Once per Transmutation, you may choose to place a rune you just drew from the bag into the Void instead of placing it o…"}]},{"n":"Troubadour","c":2,"fac":null,"grants":["Arcane"],"excl":[],"skills":[{"n":"Act of Passion","c":1,"e":"Once per event, you may empower this skill with a performance, as described above."},{"n":"Aria of Courage","c":4,"a":"2 Fire","sp":1,"e":"You may plant your feet, spend 2 points of Fire, and begin to sing."},{"n":"Awakening the Young Heart","c":2,"a":"1 Water","e":"You may make a touch attack for “Diagnose [Initiate, Experienced, or Accomplished] trait.”"},{"n":"Bringing Music to the Hearth","c":4,"a":"2 Fire","sp":1,"e":"After you deliver a performance, as described above, you may spend 2 points of Fire to call out \"By My Voice, Heal 2 by…"},{"n":"Chorus of Harmonic Focus","c":2,"pre":["Song of the Arcanum"],"sp":1,"e":"Once per event, you may deliver a performance with at least 2 others who have this skill."},{"n":"Legend Lore","c":3,"e":"Information Skill."},{"n":"Musical Focus","c":1,"e":"Three times per event, you may empower this skill with a performance, as described above."},{"n":"Restored Will","c":2,"e":"You may spend 3 seconds of Focus to make a touch attack for \"Cure Will by Inspiration.\""},{"n":"Slander","c":1,"e":"Information Skill."},{"n":"Song of the Arcanum","c":3,"rep":1,"lim":2,"e":"You may purchase this skill up to 2 times."},{"n":"The Sphere of Restoration","c":2,"sphere":"Restoration","e":"This skill allows you to learn spells from the Restoration sphere."}]},{"n":"Warrior","c":4,"fac":null,"grants":[],"excl":[],"skills":[{"n":"Armored for War","c":2,"rep":1,"lim":2,"e":"You may purchase this skill up to 2 times."},{"n":"Back to Guard","c":2,"a":"1 Water","e":"While wielding a melee weapon, you may spend 1 point of Water to call out \"Disengage.\""},{"n":"Buckler","c":2,"e":"You can use a buckler to block melee and missile attacks."},{"n":"Evasive","c":3,"pre":["Celerity"],"e":"Celerity now provides 3 armor points."},{"n":"Combat Anticipation","c":3,"a":"1 Air","e":"You may spend 3 seconds and 1 point of Air to call out “Purge”"},{"n":"A Crippling Blow","c":1,"a":"2 Earth","e":"You may spend 2 Earth to make a melee attack for \"Maim\""},{"n":"Critical Strike","c":2,"a":"1 Earth","e":"You spend 1 point of Earth to make a melee attack for \"5 Damage.\""},{"n":"A Desperate Defense","c":2,"a":"2 Earth","e":"While wielding a melee weapon you are skilled with, you may spend 2 points of Earth to call out “Parry”"},{"n":"A Flurry of Strikes","c":2,"a":"1 Water","e":"You may spend 1 point of Water to gain 2 melee attacks for “2 Damage.”"},{"n":"Heart of the Lion","c":1,"e":"You may spend 1 point of Fire to call out “Resist”"},{"n":"Last Stand","c":1,"e":"Once per event, you may call out “Resist by Will”"},{"n":"Leveraged Block","c":1,"e":"While wielding a two-handed melee weapon and one of your arms is affected by a Maim effect, you may call “Reduce.”"},{"n":"A Little Something Extra","c":2,"e":"You may fight with a medium melee weapon in your off-hand while fighting with a 46”"},{"n":"Reinforced Armaments","c":1,"e":"Twice per event you may resist a Destroy effect that would destroy your buckler or shield; call out “Resist”"},{"n":"Resilience","c":2,"a":"1 Water","e":"You may spend 3 seconds of Focus and 1 point of Water to call out \"Heal 3 to Self.\""},{"n":"Shield","c":2,"pre":["Buckler"],"e":"This skill allows you to use a full-sized shield to block melee and missile attacks."},{"n":"Shrug It Off","c":1,"e":"Once per event, you may call “Resist and Refresh 2 Earth to Self”"},{"n":"Steel Over Sorcery","c":2,"a":"2 Fire","e":"You may spend 2 points of Fire to call out \"Resist\""},{"n":"The Twin Threat","c":2,"pre":["A Little Something Extra"],"e":"This skill allows you to use any one-handed melee weapon in your off-hand."},{"n":"The Will To Live","c":1,"e":"Once per event, you may call out “Reduce”"}]},{"n":"Weaponsmith","c":4,"fac":null,"grants":[],"excl":[],"skills":[{"n":"Armored for War","c":2,"rep":1,"lim":2,"e":"You may purchase this skill up to 2 times."},{"n":"Buckler","c":2,"e":"You can use a buckler to block melee and missile attacks."},{"n":"A Desperate Defense","c":2,"a":"2 Earth","e":"While wielding a melee weapon you are skilled with, you may spend 2 points of Earth to call out “Parry”"},{"n":"Fire Hardened","c":3,"a":"2 Fire","e":"Due to your continuous exposure to the forge, you have become resistant to the elements, you may spend 2 points of Fire…"},{"n":"Know Thine Weapon","c":3,"a":"1 Fire","e":"Your meticulous attention to your weapons has rendered them resistant to breaking, you may exhaust a point of Fire to r…"},{"n":"My Heart, the Forge","c":3,"a":"1 Air","sp":1,"e":"Spend a point of Air and deliver a touch effect for “Repair 2 Armor”"},{"n":"Sharpened Blade","c":1,"e":"Once per event, call out “Imbue by Forging”, Your next 3 damage melee attacks have their damage increased by 3."},{"n":"Shield","c":2,"pre":["Buckler"],"e":"This skill allows you to use a full-sized shield to block melee and missile attacks."},{"n":"A Steel Shell","c":3,"pre":["2 purchases of Armored for War"],"e":"When you are wearing an armor prop worth 4 points, and you spend 1 minute repairing it, you gain a “Guard”"},{"n":"Strengthened Armor","c":5,"pre":["2 purchases of Armored for War"],"e":"The number of Armor points you may gain from an armor prop is increased by 1."},{"n":"Stoke the Forge","c":1,"e":"Once per event, you may call out “Imbue by Forge,”"}]},{"n":"Wizard","c":3,"fac":null,"grants":["Arcane"],"excl":[],"skills":[{"n":"Arcane Flux","c":1,"e":"At the beginning of the event, place an ornate goblet, bowl, bag, or other container in your Arcane Sanctum."},{"n":"Arcane Resonance","c":2,"a":"1 Fire","e":"You may spend 1 point of Fire to call out “Resist”"},{"n":"Compartmentalize","c":1,"a":"1 Fire","e":"You may spend 1 point of Fire to call “Resist”"},{"n":"Force Bolts","c":1,"sp":1,"e":"You have a pool of 10 magical force bolts that you use for uncalled missile attacks."},{"n":"Fortress of Earth","c":1,"a":"1 Earth","sp":1,"e":"You may spend 1 point of Earth, clasp your hands above your head, and call out “Imbue by Earth”"},{"n":"Infusion","c":3,"e":"Once per event, you may call out “Imbue by Infusion”"},{"n":"Spellbound","c":1,"e":"Your offensive spells that fail to harm the target are not truly expended."},{"n":"The Sphere of Evocation","c":2,"sphere":"Evocation","e":"This skill allows you to learn spells from the Evocation sphere."},{"n":"The Sphere of Conjuration","c":2,"sphere":"Conjuration","e":"This skill allows you to learn spells from the Conjuration sphere."},{"n":"Staff of the Arcane","c":3,"pre":["Melee Weapon - Staff"],"e":"This skill allows you to hold and use any staff while you are casting spells, overriding the restriction that casting r…"},{"n":"With An Arcane Word","c":1,"e":"Once per event, you may spend one minute of Focus performing a personal ritual."}]}],"open":[{"n":"Archery","c":1,"e":"You are skilled in the use of bows and crossbows."},{"n":"Celerity","c":2,"e":"You may Focus for 1 minute to gain 2 non-physical armor points."},{"n":"Clubs","c":0,"e":"You may use Club melee weapons to make attacks and to block melee and missile attacks in combat."},{"n":"Combat Momentum","c":2,"e":"When making an called damage attack of 4 or more using an Ax or Hammer, you may increase the damage of the attack by 1."},{"n":"Craftsman","c":1,"rep":1,"e":"You may purchase this skill multiple times, specifying a different craft for each purchase."},{"n":"Diagnose","c":0,"e":"You may touch a recipient with a packet and call Diagnose for any Elemental, Metabolic, Mental, or Physical group or an…"},{"n":"First Aid","c":1,"e":"This skill requires one minute of Focus on a willing or helpless target."},{"n":"Fumble","c":0,"e":"When you take a Disarm effect, you may call “Reduce”"},{"n":"Light Armor","c":0,"e":"You may wear physical armor and gain 2 points of Armor."},{"n":"Melee Weapon","c":1,"rep":1,"e":"You may use one type of melee weapon to make attacks and to block melee and missile attacks in combat."},{"n":"Thrown Weapon","c":1,"e":"You are skilled in the use of thrown weapons."},{"n":"“With Desperation….”","c":0,"lim":2,"e":"Twice per event, you can ignore the attribute cost of a skill when you use it."}],"spells":{"Conjuration":[{"n":"Ash Storm","c":4,"a":"2 Fire","e":"You may spend 2 points of Fire to make a packet attack for \"Drain by Earth.\""},{"n":"Break Bones","c":2,"a":"1 Earth","e":"You may spend 1 point of Earth to make a packet attack for \"Maim [Limb] by Force.\""},{"n":"Claw Shape","c":1,"a":"1 Fire","e":"You may spend 1 point of Fire to prepare your legal claw props."},{"n":"Crushing Bonds","c":1,"a":"1 Earth","e":"You may spend 1 point of Earth to make a packet attack for \"Root by Force.\""},{"n":"Life Steal","c":3,"a":"1 Earth","sp":1,"e":"You may spend 1 point of Earth to make a packet attack for \"2 Damage by Cold.\""},{"n":"Seven Mile Step","c":4,"a":"2 Water","e":"You can slip into the spirit realm and travel for a short distance safely before you are forced back into the real worl…"},{"n":"The Soothing Touch","c":2,"a":"1 Water","sp":1,"e":"You may spend 1 point of Water, and call out \"Imbue by Magic to Self”"},{"n":"Thorn Lash","c":2,"a":"1 Air","e":"You may spend 1 point of Air to make a packet attack for \"5 Damage by Thorns.\""}],"Restoration":[{"n":"A Blessing of Health","c":1,"a":"1 Water","sp":1,"e":"You may spend 1 point of Water to call out “Imbue by Magic to Self.”"},{"n":"The Clear Road","c":1,"a":"1 Fire","e":"You may spend 1 point of Fire to make a packet or touch attack for \"Cure Root by Magic.\""},{"n":"Freedom of Movement","c":5,"a":"1 Earth","e":"You may spend 1 point of Earth to make a packet or touch attack for \"Cure Physical by Magic.\""},{"n":"On Your Feet Again","c":1,"a":"1 Fire","e":"You may spend 1 point of Fire to make a packet or touch attack for \"Cure 1 Maim [Limb] by Magic.\""},{"n":"Purity of Form","c":4,"a":"1 Earth","e":"You may spend 1 point of Earth to make a packet or touch attack for \"Cure Metabolic by Magic.\""},{"n":"The Smile of Good Fortune","c":2,"a":"2 Fire","e":"You call the blessings of Fate down upon you to protect you from untimely death."},{"n":"The Soothing Touch","c":2,"a":"1 Water","sp":1,"e":"You may spend 1 point of Water, and call out \"Imbue by Magic to Self”"},{"n":"Writ of the Vaelion Door","c":2,"a":"1 Air","e":"You attempt to manipulate Fate by giving your blessing to a Spirit of the Dead who has begun the journey to the Vaelion…"}],"Evocation":[{"n":"Barrage","c":1,"a":"1 Air","e":"You may spend 1 point of Air and call out “Imbue by Evocation”"},{"n":"The Drowning Foe","c":1,"a":"1 Water","e":"You may spend 1 point of Water to make a packet attack for \"Agony by Water.\""},{"n":"Engulf","c":3,"a":"2 Earth","e":"You may spend 2 points of Earth to make a packet attack for \"Paralyze by Earth.\""},{"n":"Fire Storm","c":4,"a":"2 Fire","sp":1,"e":"You may spend 2 points of Fire and call out \"Imbue by Evocation to Self.”"},{"n":"Roots Run Deep","c":1,"a":"1 Earth","e":"You may spend 1 point of Earth to make a packet attack for \"Root by Earth.\""},{"n":"Winter's Breath","c":2,"a":"1 Air","e":"You may spend 1 point of Air to make a packet attack for \"5 Damage by Ice.\""},{"n":"Unravel the Elements","c":3,"a":"1 Water","e":"You may spend 1 point of Water to make a packet attack for \"Cure Elemental by Magic.\""}],"Illusion":[{"n":"The Displaced Image","c":3,"a":"2 Water","e":"You may spend 2 points of Water, and call out \"Imbue by Illusion to Self”"},{"n":"Dreams of Another","c":2,"e":"Once per event, you may call out the dreams, perceptions, and passions of another willing character who is familiar wit…"},{"n":"Hallucinatory Terrain","c":1,"a":"1 Earth","e":"You may spend 1 point of Earth to make a packet attack for \"Slow by Confusion.\""},{"n":"The Illusion Exposed","c":1,"a":"1 Air","e":"You may spend 1 point of Air and call out, \"By My Voice, Expose Illusion by Magic.\""},{"n":"A Mask of Fright","c":1,"a":"1 Fire","e":"You may spend 1 point of Fire to make a packet attack for \"Repel by Fear.\""},{"n":"A Moment of Clarity","c":3,"e":"You may spend 1 point of Air to make a packet attack for \"Cure Mental by Will.\""},{"n":"Send Dreams","c":1,"e":"You conjure dreams and send them forth into the Dream Realm to find their way to others."},{"n":"The Shattered Mirror","c":3,"a":"2 Air","e":"You may spend 2 points of Air to make a packet attack for \"Drain by Confusion.\""},{"n":"The Tearing of the Dream","c":1,"a":"1 Fire","e":"You may spend 1 point of Fire to make a packet attack for \"10 Damage to Illusion.\""},{"n":"The World Is an Illusion","c":5,"a":"2 Earth","sp":1,"e":"You may spend 2 points of Earth and call out \"Imbue by Illusion\""}],"Alteration":[{"n":"The Broken Path","c":3,"a":"1 Earth","e":"You may spend 1 point of Earth to make a packet attack for \"Slow by Earth.\""},{"n":"Contagion","c":3,"a":"1 Fire","sp":1,"e":"You may spend 1 point of Fire, and call out \"Imbue by Alteration to Self.”"},{"n":"Curse of Age","c":1,"a":"1 Air","e":"You may spend 1 point of Air to make a packet attack for \"Agony by Aging.\""},{"n":"Freedom of Movement","c":5,"a":"1 Earth","e":"You may spend 1 point of Earth to make a packet attack for \"Cure Physical by Magic.\""},{"n":"Imprison","c":3,"a":"2 Earth","e":"You may spend 2 points of Earth to make a packet attack for \"Paralyze by Earth.\""},{"n":"Mystic Armor","c":2,"e":"Prerequisite: Celerity Celerity now provides 3 armor points."},{"n":"On Your Feet Again","c":1,"a":"1 Fire","e":"You may spend 1 point of Fire to make a packet or touch attack for \"Cure 1 Maim [Limb] by Magic.\""},{"n":"Stolen Voice","c":3,"a":"1 Air","sp":1,"e":"You may spend 1 point of Air to make a packet attack for \"Silence by Cold.\""}],"Manipulation":[{"n":"All Hope is Gone","c":3,"a":"2 Earth","e":"You may spend 2 points of Earth to make a packet attack for \"Drain by Despair.\""},{"n":"A Command to Step Aside","c":2,"a":"1 Air","e":"You may spend 1 point of Air to make a packet attack for \"Repel by Will.\""},{"n":"Disarm","c":3,"a":"1 Air","e":"You may spend 1 point of Air to make a packet attack for \"Disarm [Hand] by Will.\""},{"n":"Free the Mind","c":3,"e":"You may spend 1 point of Air to make a packet attack for \"Cure Mental by Will.”"},{"n":"Spare Not the Rod","c":3,"a":"1 Fire","sp":1,"e":"You may spend 1 point of Fire and call out \"Imbue by Manipulation to Self.”"},{"n":"Struck Silent","c":2,"a":"1 Air","e":"You may spend 1 point of Air to make a packet attack for \"Silence by Will.\""},{"n":"The Swift Hand of Vengeance","c":4,"a":"3 Fire","e":"You may spend 3 points of Fire to make a packet attack for \"Death by Will.\""},{"n":"The Unseen Hand","c":1,"e":"Many beings are touched by the strands of Manipulation as they make deals and receive orders from someone with more pur…"}]}}</script>
+<script>
+const DATA = JSON.parse(document.getElementById('idd-data').textContent);
+const ATTRS = DATA.rules.attrs, BASE = DATA.rules.base;
+const SUB = {Air:"mind",Earth:"stamina",Fire:"drive",Water:"agility",Void:"restore"};
+const CLR = {Air:"var(--air)",Earth:"var(--earth)",Fire:"var(--fire)",Water:"var(--water)",Void:"var(--void)"};
+
+const norm = s => String(s||"").toLowerCase().replace(/[’‘'“”"]/g,"").replace(/^[\s.…]+|[\s.…]+$/g,"").replace(/\s+/g," ");
+const esc = s => String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const elOf = a => (String(a).match(/Air|Earth|Fire|Water|Void/)||[null])[0];
+function attrCost(v){let t=0; for(let i=BASE+1;i<=v;i++) t+=i; return t;}
+const ceilDiv = (a,b)=>Math.ceil(a/b);
+
+// indexes
+const HDR = {}; DATA.headers.forEach(h=>HDR[h.n]=h);
+const ALLNAMES = new Set();
+DATA.open.forEach(s=>ALLNAMES.add(norm(s.n)));
+DATA.heritages.forEach(h=>h.skills.forEach(s=>ALLNAMES.add(norm(s.n))));
+DATA.headers.forEach(h=>{ALLNAMES.add(norm(h.n)); h.skills.forEach(s=>ALLNAMES.add(norm(s.n)));});
+Object.values(DATA.spells).forEach(sl=>sl.forEach(s=>ALLNAMES.add(norm(s.n))));
+
+// ---------- state ----------
+const CP_KEYS = [["starting","Starting"],["history","History"],["bullets","Bullets"],
+                 ["donations","Donations"],["playtest","Playtest"],["earned","Earned"]];
+let state;
+function fresh(){
+  const a={}; ATTRS.forEach(k=>a[k]=BASE);
+  return {name:"", heritage:"", faction:"",
+    cp:{starting:30, history:5, bullets:0, donations:0, playtest:0, earned:0},
+    attributes:a, headers:[], skills:{}};  // skills: normName -> {name,count}
+}
+state = fresh();
+
+// ---------- catalog: which skills are buyable now ----------
+function catalog(){
+  const cat = {};
+  const add=(s,src)=>{ cat[norm(s.n)] = {...s, src}; };
+  DATA.open.forEach(s=>add(s,"Open"));
+  const her = DATA.heritages.find(h=>h.n===state.heritage);
+  if(her) her.skills.forEach(s=>add(s,"Heritage · "+her.n));
+  state.headers.forEach(hn=>{ const h=HDR[hn]; if(h) h.skills.forEach(s=>add(s,h.n)); });
+  // owned spheres unlock spells
+  const spheres = new Set();
+  Object.keys(state.skills).forEach(k=>{ const m=k.match(/sphere of (\w+)/); if(m) spheres.add(m[1][0].toUpperCase()+m[1].slice(1)); });
+  spheres.forEach(sp=>{ (DATA.spells[sp]||[]).forEach(s=>add(s,"Sphere · "+sp)); });
+  return cat;
+}
+
+// ---------- validate/compute ----------
+function compute(){
+  const errors=[], warnings=[];
+  const available = CP_KEYS.reduce((t,[k])=>t+(+state.cp[k]||0),0);
+  // attributes
+  let attrCp=0; ATTRS.forEach(k=>attrCp+=attrCost(state.attributes[k]));
+  const vit = ceilDiv(state.attributes.Earth + state.attributes.Void, 2);
+  // required
+  if(!state.heritage) errors.push("Choose a heritage — every character must have one.");
+  if(!state.faction) errors.push("Choose a faction — every character must belong to one.");
+  // headers
+  let headerCp=0; const owned=new Set(state.headers.map(norm));
+  state.headers.forEach(hn=>{
+    const h=HDR[hn]; if(!h) return; headerCp+=h.c;
+    if(h.fac && norm(h.fac)!==norm(state.faction))
+      errors.push(`Header “${h.n}” requires you to be a member of ${h.fac}.`);
+    (h.excl||[]).forEach(x=>{ if(state.headers.some(o=>o!==hn && (norm(o).includes(norm(x))||norm(x).includes(norm(o)))))
+      errors.push(`Header “${h.n}” cannot be taken with the ${x} header.`); });
+  });
+  // prune skills no longer reachable
+  const cat = catalog();
+  Object.keys(state.skills).forEach(k=>{ if(!cat[k]) delete state.skills[k]; });
+  // skills
+  let skillsCp=0; const resolved=[];
+  Object.entries(state.skills).forEach(([k,e])=>{
+    const rec=cat[k]; if(!rec) return;
+    const cnt=e.count||1; skillsCp+=(rec.c||0)*cnt;
+    if(cnt>1 && !rec.rep) errors.push(`“${rec.n}” is not repeatable.`);
+    if(rec.lim && cnt>rec.lim) errors.push(`“${rec.n}” exceeds its limit of ${rec.lim}.`);
+    resolved.push({rec,cnt});
+  });
+  const ownedTargets = new Set([...Object.keys(state.skills), ...state.headers.map(norm)]);
+  const isOwned=(pre,self)=>{ const pn=norm(pre); if(pn===self) return false;
+    if(ownedTargets.has(pn)) return true;
+    for(const t of ownedTargets){ if(pn.startsWith(t+" ")||pn.startsWith(t+"-")) return true; } return false; };
+  resolved.forEach(({rec})=>{
+    const pre=rec.pre||[]; const self=norm(rec.n);
+    if(pre.length && !pre.some(p=>isOwned(p,self))){
+      if(pre.length===1 && ALLNAMES.has(norm(pre[0]))) errors.push(`“${rec.n}” requires ${pre[0]}, which isn’t in your build.`);
+      else if(pre.length>1 && pre.every(p=>ALLNAMES.has(norm(p)))) errors.push(`“${rec.n}” requires one of: ${pre.join(", ")}.`);
+      else warnings.push(`“${rec.n}” needs ${pre.join(" / ")} — verify against the rulebook.`);
+    }
+    (rec.x||[]).forEach(cn=>{ if(state.skills[norm(cn)]) {
+      const other=cat[norm(cn)]? cat[norm(cn)].n : cn;
+      errors.push(`“${rec.n}” and “${other}” are mutually exclusive.`); } });
+  });
+  // dedup exclusion messages
+  const dedup=a=>[...new Set(a)];
+  const total = attrCp+headerCp+skillsCp;
+  if(total>available) errors.push(`Over budget: ${total} CP spent vs ${available} available.`);
+  const abilityCp = headerCp+skillsCp;
+  const tier = abilityCp>=100?"Accomplished":abilityCp>=50?"Experienced":"Initiate";
+  // traits
+  const traits=["Living"]; if(state.heritage)traits.push(state.heritage); if(state.faction)traits.push(state.faction);
+  state.headers.forEach(hn=>{ traits.push(hn); (HDR[hn].grants||[]).forEach(t=>{if(!traits.includes(t))traits.push(t);}); });
+  traits.push(tier);
+  return {available,attrCp,headerCp,skillsCp,total,remaining:available-total,vit,tier,traits,
+    errors:dedup(errors),warnings:dedup(warnings),resolved};
+}
+
+// ---------- rendering ----------
+function chip(attr){ const el=elOf(attr); return el?`<span class="chip" style="--el:${CLR[el]}">${esc(attr)}</span>`:""; }
+
+function renderControls(){
+  // heritage / faction selects
+  const her=document.getElementById('her');
+  her.innerHTML='<option value="">— choose heritage —</option>'+DATA.heritages.map(h=>`<option ${h.n===state.heritage?'selected':''}>${esc(h.n)}</option>`).join('');
+  const fac=document.getElementById('fac');
+  fac.innerHTML='<option value="">— choose faction —</option>'+DATA.factions.map(f=>`<option ${f===state.faction?'selected':''}>${esc(f)}</option>`).join('');
+  // heritage disadvantage note
+  const hn=document.getElementById('herNote'); const her0=DATA.heritages.find(h=>h.n===state.heritage);
+  if(her0 && her0.disadv){ hn.style.display='block'; hn.textContent='Heritage drawback: '+her0.disadv; } else hn.style.display='none';
+  // cp sources
+  document.getElementById('cpsrc').innerHTML = CP_KEYS.map(([k,lbl])=>
+    `<div class="f"><label class="fl">${lbl}</label><input type="number" min="0" data-cp="${k}" value="${state.cp[k]}"></div>`).join('');
+  // attributes
+  document.getElementById('attrs').innerHTML = ATTRS.map(k=>{
+    const v=state.attributes[k];
+    return `<div class="attr" style="--el:${CLR[k]}">
+      <div class="an">${k}</div><div class="as">${SUB[k]}</div>
+      <div class="stp"><button data-attr="${k}" data-d="-1" ${v<=BASE?'disabled':''}>−</button>
+        <span class="v">${v}</span>
+        <button data-attr="${k}" data-d="1" ${v>=10?'disabled':''}>+</button></div>
+      <div class="cpc">${attrCost(v)} CP</div></div>`;
+  }).join('');
+  // headers
+  document.getElementById('headers').innerHTML = DATA.headers.map(h=>{
+    const on=state.headers.includes(h.n);
+    const locked = h.fac && norm(h.fac)!==norm(state.faction);
+    const grants=(h.grants||[]).map(g=>`<span class="tag">${g}</span>`).join('');
+    const meta = locked ? `needs ${esc(h.fac.replace('The ',''))}` : `${h.c} CP`;
+    return `<div class="tg ${on?'on':''} ${locked&&!on?'locked':''}" data-hdr="${esc(h.n)}" ${locked&&!on?'aria-disabled="true"':''}>
+      <span class="box">${on?'✓':''}</span><span class="nm">${esc(h.n)}${grants}</span><span class="meta">${meta}</span></div>`;
+  }).join('');
+  // skills — grouped by source, only for reachable sources
+  const cat=catalog();
+  const groups=[]; // {title, items:[rec]}
+  const openG={title:"Open skills", items:DATA.open};
+  groups.push(openG);
+  const her1=DATA.heritages.find(h=>h.n===state.heritage);
+  if(her1 && her1.skills.length) groups.push({title:"Heritage · "+her1.n, items:her1.skills});
+  state.headers.forEach(hn=>{ const h=HDR[hn]; if(h) groups.push({title:h.n, items:h.skills}); });
+  // owned spheres
+  Object.keys(state.skills).forEach(k=>{ const m=k.match(/sphere of (\w+)/); if(m){ const sp=m[1][0].toUpperCase()+m[1].slice(1);
+    if(DATA.spells[sp]) groups.push({title:"Sphere · "+sp+" spells", items:DATA.spells[sp]}); }});
+  document.getElementById('skills').innerHTML = groups.map(g=>{
+    const sel=g.items.filter(s=>state.skills[norm(s.n)]).length;
+    const openAttr = (g.title.startsWith("Sphere")||g.title.startsWith("Heritage")||sel>0)?'open':'';
+    return `<details class="grp" ${openAttr}><summary><span class="chev">▸</span>${esc(g.title)}
+      <span class="cnt">${sel? sel+' selected':''}</span></summary>
+      ${g.items.map(s=>skillRow(s)).join('')}</details>`;
+  }).join('');
+}
+
+function skillRow(s){
+  const k=norm(s.n); const cur=state.skills[k]; const on=!!cur;
+  const sig=s.sp?`<span class="sig" title="Spell-like Ability">✦</span>`:'';
+  const cchip = s.a?chip(s.a):'';
+  let right = `<span class="cpc2">${s.c} CP</span>`;
+  if(s.rep){ const cnt=cur?cur.count:0;
+    right += `<span class="rep"><button data-rep="${esc(s.n)}" data-d="-1">−</button><span class="rv">${cnt}</span><button data-rep="${esc(s.n)}" data-d="1">+</button></span>`; }
+  return `<div class="sk ${on?'on':''}" data-sk="${esc(s.n)}">
+    <span class="box">${on?'✓':''}</span>
+    <span class="info"><span class="snm">${esc(s.n)}${sig}</span><span class="se">${esc(s.e||'')}</span></span>
+    <span class="right">${cchip}${right}</span></div>`;
+}
+
+function renderSheet(){
+  const r=compute();
+  // ledger
+  document.getElementById('cpAvail').textContent=r.available;
+  document.getElementById('ledger').innerHTML=`
+    <div class="lrow"><span>Available</span><span class="n">${r.available}</span></div>
+    <div class="lrow"><span>Attributes</span><span>−${r.attrCp}</span></div>
+    <div class="lrow"><span>Headers</span><span>−${r.headerCp}</span></div>
+    <div class="lrow"><span>Skills &amp; spells</span><span>−${r.skillsCp}</span></div>
+    <div class="lrow tot big ${r.remaining<0?'over':''}"><span>${r.remaining<0?'Over by':'Remaining'}</span><span class="n">${r.remaining<0?(-r.remaining):r.remaining}</span></div>`;
+  document.getElementById('vitrow').innerHTML=`
+    <div class="stat vit"><div class="k">Vitality</div><div class="val">${r.vit}</div></div>
+    <div class="stat"><div class="k">Tier</div><div class="val" style="font-size:16px;font-family:var(--mono);padding-top:6px">${r.tier}</div></div>
+    <div class="stat"><div class="k">Spent</div><div class="val">${r.total}</div></div>`;
+  // validation
+  const v=document.getElementById('validation');
+  if(!r.errors.length && !r.warnings.length){ v.innerHTML=`<div class="val-ok">✓ Legal build — ${r.total}/${r.available} CP</div>`; }
+  else v.innerHTML = r.errors.map(e=>`<div class="msg err">${esc(e)}</div>`).join('')
+                   + r.warnings.map(w=>`<div class="msg warn">${esc(w)}</div>`).join('');
+  // printable sheet
+  renderCard(r);
+}
+
+function renderCard(r){
+  const c=document.getElementById('sheetCard');
+  const attrs=ATTRS.map(k=>`<div class="attr" style="--el:${CLR[k]}">
+    <div class="an">${k}</div><div class="as">${SUB[k]}</div>
+    <div class="v" style="font-family:var(--mono);font-size:24px;margin-top:4px">${state.attributes[k]}</div></div>`).join('');
+  const skills = r.resolved.length ? r.resolved.map(({rec,cnt})=>{
+    const sig=rec.sp?'<span class="sig">✦</span>':''; const x=cnt>1?` ×${cnt}`:'';
+    return `<div class="sheet-sk"><div class="st"><span class="nm">${esc(rec.n)}${x}${sig}</span>
+      ${rec.a?chip(rec.a):''}<span class="cp">${rec.c*cnt} CP</span></div>
+      <div class="ee">${esc(rec.e||'')}</div></div>`; }).join('')
+    : '<div class="empty">No skills yet — pick some headers and skills.</div>';
+  const headers = state.headers.length? state.headers.map(h=>`<span class="tag2 hdr">${esc(h)}</span>`).join('') : '<span class="empty">none</span>';
+  c.innerHTML=`
+    <div class="sheet-eyebrow">${esc(state.heritage||'—')} &nbsp;·&nbsp; ${esc(state.faction||'—')}</div>
+    <h2 class="sheet-name">${esc(state.name||'Unnamed Character')}</h2>
+    <div class="attrs" style="margin:14px 0 4px">${attrs}
+      <div class="attr" style="border-top-color:var(--fire)"><div class="an" style="color:var(--fire)">Vitality</div>
+      <div class="as">health</div><div class="v" style="font-family:var(--serif);font-size:26px;margin-top:2px">${r.vit}</div></div></div>
+    <div class="vitrow" style="border-top:1px solid var(--rule)">
+      <div class="stat"><div class="k">Tier</div><div class="val" style="font-size:15px;font-family:var(--mono);padding-top:7px">${r.tier}</div></div>
+      <div class="stat"><div class="k">CP spent</div><div class="val">${r.total}<span style="font-size:13px;color:var(--ink-faint)">/${r.available}</span></div></div>
+      <div class="stat"><div class="k">Headers</div><div class="val" style="font-size:15px;padding-top:7px">${state.headers.length}</div></div>
+    </div>
+    <h3 class="sect" style="margin-top:16px">Skills &amp; Abilities</h3>
+    ${skills}
+    <h3 class="sect" style="margin-top:16px">Headers</h3><div class="tags">${headers}</div>
+    <h3 class="sect" style="margin-top:14px">Traits</h3><div class="tags">${r.traits.map(t=>`<span class="tag2">${esc(t)}</span>`).join('')}</div>`;
+}
+
+function render(){ renderControls(); renderSheet(); }
+
+// ---------- interactions ----------
+document.addEventListener('input', e=>{
+  const t=e.target;
+  if(t.id==='cname'){ state.name=t.value; renderSheet(); }
+  else if(t.dataset.cp){ state.cp[t.dataset.cp]=Math.max(0, +t.value||0); renderSheet(); }
+});
+document.addEventListener('change', e=>{
+  const t=e.target;
+  if(t.id==='her'){ state.heritage=t.value; render(); }
+  else if(t.id==='fac'){ state.faction=t.value;
+    // drop headers now illegal
+    state.headers=state.headers.filter(hn=>{ const h=HDR[hn]; return !(h.fac && norm(h.fac)!==norm(state.faction)); });
+    render(); }
+});
+document.addEventListener('click', e=>{
+  const t=e.target.closest('[data-attr],[data-hdr],[data-sk],[data-rep]');
+  if(!t) return;
+  if(t.dataset.attr){ const k=t.dataset.attr, d=+t.dataset.d;
+    state.attributes[k]=Math.min(10,Math.max(BASE, state.attributes[k]+d)); render(); }
+  else if(t.dataset.hdr){ const h=HDR[t.dataset.hdr];
+    if(h.fac && norm(h.fac)!==norm(state.faction) && !state.headers.includes(h.n)) return; // locked
+    if(state.headers.includes(h.n)){ state.headers=state.headers.filter(x=>x!==h.n); }
+    else state.headers.push(h.n); render(); }
+  else if(t.dataset.sk){ const nm=t.dataset.sk, k=norm(nm); const cat=catalog(); const rec=cat[k]; if(!rec) return;
+    if(state.skills[k]) delete state.skills[k]; else state.skills[k]={name:nm,count:1}; render(); }
+  else if(t.dataset.rep){ const nm=t.dataset.rep, k=norm(nm), d=+t.dataset.d; const cat=catalog(); const rec=cat[k]; if(!rec) return;
+    const cur=state.skills[k]?state.skills[k].count:0; let nv=cur+d; const max=rec.lim||99;
+    nv=Math.min(max,Math.max(0,nv));
+    if(nv<=0) delete state.skills[k]; else state.skills[k]={name:nm,count:nv}; render(); }
+});
+
+// ---------- export / print / reset ----------
+function buildJSON(){
+  const skills=Object.values(state.skills).map(e=> e.count>1?{name:e.name,count:e.count}:{name:e.name});
+  return {name:state.name||"Unnamed", heritage:state.heritage||null, faction:state.faction||null,
+    cp_sources:{...state.cp}, attributes:{...state.attributes},
+    headers:[...state.headers], skills};
+}
+document.getElementById('copyBtn').addEventListener('click', async ()=>{
+  const txt=JSON.stringify(buildJSON(),null,2); const btn=document.getElementById('copyBtn');
+  try{ await navigator.clipboard.writeText(txt); }catch(_){
+    const ta=document.createElement('textarea'); ta.value=txt; document.body.appendChild(ta); ta.select();
+    try{document.execCommand('copy');}catch(e){} ta.remove(); }
+  const old=btn.textContent; btn.textContent='✓ Copied — paste into chat'; setTimeout(()=>btn.textContent=old,1900);
+});
+document.getElementById('printBtn').addEventListener('click', ()=>window.print());
+document.getElementById('resetBtn').addEventListener('click', ()=>{ if(confirm('Start a new character? This clears the current build.')){ state=fresh(); render(); }});
+
+render();
+</script>
