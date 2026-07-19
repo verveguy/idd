@@ -17,6 +17,8 @@ All rules live as JSON bundled with this plugin under `${CLAUDE_PLUGIN_ROOT}/ids
 
 Read the JSON files directly when you need skill descriptions or options: `rules.json`, `heritages.json`, `factions.json`, `open-skills.json`, `headers-a/b/c.json`, `magic.json`, `spells.json`.
 
+**The CP rule — do not do CP math in your head.** Every CP figure you show the player — a running total, a "CP remaining", the cost impact of a choice, the final tally — must come from an actual validator run, not your own arithmetic. Keep a temp `build.json` and **re-run `validate.py --sheet` after each change**, then quote *its* numbers (`available`, `attributes`, `headers`, `skills`, `remaining`). Whenever the player asks "how much do I have left?" or you're about to state any number, run the validator first. This is what keeps costs correct (e.g. it never charges for heritage/faction) — trust the tool over mental math.
+
 ## The core rules (summary — validator is authoritative)
 
 - Start with **30 CP**, +5 when character history is approved. IDD grants more via bullets, donations, playtest, and earned CP. Ask the player their **total available CP** (or itemize the sources).

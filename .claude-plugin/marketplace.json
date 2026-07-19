@@ -10,7 +10,7 @@
       "name": "idd",
       "source": "./plugins/idd",
       "description": "Interactive character builder, validator, and level-up tool for the In Darkened Dreams LARP.",
-      "version": "1.0.3",
+      "version": "1.0.4",
       "author": {
         "name": "verveguy"
       },

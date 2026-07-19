@@ -4,7 +4,7 @@ description: Build, validate, or level up a legal In Darkened Dreams (IDD) LARP 
 license: See scripts/NOTICE.md
 metadata:
   author: verveguy
-  version: "1.0.3"
+  version: "1.0.4"
 ---
 
 # In Darkened Dreams — Character Builder
@@ -28,6 +28,15 @@ eyeball prerequisites.** Run it with the code-execution tool:
 The data JSON lives beside the script (`scripts/*.json`); read those files
 directly when you need skill descriptions or the full list of options. Write the
 working build to a temp file (e.g. `build.json`) and validate it.
+
+**The CP rule — do not do CP math in your head.** Every CP figure you show the
+player — a running total, a "CP remaining", the cost impact of a choice, the
+final tally — must come from an actual validator run, not your own arithmetic.
+Keep a temp `build.json` and **re-run `validate.py --sheet` after each change**,
+then quote *its* numbers (`available`, `attributes`, `headers`, `skills`,
+`remaining`). Whenever the player asks "how much do I have left?" or you're about
+to state any number, run the validator first. This is what keeps costs correct
+(e.g. it never charges for heritage/faction) — trust the tool over mental math.
 
 ## Core rules (validator is authoritative)
 
