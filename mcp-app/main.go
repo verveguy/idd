@@ -1,9 +1,10 @@
-// Command idd-mcp is the In Darkened Dreams MCP App server. It speaks MCP over
-// stdio (line-delimited JSON-RPC 2.0) and exposes character-building tools plus
-// an interactive UI resource (an MCP App) that renders in Claude Desktop.
+// Command idd-mcp is the In Darkened Dreams MCP server. It speaks MCP over
+// stdio (line-delimited JSON-RPC 2.0) and exposes character-building tools:
+// discovery (get_catalog/get_header/get_heritage/get_sphere/find_ability),
+// validation, a shared live build session, and character persistence.
 //
-// The server only speaks plain MCP — tools + a ui:// resource. The interactive
-// ui/ postMessage bridge is between the applet HTML and the host, not this server.
+// It also runs an opt-in localhost HTTP head (see http.go) serving a browser
+// builder that shares the same live session; there is no in-chat UI panel.
 package main
 
 import (
@@ -106,7 +107,7 @@ func dispatch(req rpcRequest) (any, *rpcError) {
 		}
 		return map[string]any{
 			"protocolVersion": pv,
-			"serverInfo":      map[string]any{"name": "in-darkened-dreams", "version": "1.2.3"},
+			"serverInfo":      map[string]any{"name": "in-darkened-dreams", "version": "1.2.4"},
 			"capabilities":    map[string]any{"tools": map[string]any{}},
 			"instructions":    serverInstructions(),
 		}, nil
@@ -149,9 +150,19 @@ func toolDefs() []any {
 			"inputSchema": map[string]any{"type": "object", "properties": map[string]any{"name": map[string]any{"type": "string"}}, "required": []string{"name"}},
 		},
 		map[string]any{
+			"name":        "get_heritage",
+			"description": "Show one heritage's DRAWBACK and its purchasable heritage skills (name, CP cost, one-line effect). Choosing a heritage is free (0 CP), but its skills cost CP and are added to skills by name. Call this after get_catalog to see what a heritage actually grants before committing. Pass the heritage name.",
+			"inputSchema": map[string]any{"type": "object", "properties": map[string]any{"name": map[string]any{"type": "string"}}, "required": []string{"name"}},
+		},
+		map[string]any{
 			"name":        "get_sphere",
 			"description": "List the individually-purchasable SPELLS in one of the six magic spheres (Restoration, Evocation, Illusion, Conjuration, Alteration, Manipulation) — each spell's name, CP cost, per-cast attribute cost, and effect. A caster buys an Arcane header, then a \"The Sphere of X\" skill, then buys spells from that sphere by name (they only become legal once the sphere is owned). Pass the sphere name (\"Evocation\" or \"The Sphere of Evocation\").",
 			"inputSchema": map[string]any{"type": "object", "properties": map[string]any{"name": map[string]any{"type": "string"}}, "required": []string{"name"}},
+		},
+		map[string]any{
+			"name":        "find_ability",
+			"description": "Search ALL purchasable things (header skills, open skills, sphere spells, heritage skills) and header names for a keyword, and report WHERE each match lives and what you must own first. Use this to turn a concept into mechanics — e.g. find_ability \"lightning\" (it's in the Storm Caller header, not a sphere), \"heal\", \"stealth\", \"armor\". Note: the ruleset may use different words (\"thunder\" for lightning, \"restoration\" for healing) — try synonyms if a search is empty.",
+			"inputSchema": map[string]any{"type": "object", "properties": map[string]any{"keyword": map[string]any{"type": "string"}}, "required": []string{"keyword"}},
 		},
 		map[string]any{
 			"name":        "get_current_build",
@@ -203,6 +214,10 @@ func callTool(params json.RawMessage) (any, *rpcError) {
 		return toolGetHeader(p.Arguments)
 	case "get_sphere":
 		return toolGetSphere(p.Arguments)
+	case "get_heritage":
+		return toolGetHeritage(p.Arguments)
+	case "find_ability":
+		return toolFindAbility(p.Arguments)
 	case "get_builder_url":
 		return toolBuilderURL()
 	case "get_current_build":
@@ -278,22 +293,41 @@ func toolCatalog() (any, *rpcError) {
 		factions = append(factions, f.Name)
 	}
 	fmt.Fprintf(&b, "IN DARKENED DREAMS — ruleset options\n\n")
-	fmt.Fprintf(&b, "HERITAGES (free — every character has one): %s\n\n", strings.Join(heritages, ", "))
+
+	fmt.Fprintf(&b, "ATTRIBUTES (all 5 start at 2, for free): Air, Earth, Fire, Water, Void.\n")
+	fmt.Fprintf(&b, "Raising an attribute to level N costs N CP, and you pay every step: 2→3 = 3 CP; 2→4 = 3+4 = 7 CP; 2→5 = 3+4+5 = 12 CP.\n")
+	fmt.Fprintf(&b, "Vitality = ceil((Earth + Void) / 2). Attribute costs printed on skills/spells like [1 Fire] are spent DURING PLAY each event — they are NOT CP.\n\n")
+
+	fmt.Fprintf(&b, "HERITAGES (free — every character has one): %s. Call get_heritage <name> for a heritage's drawback + buyable skills.\n\n", strings.Join(heritages, ", "))
+
 	fmt.Fprintf(&b, "FACTIONS (free — every character must join exactly one): %s\n", strings.Join(factions, ", "))
-	fmt.Fprintf(&b, "Each faction unlocks 3 exclusive headers; a header with no faction requirement can be taken by any faction.\n\n")
-	fmt.Fprintf(&b, "HEADERS (buy the header before its skills; then call get_header for its skill list):\n")
-	for i := range ruleset.Headers {
-		h := &ruleset.Headers[i]
-		line := fmt.Sprintf("  %s — %d CP", h.Name, h.HeaderCost)
-		if fac := headerFaction(h); fac != "" {
-			line += " — requires " + fac
-		}
+	fmt.Fprintf(&b, "You may only pick ONE faction, and it gates your headers. Headers grouped by the faction that unlocks them:\n\n")
+
+	fmt.Fprintf(&b, "HEADERS (buy the header before its skills; then call get_header <name> for its skill list):\n")
+	writeHeaderLine := func(h *rules.Header) {
+		line := fmt.Sprintf("    %s — %d CP", h.Name, h.HeaderCost)
 		if len(h.GrantsTraits) > 0 {
 			line += " — grants " + strings.Join(h.GrantsTraits, "/")
 		}
 		b.WriteString(line + "\n")
 	}
-	fmt.Fprintf(&b, "\nAlso: %d open skills (any character), via get_header \"Open\". Casters buy a Sphere under an Arcane header, then spells in it.", len(ruleset.OpenSkills))
+	// Group by faction (ruleset order), then a faction-free bucket last.
+	for _, f := range ruleset.Factions {
+		fmt.Fprintf(&b, "  %s unlocks:\n", f.Name)
+		for i := range ruleset.Headers {
+			if headerFaction(&ruleset.Headers[i]) == f.Name {
+				writeHeaderLine(&ruleset.Headers[i])
+			}
+		}
+	}
+	fmt.Fprintf(&b, "  Any faction (no faction requirement):\n")
+	for i := range ruleset.Headers {
+		if headerFaction(&ruleset.Headers[i]) == "" {
+			writeHeaderLine(&ruleset.Headers[i])
+		}
+	}
+	fmt.Fprintf(&b, "\nAlso: %d open skills (any character), via get_header \"Open\". Casters buy an Arcane header, then a Sphere skill in it, then individual spells (get_sphere).\n", len(ruleset.OpenSkills))
+	fmt.Fprintf(&b, "Looking for a specific ability by theme (e.g. \"lightning\", \"heal\", \"stealth\")? Call find_ability <keyword> to locate which header/sphere it lives in.")
 	return textResult(b.String(), nil), nil
 }
 
@@ -301,6 +335,13 @@ func writeSkill(sb *strings.Builder, s rules.Skill) {
 	line := fmt.Sprintf("  %s (%d CP)", s.Name, s.Cost)
 	if a := attrStr(s.AttributeCost); a != "" {
 		line += " [" + a + "]"
+	}
+	if s.Repeatable {
+		if s.PurchaseLimit != nil {
+			line += fmt.Sprintf(" [repeatable up to %d×]", *s.PurchaseLimit)
+		} else {
+			line += " [repeatable]"
+		}
 	}
 	if s.SpellLike {
 		line += " [spell-like]"
@@ -319,10 +360,17 @@ func writeSkill(sb *strings.Builder, s rules.Skill) {
 
 func toolGetHeader(args json.RawMessage) (any, *rpcError) {
 	var a struct {
-		Name string `json:"name"`
+		Name   string `json:"name"`
+		Header string `json:"header"` // alias: the build JSON uses this key
 	}
 	if err := json.Unmarshal(args, &a); err != nil {
 		return nil, &rpcError{Code: -32602, Message: "bad params"}
+	}
+	if strings.TrimSpace(a.Name) == "" {
+		a.Name = strings.TrimSpace(a.Header)
+	}
+	if strings.TrimSpace(a.Name) == "" {
+		return textResult("Which header? Pass name, e.g. {\"name\":\"Wizard\"}, or {\"name\":\"Open\"} for open skills. See get_catalog for the list.", nil), nil
 	}
 	var b strings.Builder
 	if strings.EqualFold(a.Name, "open") {
@@ -356,14 +404,73 @@ func toolGetHeader(args json.RawMessage) (any, *rpcError) {
 	return textResult(b.String(), nil), nil
 }
 
+func toolGetHeritage(args json.RawMessage) (any, *rpcError) {
+	var a struct {
+		Name     string `json:"name"`
+		Heritage string `json:"heritage"` // alias: the build JSON uses this key
+	}
+	if err := json.Unmarshal(args, &a); err != nil {
+		return nil, &rpcError{Code: -32602, Message: "bad params"}
+	}
+	q := strings.ToLower(strings.TrimSpace(a.Name))
+	if q == "" {
+		q = strings.ToLower(strings.TrimSpace(a.Heritage))
+	}
+	heritageNames := func() string {
+		var names []string
+		for _, x := range ruleset.Heritages {
+			names = append(names, x.Name)
+		}
+		return strings.Join(names, ", ")
+	}
+	if q == "" {
+		return textResult("Which heritage? Pass name, e.g. {\"name\":\"Grelkyn\"}. The six: "+heritageNames()+". Choosing one is free (0 CP).", nil), nil
+	}
+	var h *rules.Heritage
+	for i := range ruleset.Heritages {
+		hn := strings.ToLower(ruleset.Heritages[i].Name)
+		if hn == q || strings.Contains(hn, q) {
+			h = &ruleset.Heritages[i]
+			break
+		}
+	}
+	if h == nil {
+		return textResult(fmt.Sprintf("No heritage named %q. The six heritages: %s. Choosing one is free (0 CP).", a.Name+a.Heritage, heritageNames()), nil), nil
+	}
+	var b strings.Builder
+	fmt.Fprintf(&b, "%s — choosing a heritage is FREE (0 CP).\n", h.Name)
+	if len(h.Disadvantages) > 0 {
+		fmt.Fprintf(&b, "Drawback: %s\n", strings.Join(h.Disadvantages, " "))
+	} else {
+		b.WriteString("Drawback: none.\n")
+	}
+	if len(h.HeritageSkills) > 0 {
+		b.WriteString("Heritage skills — add each you want to skills by name (even 0-CP ones are NOT auto-granted; list them explicitly):\n")
+		for _, s := range h.HeritageSkills {
+			line := fmt.Sprintf("  %s (%d CP)", s.Name, s.Cost)
+			if e := eff(s.Description); e != "" {
+				line += " — " + e
+			}
+			b.WriteString(line + "\n")
+		}
+	} else {
+		b.WriteString("No purchasable heritage skills.\n")
+	}
+	return textResult(b.String(), nil), nil
+}
+
 var reSphereName = regexp.MustCompile(`(?i)\b(the\s+)?sphere\s+of\s+`)
 
 func toolGetSphere(args json.RawMessage) (any, *rpcError) {
 	var a struct {
-		Name string `json:"name"`
+		Name   string `json:"name"`
+		Sphere string `json:"sphere"` // alias
 	}
 	if err := json.Unmarshal(args, &a); err != nil {
 		return nil, &rpcError{Code: -32602, Message: "bad params"}
+	}
+	if strings.TrimSpace(a.Name) == "" {
+		a.Name = strings.TrimSpace(a.Sphere)
 	}
 	key := strings.TrimSpace(reSphereName.ReplaceAllString(a.Name, ""))
 	var spells []rules.Skill
@@ -389,6 +496,99 @@ func toolGetSphere(args json.RawMessage) (any, *rpcError) {
 	return textResult(b.String(), nil), nil
 }
 
+// toolFindAbility searches every purchasable thing (header skills, open skills,
+// sphere spells, heritage skills) plus header names for a keyword, and reports
+// WHERE each match lives + what you must own to buy it. This bridges a player's
+// concept ("lightning", "heal") to the mechanical items, which are otherwise
+// scattered across headers and spheres with no single index.
+func toolFindAbility(args json.RawMessage) (any, *rpcError) {
+	var a struct {
+		Name    string `json:"name"`
+		Keyword string `json:"keyword"`
+	}
+	if err := json.Unmarshal(args, &a); err != nil {
+		return nil, &rpcError{Code: -32602, Message: "bad params"}
+	}
+	kw := strings.ToLower(strings.TrimSpace(a.Keyword))
+	if kw == "" {
+		kw = strings.ToLower(strings.TrimSpace(a.Name))
+	}
+	if kw == "" {
+		return textResult("Pass a keyword to search for, e.g. {\"keyword\":\"lightning\"}.", nil), nil
+	}
+	has := func(s string) bool { return strings.Contains(strings.ToLower(s), kw) }
+	// Two buckets: items whose NAME matches (what the player usually wants) rank
+	// above items that only mention the keyword in their effect text. Without this
+	// split, a common word like "fire" buries the actual "Fire Storm" spell under
+	// dozens of skills that merely mention fire in prose.
+	var nameLines, descLines []string
+	add := func(nameHit bool, name string, cost int, where string) {
+		l := fmt.Sprintf("  %s (%d CP) — %s", name, cost, where)
+		if nameHit {
+			nameLines = append(nameLines, l)
+		} else {
+			descLines = append(descLines, l)
+		}
+	}
+	consider := func(name, desc string, cost int, where string) {
+		if has(name) {
+			add(true, name, cost, where)
+		} else if has(desc) {
+			add(false, name, cost, where)
+		}
+	}
+	// Header names themselves (name-only; a header has no "description" here).
+	for i := range ruleset.Headers {
+		h := &ruleset.Headers[i]
+		if has(h.Name) || has(h.Notes) {
+			w := "a HEADER"
+			if fac := headerFaction(h); fac != "" {
+				w += " (requires " + fac + ")"
+			}
+			add(has(h.Name), h.Name, h.HeaderCost, w)
+		}
+	}
+	// Skills under each header.
+	for i := range ruleset.Headers {
+		h := &ruleset.Headers[i]
+		for _, s := range h.Skills {
+			consider(s.Name, s.Description, s.Cost, "skill in header \""+h.Name+"\" (buy that header first)")
+		}
+	}
+	// Open skills.
+	for _, s := range ruleset.OpenSkills {
+		consider(s.Name, s.Description, s.Cost, "OPEN skill (no header needed)")
+	}
+	// Spells, by sphere.
+	for sphere, spells := range ruleset.Spells {
+		for _, s := range spells {
+			consider(s.Name, s.Description, s.Cost, "spell in the Sphere of "+sphere+" (buy an Arcane header + \"The Sphere of "+sphere+"\" first)")
+		}
+	}
+	// Heritage skills.
+	for _, h := range ruleset.Heritages {
+		for _, s := range h.HeritageSkills {
+			consider(s.Name, s.Description, s.Cost, h.Name+" heritage skill (only if you are "+h.Name+")")
+		}
+	}
+	if len(nameLines)+len(descLines) == 0 {
+		return textResult(fmt.Sprintf("No header/skill/spell matches %q. Try a broader or different word (the ruleset may name it differently — e.g. \"thunder\" not \"lightning\", \"restoration\" not \"heal\").", kw), nil), nil
+	}
+	// Always keep every name match; fill the rest of the budget with desc matches.
+	const cap = 40
+	lines := nameLines
+	trunc := ""
+	if room := cap - len(lines); room < len(descLines) {
+		if room > 0 {
+			lines = append(lines, descLines[:room]...)
+		}
+		trunc = fmt.Sprintf("\n…and %d more that only MENTION %q in their effect text (narrow the keyword).", len(descLines)-max(room, 0), kw)
+	} else {
+		lines = append(lines, descLines...)
+	}
+	return textResult(fmt.Sprintf("Things matching %q — name matches first, then effect-text mentions; the CP is the buy cost, \"where\" tells you what to own first:\n%s%s", kw, strings.Join(lines, "\n"), trunc), nil), nil
+}
+
 // serverInstructions is sent in the initialize result — it tells the model how
 // to use this server: build via the tools, push to the shared session so the
 // browser updates live, and point players at the browser URL (no in-chat panel).
@@ -399,7 +599,8 @@ func serverInstructions() string {
 	}
 	return "This server powers a LIVE In Darkened Dreams (IDD) LARP character builder that is shared with a web page in the player's browser at " + url + " (call get_builder_url anytime for this exact address — tell the player to open it; it does not open by itself).\n\n" +
 		"How to work with it:\n" +
-		"- Use get_catalog and get_header to see heritages, factions, headers, and their skills. Heritage and Faction are FREE (0 CP); CP is spent only on attributes, headers, and skills/spells.\n" +
+		"- Use get_catalog and get_header to see heritages, factions, headers, and their skills. Heritage and Faction are FREE (0 CP); CP is spent only on attributes, headers, and skills/spells. Raising an attribute to level N costs N CP cumulatively (2→5 = 3+4+5 = 12).\n" +
+		"- CONCEPT → MECHANICS: when the player wants a themed ability (\"lightning\", \"heal\", \"stealth\"), call find_ability with that keyword — it tells you which header or sphere the ability lives in and what to buy first. Abilities are scattered across headers AND spheres; don't assume a theme maps to a sphere (e.g. lightning is a Storm Caller header skill, not a spell). Use get_heritage to see a heritage's drawback + buyable skills.\n" +
 		"- MAGIC: a caster buys an Arcane header, then buys a Sphere skill (e.g. \"The Sphere of Evocation\", ~2 CP), then buys INDIVIDUAL spells from that sphere. Each spell is a separate purchasable skill with its own CP cost (add it to skills by name) and a per-cast attribute cost. Owning the sphere does NOT auto-grant its spells — call get_sphere to list them and buy the ones you want (they only validate once the sphere is owned).\n" +
 		"- Build it STEP BY STEP and let the player watch: after each choice, call patch_build with just what changed (e.g. {\"heritage\":\"Solari\"}, then {\"attributes\":{\"Fire\":4}}, then {\"headers\":[\"Wizard\"]}). Each patch merges into the shared session and the browser updates live. Do this automatically as you decide things; don't wait to be asked. Use set_current_build only to replace the whole sheet at once.\n" +
 		"- Before changing a build, call get_current_build to read what the player may have edited in their browser, so you don't overwrite it.\n" +
