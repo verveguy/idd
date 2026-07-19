@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "idd",
   "displayName": "In Darkened Dreams Character Builder",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Interactive character builder, validator, and level-up tool for the In Darkened Dreams (Accelerant) LARP. Enforces all CP, attribute, header, skill, faction, and spell rules against the v1.0.3 ruleset.",
   "author": {
     "name": "verveguy"

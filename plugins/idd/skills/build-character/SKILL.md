@@ -20,6 +20,7 @@ Read the JSON files directly when you need skill descriptions or options: `rules
 ## The core rules (summary — validator is authoritative)
 
 - Start with **30 CP**, +5 when character history is approved. IDD grants more via bullets, donations, playtest, and earned CP. Ask the player their **total available CP** (or itemize the sources).
+- **CP is spent ONLY on: attributes, headers, and skills/spells.** Nothing else costs CP. In particular, **choosing a Heritage and a Faction is FREE — they cost 0 CP.** Never deduct CP for heritage or faction. (When in doubt, run the validator — it computes the true cost and never charges for heritage/faction.)
 - **5 attributes** (Air, Earth, Fire, Water, Void), all start at **2**. Raising an attribute to level N costs N CP (2→3 costs 3, 3→4 costs 4, ...).
 - **Vitality = ⌈(Earth + Void) / 2⌉**.
 - **Heritage** (6 options) and **Faction** (4 options) are **required** — every character MUST have a heritage and belong to exactly **one** faction. Never build a factionless character. Each faction unlocks **3 exclusive headers**, and many headers require a specific faction. Headers with **no** faction prerequisite (e.g. Sorcerer, Warrior, Wizard) can be bought by a member of **any** faction — "faction-free" means the header isn't restricted to one faction, **not** that the character is factionless.
@@ -34,8 +35,8 @@ Read the JSON files directly when you need skill descriptions or options: `rules
 Walk through these in order, but stay flexible — if the player leads with a concept, propose choices and confirm. Keep a running CP tally visible.
 
 1. **Concept & CP** — Ask the character's concept and their total available CP (default 35 = 30 starting + 5 history if unsure). Record the itemized sources if they know them.
-2. **Heritage** — Present the 6 heritages with their one-line flavor, appearance requirements, disadvantages, and free/cheap heritage skills. Let them pick.
-3. **Faction** — Present the 4 factions and, crucially, **which headers each unlocks** (derive from header prerequisites via `--catalog`). This choice gates their build, so explain it before headers.
+2. **Heritage** — Present the 6 heritages with their one-line flavor, appearance requirements, disadvantages, and free/cheap heritage skills. Let them pick. Choosing a heritage is **free (0 CP)**.
+3. **Faction** — Present the 4 factions and, crucially, **which headers each unlocks** (derive from header prerequisites via `--catalog`). This choice gates their build, so explain it before headers. Joining a faction is **free (0 CP)**.
 4. **Attributes** — Explain what each attribute powers and the cost curve. Help them allocate. Show resulting Vitality. (Void doubles as the refresh engine; Earth+Void drive Vitality.)
 5. **Headers** — Based on faction and concept, recommend headers. Show each header's cost and a sample of its skills. Buying a header is a CP cost itself.
 6. **Skills & spells** — Under owned headers (plus open + heritage skills), help them pick skills. For casters, buy a Sphere then spells from it. Explain prerequisites as they come up.

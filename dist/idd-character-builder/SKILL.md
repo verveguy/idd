@@ -4,7 +4,7 @@ description: Build, validate, or level up a legal In Darkened Dreams (IDD) LARP 
 license: See scripts/NOTICE.md
 metadata:
   author: verveguy
-  version: "1.0.2"
+  version: "1.0.3"
 ---
 
 # In Darkened Dreams — Character Builder
@@ -34,6 +34,10 @@ working build to a temp file (e.g. `build.json`) and validate it.
 - Start with **30 CP**, +5 when character history is approved. IDD grants more via
   bullets, donations, playtest, and earned CP. Ask the player their **total
   available CP** (default 35 if unsure), or itemize the sources.
+- **CP is spent ONLY on: attributes, headers, and skills/spells.** Nothing else
+  costs CP. In particular, **choosing a Heritage and a Faction is FREE — they cost
+  0 CP.** Never deduct CP for heritage or faction. (When in doubt, run the
+  validator — it never charges for heritage/faction.)
 - **5 attributes** (Air, Earth, Fire, Water, Void), all start at **2**. Raising an
   attribute to level N costs N CP (2→3 = 3, 3→4 = 4, …).
 - **Vitality = ⌈(Earth + Void) / 2⌉**.
@@ -85,9 +89,10 @@ Pick the one that fits the request:
 ### Build a new character
 1. **Concept & CP** — ask the concept and total available CP.
 2. **Heritage** — present the 6 with flavor, appearance reqs, disadvantages, and
-   cheap heritage skills.
+   cheap heritage skills. Choosing a heritage is **free (0 CP)**.
 3. **Faction** — present the 4 and which headers each unlocks (from `--catalog`);
-   this gates the build, so explain before headers.
+   this gates the build, so explain before headers. Joining a faction is **free
+   (0 CP)**.
 4. **Attributes** — explain each and the cost curve; help allocate; show Vitality.
 5. **Headers** — recommend based on faction + concept; each costs CP.
 6. **Skills & spells** — pick under owned headers + open + heritage; casters buy a

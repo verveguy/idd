@@ -52,6 +52,7 @@
     "Each skill header you purchase (e.g. buying the Rogue header grants the Rogue trait)"
   ],
   "build_rules": [
+    "CP is spent only on attributes, headers, and skills/spells. Choosing a Heritage and a Faction is free (0 CP) — never deduct CP for them.",
     "Every character must have a Heritage and must belong to exactly one Faction — both are required.",
     "A header with no specific-faction prerequisite (e.g. Sorcerer, Warrior, Wizard) may be purchased by a member of any faction; this does not make the character factionless.",
     "Some skills are mutually exclusive (e.g. Aura of Healing, Aura of the Herald, and Aura of Vengeance) — a character may purchase at most one of a mutually-exclusive set.",
