@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>In Darkened Dreams — Character Builder</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root{
+    color-scheme:light;
+    --desk:#141019; --desk-2:#1d1826;
+    --vellum:#efedf4; --panel:#e7e4ee; --panel-2:#eae7f1; --field:#f6f5fa;
+    --ink:#211a2e; --ink-soft:#574f68; --ink-faint:#8b8499;
+    --rule:#d6d1e1; --rule-strong:#c3bcd4;
+    --accent:#5a4a8c; --accent-2:#6a57a3; --gold:#8f7327;
+    --good:#2f7d55; --warn:#9a6a1e; --bad:#a5352f;
+    --air:#3e6591; --earth:#77632f; --fire:#a83f24; --water:#1d7178; --void:#6a559c;
+    --serif:"Iowan Old Style","Palatino Linotype","Book Antiqua",Palatino,Georgia,serif;
+    --mono:ui-monospace,"SF Mono","Cascadia Mono",Menlo,"Roboto Mono",monospace;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0; font-family:var(--serif); color:var(--ink);
+    background:radial-gradient(120% 70% at 50% -10%, #241d33 0%, var(--desk) 62%) fixed;
+    padding:22px 18px 60px;}
+  .wrap{max-width:1180px; margin:0 auto}
+  .topbar{display:flex; align-items:flex-end; justify-content:space-between; gap:16px;
+    color:#cfc7e0; margin-bottom:18px; flex-wrap:wrap}
+  .topbar h1{font-size:23px; margin:0; font-weight:600; letter-spacing:.01em; color:#efe9fb}
+  .topbar .eyebrow{font-family:var(--mono); font-size:10px; letter-spacing:.36em;
+    text-transform:uppercase; color:#9b90bd; display:block; margin-bottom:5px}
+  .topbar p{margin:4px 0 0; font-style:italic; color:#8177a0; font-size:13px}
+  .actions{display:flex; gap:8px; flex-wrap:wrap}
+  button.act{font-family:var(--mono); font-size:11px; letter-spacing:.06em; text-transform:uppercase;
+    color:#efedf4; background:var(--accent); border:1px solid var(--accent-2); border-radius:4px;
+    padding:9px 13px; cursor:pointer}
+  button.act.ghost{background:transparent; color:#b8aede; border-color:#4a3f6a}
+  button.act:hover{background:var(--accent-2)}
+  button.act.ghost:hover{background:#241d33}
+  button.act:focus-visible{outline:2px solid #cfc7e0; outline-offset:2px}
+
+  .grid{display:grid; grid-template-columns:1.15fr 1fr; gap:20px; align-items:start}
+  @media (max-width:920px){.grid{grid-template-columns:1fr}}
+
+  .card{background:var(--vellum); border:1px solid var(--rule-strong);
+    box-shadow:0 20px 50px -30px #000; padding:20px 22px}
+  .card + .card{margin-top:18px}
+  .sect{font-family:var(--mono); font-size:10px; letter-spacing:.2em; text-transform:uppercase;
+    color:var(--ink-faint); margin:0 0 12px; padding-bottom:6px; border-bottom:1px solid var(--rule)}
+  .sect .hint{float:right; text-transform:none; letter-spacing:0; font-family:var(--serif);
+    font-style:italic; color:var(--ink-faint); font-size:11px}
+
+  label.fl{display:block; font-family:var(--mono); font-size:9.5px; letter-spacing:.12em;
+    text-transform:uppercase; color:var(--ink-faint); margin:0 0 4px}
+  .row{display:flex; gap:12px; flex-wrap:wrap}
+  .row > .f{flex:1 1 0; min-width:120px}
+  input[type=text], select{width:100%; font-family:var(--serif); font-size:14px; color:var(--ink);
+    background:var(--field); border:1px solid var(--rule-strong); border-radius:3px; padding:8px 9px}
+  select{cursor:pointer}
+  input:focus, select:focus{outline:2px solid var(--accent); outline-offset:0; border-color:var(--accent)}
+
+  /* cp sources */
+  .cpsrc{display:grid; grid-template-columns:repeat(3,1fr); gap:10px}
+  .cpsrc .f label{font-size:9px}
+  .cpsrc input{font-family:var(--mono); text-align:right; font-variant-numeric:tabular-nums; padding:6px 8px}
+  .cpsum{margin-top:10px; font-family:var(--mono); font-size:12px; color:var(--ink-soft);
+    display:flex; justify-content:space-between; border-top:1px solid var(--rule); padding-top:8px}
+  .cpsum b{color:var(--ink)}
+
+  /* attributes */
+  .attrs{display:grid; grid-template-columns:repeat(5,1fr); gap:10px}
+  .attr{border-top:2.5px solid var(--el); padding-top:7px; text-align:center}
+  .attr .an{font-family:var(--mono); font-size:9.5px; letter-spacing:.1em; text-transform:uppercase;
+    color:var(--el); font-weight:600}
+  .attr .as{font-size:9.5px; color:var(--ink-faint); font-style:italic}
+  .stp{display:flex; align-items:center; justify-content:center; gap:8px; margin-top:5px}
+  .stp button{width:24px; height:24px; border-radius:3px; border:1px solid var(--rule-strong);
+    background:var(--panel); color:var(--ink); font-family:var(--mono); font-size:15px; cursor:pointer; line-height:1}
+  .stp button:hover{background:#ded9ea} .stp button:disabled{opacity:.35; cursor:default}
+  .stp .v{font-family:var(--mono); font-size:22px; min-width:20px; font-variant-numeric:tabular-nums}
+  .attr .cpc{font-family:var(--mono); font-size:9px; color:var(--ink-faint); margin-top:3px}
+
+  /* toggles (headers) */
+  .toggles{display:flex; flex-direction:column; gap:6px}
+  .tg{display:flex; align-items:center; gap:9px; padding:7px 9px; border:1px solid var(--rule);
+    border-radius:4px; background:var(--field); cursor:pointer}
+  .tg:hover{border-color:var(--rule-strong)}
+  .tg.on{border-color:var(--accent); background:color-mix(in srgb,var(--accent) 8%,transparent)}
+  .tg.locked{opacity:.5; cursor:not-allowed; background:var(--panel)}
+  .tg .box{width:15px; height:15px; border:1.5px solid var(--rule-strong); border-radius:3px; flex:0 0 auto;
+    display:grid; place-items:center; font-size:11px; color:#fff}
+  .tg.on .box{background:var(--accent); border-color:var(--accent)}
+  .tg .nm{font-size:14px; font-weight:600}
+  .tg .meta{margin-left:auto; font-family:var(--mono); font-size:9.5px; color:var(--ink-faint);
+    text-transform:uppercase; letter-spacing:.04em; text-align:right}
+  .tg .tag{font-family:var(--mono); font-size:8.5px; color:var(--accent); border:1px solid var(--accent);
+    border-radius:2px; padding:1px 4px; margin-left:6px}
+
+  /* skill groups */
+  .grp{border:1px solid var(--rule); border-radius:5px; margin-bottom:9px; overflow:hidden; background:var(--field)}
+  .grp > summary{list-style:none; cursor:pointer; padding:9px 11px; display:flex; align-items:center; gap:8px;
+    font-family:var(--mono); font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-soft);
+    background:var(--panel-2)}
+  .grp > summary::-webkit-details-marker{display:none}
+  .grp > summary .chev{transition:transform .15s} .grp[open] > summary .chev{transform:rotate(90deg)}
+  .grp > summary .cnt{margin-left:auto; color:var(--accent); font-weight:600}
+  .sk{display:flex; align-items:flex-start; gap:9px; padding:8px 11px; border-top:1px solid var(--rule)}
+  .sk .box{width:15px;height:15px;border:1.5px solid var(--rule-strong);border-radius:3px;flex:0 0 auto;margin-top:2px;
+    display:grid;place-items:center;font-size:11px;color:#fff;cursor:pointer}
+  .sk.on .box{background:var(--accent);border-color:var(--accent)}
+  .sk .info{flex:1 1 auto; min-width:0}
+  .sk .snm{font-size:13.5px; font-weight:600}
+  .sk .sig{color:var(--gold); margin-left:2px}
+  .sk .se{font-size:11.5px; color:var(--ink-soft); line-height:1.35; margin-top:2px}
+  .sk .right{display:flex; align-items:center; gap:7px; flex:0 0 auto}
+  .chip{font-family:var(--mono); font-size:9px; letter-spacing:.03em; padding:2px 5px; border:1px solid var(--el);
+    color:var(--el); border-radius:2px; white-space:nowrap; text-transform:uppercase;
+    background:color-mix(in srgb,var(--el) 8%,transparent)}
+  .cpc2{font-family:var(--mono); font-size:9.5px; color:var(--ink-faint); font-variant-numeric:tabular-nums}
+  .rep{display:flex; align-items:center; gap:5px}
+  .rep button{width:19px;height:19px;border:1px solid var(--rule-strong);border-radius:3px;background:var(--panel);
+    font-family:var(--mono);cursor:pointer;line-height:1} .rep .rv{font-family:var(--mono);font-size:11px;min-width:9px;text-align:center}
+
+  /* ===== right pane: sheet ===== */
+  .ledger .lrow{display:flex; justify-content:space-between; font-family:var(--mono); font-size:12.5px;
+    padding:4px 0; color:var(--ink-soft); font-variant-numeric:tabular-nums}
+  .ledger .lrow.big{font-size:15px}
+  .ledger .lrow .n{color:var(--ink)}
+  .ledger .lrow.tot{border-top:1px solid var(--rule-strong); margin-top:5px; padding-top:8px; color:var(--ink); font-weight:600}
+  .ledger .lrow.tot.over .n{color:var(--bad)}
+  .ledger .lrow.tot.over{color:var(--bad)}
+  .pill{display:inline-flex; align-items:baseline; gap:6px; font-family:var(--mono); font-variant-numeric:tabular-nums}
+  .vitrow{display:flex; gap:18px; margin-top:12px; padding-top:12px; border-top:1px solid var(--rule)}
+  .vitrow .stat{text-align:center; flex:1}
+  .vitrow .stat .k{font-family:var(--mono); font-size:9px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-faint)}
+  .vitrow .stat .val{font-size:26px; font-weight:600; font-variant-numeric:tabular-nums; margin-top:2px}
+  .vitrow .stat.vit .val{color:var(--fire)}
+
+  .val-ok{font-family:var(--mono); font-size:11px; letter-spacing:.04em; color:var(--good); text-transform:uppercase}
+  .msg{font-size:12.5px; padding:7px 10px; border-radius:4px; margin-top:7px; line-height:1.4}
+  .msg.err{background:color-mix(in srgb,var(--bad) 11%,transparent); border-left:3px solid var(--bad); color:#7d2822}
+  .msg.warn{background:color-mix(in srgb,var(--warn) 13%,transparent); border-left:3px solid var(--warn); color:#6f4c14}
+
+  .tags{display:flex; flex-wrap:wrap; gap:6px}
+  .tag2{font-family:var(--mono); font-size:10px; padding:3px 8px; border-radius:2px; background:var(--panel);
+    border:1px solid var(--rule-strong); color:var(--ink-soft)}
+  .tag2.hdr{border-color:var(--accent); color:var(--accent); background:color-mix(in srgb,var(--accent) 8%,transparent)}
+
+  .sheet-name{font-size:24px; font-weight:600; margin:0; text-wrap:balance}
+  .sheet-eyebrow{font-family:var(--mono); font-size:10px; letter-spacing:.2em; text-transform:uppercase; color:var(--accent)}
+  .sheet-sk{padding:6px 0; border-bottom:1px solid var(--rule)}
+  .sheet-sk:last-child{border-bottom:0}
+  .sheet-sk .st{display:flex; align-items:baseline; gap:7px}
+  .sheet-sk .st .nm{font-size:13.5px; font-weight:600}
+  .sheet-sk .st .cp{margin-left:auto; font-family:var(--mono); font-size:9.5px; color:var(--ink-faint)}
+  .sheet-sk .ee{font-size:11.5px; color:var(--ink-soft); margin-top:2px; line-height:1.35}
+  .empty{color:var(--ink-faint); font-style:italic; font-size:13px}
+
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+  /* ===== print: only the sheet, as a clean card ===== */
+  @media print{
+    @page{size:letter portrait; margin:0.35in}
+    html,body{background:#fff!important}
+    body{padding:0}
+    .topbar,.builder,.actions,.no-print{display:none!important}
+    .grid{grid-template-columns:1fr; gap:0}
+    .sheet{margin:0}
+    .card{box-shadow:none; border:1px solid #bbb; -webkit-print-color-adjust:exact; print-color-adjust:exact}
+    .card + .card{margin-top:10px}
+  }
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+  <div class="topbar">
+    <div>
+      <span class="eyebrow">In Darkened Dreams</span>
+      <h1>Character Builder</h1>
+      <p>Live shared session — edits sync with your Claude conversation.</p>
+    </div>
+    <div class="actions">
+      <button class="act ghost" id="importBtn">⤵ Import JSON</button>
+      <button class="act" id="shareBtn" title="Copy a link that opens this exact build">🔗 Copy share link</button>
+      <button class="act ghost" id="copyBtn">⧉ Copy build JSON</button>
+      <button class="act ghost" id="printBtn">⎙ Save sheet as PDF</button>
+      <button class="act ghost" id="resetBtn">↺ Reset</button>
+    </div>
+  </div>
+
+  <div id="importPanel" class="card no-print" style="display:none; margin-bottom:18px">
+    <h2 class="sect">Import a build <span class="hint">paste the JSON from your chat / the skill</span></h2>
+    <textarea id="importTA" rows="6" spellcheck="false"
+      style="width:100%; font-family:var(--mono); font-size:12px; color:var(--ink); background:var(--field);
+      border:1px solid var(--rule-strong); border-radius:3px; padding:9px" placeholder='{ "name": "…", "heritage": "…", … }'></textarea>
+    <div id="importErr" class="msg err" style="display:none"></div>
+    <div style="display:flex; gap:8px; margin-top:10px">
+      <button class="act" id="importLoad">Load build</button>
+      <button class="act ghost" id="importCancel">Cancel</button>
+    </div>
+  </div>
+
+  <div class="grid">
+    <!-- ============ BUILDER ============ -->
+    <div class="builder">
+      <div class="card">
+        <h2 class="sect">Identity</h2>
+        <div class="row" style="margin-bottom:12px">
+          <div class="f"><label class="fl" for="cname">Character name</label>
+            <input type="text" id="cname" placeholder="Name your character…"></div>
+        </div>
+        <div class="row">
+          <div class="f"><label class="fl" for="her">Heritage <span style="color:var(--good)">· free</span></label>
+            <select id="her"></select></div>
+          <div class="f"><label class="fl" for="fac">Faction <span style="color:var(--good)">· free</span></label>
+            <select id="fac"></select></div>
+        </div>
+        <div id="herNote" class="msg warn" style="display:none"></div>
+      </div>
+
+      <div class="card">
+        <h2 class="sect">Character Points <span class="hint">what you have to spend</span></h2>
+        <div class="cpsrc" id="cpsrc"></div>
+        <div class="cpsum"><span>Available CP</span><b id="cpAvail">35</b></div>
+      </div>
+
+      <div class="card">
+        <h2 class="sect">Attributes <span class="hint">all start at 2 · raise to N costs N</span></h2>
+        <div class="attrs" id="attrs"></div>
+      </div>
+
+      <div class="card">
+        <h2 class="sect">Headers <span class="hint">buy before their skills</span></h2>
+        <div class="toggles" id="headers"></div>
+      </div>
+
+      <div class="card">
+        <h2 class="sect">Skills &amp; Spells <span class="hint">from open, heritage &amp; your headers</span></h2>
+        <div id="skills"></div>
+      </div>
+    </div>
+
+    <!-- ============ SHEET ============ -->
+    <div class="sheet">
+      <div class="card no-print">
+        <h2 class="sect">Ledger</h2>
+        <div class="ledger" id="ledger"></div>
+        <div class="vitrow" id="vitrow"></div>
+      </div>
+      <div class="card no-print" id="valCard">
+        <h2 class="sect">Validation</h2>
+        <div id="validation"></div>
+      </div>
+      <div class="card" id="sheetCard">
+        <!-- printable character sheet rendered here -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<script id="idd-data" type="application/json">/*__IDD_DATA__*/</script>
+<!-- The skill can seed a build here (fill this tag), or a browser deep link can use location.hash #build=<url-encoded JSON>. -->
+<script id="initial-build" type="application/json"></script>
+<script>
+const DATA = JSON.parse(document.getElementById('idd-data').textContent);
+const ATTRS = DATA.rules.attrs, BASE = DATA.rules.base;
+const SUB = {Air:"mind",Earth:"stamina",Fire:"drive",Water:"agility",Void:"restore"};
+const CLR = {Air:"var(--air)",Earth:"var(--earth)",Fire:"var(--fire)",Water:"var(--water)",Void:"var(--void)"};
+
+const norm = s => String(s||"").toLowerCase().replace(/[’‘'“”"]/g,"").replace(/^[\s.…]+|[\s.…]+$/g,"").replace(/\s+/g," ");
+const esc = s => String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const elOf = a => (String(a).match(/Air|Earth|Fire|Water|Void/)||[null])[0];
+function attrCost(v){let t=0; for(let i=BASE+1;i<=v;i++) t+=i; return t;}
+const ceilDiv = (a,b)=>Math.ceil(a/b);
+
+// indexes
+const HDR = {}; DATA.headers.forEach(h=>HDR[h.n]=h);
+const ALLNAMES = new Set();
+DATA.open.forEach(s=>ALLNAMES.add(norm(s.n)));
+DATA.heritages.forEach(h=>h.skills.forEach(s=>ALLNAMES.add(norm(s.n))));
+DATA.headers.forEach(h=>{ALLNAMES.add(norm(h.n)); h.skills.forEach(s=>ALLNAMES.add(norm(s.n)));});
+Object.values(DATA.spells).forEach(sl=>sl.forEach(s=>ALLNAMES.add(norm(s.n))));
+
+// ---------- state ----------
+const CP_KEYS = [["starting","Starting"],["history","History"],["bullets","Bullets"],
+                 ["donations","Donations"],["playtest","Playtest"],["earned","Earned"]];
+let state;
+function fresh(){
+  const a={}; ATTRS.forEach(k=>a[k]=BASE);
+  return {name:"", heritage:"", faction:"",
+    cp:{starting:30, history:5, bullets:0, donations:0, playtest:0, earned:0},
+    attributes:a, headers:[], skills:{}};  // skills: normName -> {name,count}
+}
+state = fresh();
+
+// ---------- catalog: which skills are buyable now ----------
+function catalog(){
+  const cat = {};
+  const add=(s,src)=>{ cat[norm(s.n)] = {...s, src}; };
+  DATA.open.forEach(s=>add(s,"Open"));
+  const her = DATA.heritages.find(h=>h.n===state.heritage);
+  if(her) her.skills.forEach(s=>add(s,"Heritage · "+her.n));
+  state.headers.forEach(hn=>{ const h=HDR[hn]; if(h) h.skills.forEach(s=>add(s,h.n)); });
+  // owned spheres unlock spells
+  const spheres = new Set();
+  Object.keys(state.skills).forEach(k=>{ const m=k.match(/sphere of (\w+)/); if(m) spheres.add(m[1][0].toUpperCase()+m[1].slice(1)); });
+  spheres.forEach(sp=>{ (DATA.spells[sp]||[]).forEach(s=>add(s,"Sphere · "+sp)); });
+  return cat;
+}
+
+// ---------- validate/compute ----------
+function compute(){
+  const errors=[], warnings=[];
+  const available = CP_KEYS.reduce((t,[k])=>t+(+state.cp[k]||0),0);
+  // attributes
+  let attrCp=0; ATTRS.forEach(k=>attrCp+=attrCost(state.attributes[k]));
+  const vit = ceilDiv(state.attributes.Earth + state.attributes.Void, 2);
+  // required
+  if(!state.heritage) errors.push("Choose a heritage — every character must have one.");
+  if(!state.faction) errors.push("Choose a faction — every character must belong to one.");
+  // headers
+  let headerCp=0; const owned=new Set(state.headers.map(norm));
+  state.headers.forEach(hn=>{
+    const h=HDR[hn]; if(!h) return; headerCp+=h.c;
+    if(h.fac && norm(h.fac)!==norm(state.faction))
+      errors.push(`Header “${h.n}” requires you to be a member of ${h.fac}.`);
+    (h.excl||[]).forEach(x=>{ if(state.headers.some(o=>o!==hn && (norm(o).includes(norm(x))||norm(x).includes(norm(o)))))
+      errors.push(`Header “${h.n}” cannot be taken with the ${x} header.`); });
+  });
+  // prune skills no longer reachable
+  const cat = catalog();
+  Object.keys(state.skills).forEach(k=>{ if(!cat[k]) delete state.skills[k]; });
+  // skills
+  let skillsCp=0; const resolved=[];
+  Object.entries(state.skills).forEach(([k,e])=>{
+    const rec=cat[k]; if(!rec) return;
+    const cnt=e.count||1; skillsCp+=(rec.c||0)*cnt;
+    if(cnt>1 && !rec.rep) errors.push(`“${rec.n}” is not repeatable.`);
+    if(rec.lim && cnt>rec.lim) errors.push(`“${rec.n}” exceeds its limit of ${rec.lim}.`);
+    resolved.push({rec,cnt});
+  });
+  const ownedTargets = new Set([...Object.keys(state.skills), ...state.headers.map(norm)]);
+  const isOwned=(pre,self)=>{ const pn=norm(pre); if(pn===self) return false;
+    if(ownedTargets.has(pn)) return true;
+    for(const t of ownedTargets){ if(pn.startsWith(t+" ")||pn.startsWith(t+"-")) return true; } return false; };
+  resolved.forEach(({rec})=>{
+    const pre=rec.pre||[]; const self=norm(rec.n);
+    if(pre.length && !pre.some(p=>isOwned(p,self))){
+      if(pre.length===1 && ALLNAMES.has(norm(pre[0]))) errors.push(`“${rec.n}” requires ${pre[0]}, which isn’t in your build.`);
+      else if(pre.length>1 && pre.every(p=>ALLNAMES.has(norm(p)))) errors.push(`“${rec.n}” requires one of: ${pre.join(", ")}.`);
+      else warnings.push(`“${rec.n}” needs ${pre.join(" / ")} — verify against the rulebook.`);
+    }
+    (rec.x||[]).forEach(cn=>{ if(state.skills[norm(cn)]) {
+      const other=cat[norm(cn)]? cat[norm(cn)].n : cn;
+      errors.push(`“${rec.n}” and “${other}” are mutually exclusive.`); } });
+  });
+  // dedup exclusion messages
+  const dedup=a=>[...new Set(a)];
+  const total = attrCp+headerCp+skillsCp;
+  if(total>available) errors.push(`Over budget: ${total} CP spent vs ${available} available.`);
+  const abilityCp = headerCp+skillsCp;
+  const tier = abilityCp>=100?"Accomplished":abilityCp>=50?"Experienced":"Initiate";
+  // traits
+  const traits=["Living"]; if(state.heritage)traits.push(state.heritage); if(state.faction)traits.push(state.faction);
+  state.headers.forEach(hn=>{ traits.push(hn); (HDR[hn].grants||[]).forEach(t=>{if(!traits.includes(t))traits.push(t);}); });
+  traits.push(tier);
+  return {available,attrCp,headerCp,skillsCp,total,remaining:available-total,vit,tier,traits,
+    errors:dedup(errors),warnings:dedup(warnings),resolved};
+}
+
+// ---------- rendering ----------
+function chip(attr){ const el=elOf(attr); return el?`<span class="chip" style="--el:${CLR[el]}">${esc(attr)}</span>`:""; }
+
+function renderControls(){
+  // heritage / faction selects
+  const her=document.getElementById('her');
+  her.innerHTML='<option value="">— choose heritage —</option>'+DATA.heritages.map(h=>`<option ${h.n===state.heritage?'selected':''}>${esc(h.n)}</option>`).join('');
+  const fac=document.getElementById('fac');
+  fac.innerHTML='<option value="">— choose faction —</option>'+DATA.factions.map(f=>`<option ${f===state.faction?'selected':''}>${esc(f)}</option>`).join('');
+  // heritage disadvantage note
+  const hn=document.getElementById('herNote'); const her0=DATA.heritages.find(h=>h.n===state.heritage);
+  if(her0 && her0.disadv){ hn.style.display='block'; hn.textContent='Heritage drawback: '+her0.disadv; } else hn.style.display='none';
+  // cp sources
+  document.getElementById('cpsrc').innerHTML = CP_KEYS.map(([k,lbl])=>
+    `<div class="f"><label class="fl">${lbl}</label><input type="number" min="0" data-cp="${k}" value="${state.cp[k]}"></div>`).join('');
+  // attributes
+  document.getElementById('attrs').innerHTML = ATTRS.map(k=>{
+    const v=state.attributes[k];
+    return `<div class="attr" style="--el:${CLR[k]}">
+      <div class="an">${k}</div><div class="as">${SUB[k]}</div>
+      <div class="stp"><button data-attr="${k}" data-d="-1" ${v<=BASE?'disabled':''}>−</button>
+        <span class="v">${v}</span>
+        <button data-attr="${k}" data-d="1" ${v>=10?'disabled':''}>+</button></div>
+      <div class="cpc">${attrCost(v)} CP</div></div>`;
+  }).join('');
+  // headers
+  document.getElementById('headers').innerHTML = DATA.headers.map(h=>{
+    const on=state.headers.includes(h.n);
+    const locked = h.fac && norm(h.fac)!==norm(state.faction);
+    const grants=(h.grants||[]).map(g=>`<span class="tag">${g}</span>`).join('');
+    const meta = locked ? `needs ${esc(h.fac.replace('The ',''))}` : `${h.c} CP`;
+    return `<div class="tg ${on?'on':''} ${locked&&!on?'locked':''}" data-hdr="${esc(h.n)}" ${locked&&!on?'aria-disabled="true"':''}>
+      <span class="box">${on?'✓':''}</span><span class="nm">${esc(h.n)}${grants}</span><span class="meta">${meta}</span></div>`;
+  }).join('');
+  // skills — grouped by source, only for reachable sources
+  const cat=catalog();
+  const groups=[]; // {title, items:[rec]}
+  const openG={title:"Open skills", items:DATA.open};
+  groups.push(openG);
+  const her1=DATA.heritages.find(h=>h.n===state.heritage);
+  if(her1 && her1.skills.length) groups.push({title:"Heritage · "+her1.n, items:her1.skills});
+  state.headers.forEach(hn=>{ const h=HDR[hn]; if(h) groups.push({title:h.n, items:h.skills}); });
+  // owned spheres
+  Object.keys(state.skills).forEach(k=>{ const m=k.match(/sphere of (\w+)/); if(m){ const sp=m[1][0].toUpperCase()+m[1].slice(1);
+    if(DATA.spells[sp]) groups.push({title:"Sphere · "+sp+" spells", items:DATA.spells[sp]}); }});
+  document.getElementById('skills').innerHTML = groups.map(g=>{
+    const sel=g.items.filter(s=>state.skills[norm(s.n)]).length;
+    const openAttr = (g.title.startsWith("Sphere")||g.title.startsWith("Heritage")||sel>0)?'open':'';
+    return `<details class="grp" ${openAttr}><summary><span class="chev">▸</span>${esc(g.title)}
+      <span class="cnt">${sel? sel+' selected':''}</span></summary>
+      ${g.items.map(s=>skillRow(s)).join('')}</details>`;
+  }).join('');
+}
+
+function skillRow(s){
+  const k=norm(s.n); const cur=state.skills[k]; const on=!!cur;
+  const sig=s.sp?`<span class="sig" title="Spell-like Ability">✦</span>`:'';
+  const cchip = s.a?chip(s.a):'';
+  let right = `<span class="cpc2">${s.c} CP</span>`;
+  if(s.rep){ const cnt=cur?cur.count:0;
+    right += `<span class="rep"><button data-rep="${esc(s.n)}" data-d="-1">−</button><span class="rv">${cnt}</span><button data-rep="${esc(s.n)}" data-d="1">+</button></span>`; }
+  return `<div class="sk ${on?'on':''}" data-sk="${esc(s.n)}">
+    <span class="box">${on?'✓':''}</span>
+    <span class="info"><span class="snm">${esc(s.n)}${sig}</span><span class="se">${esc(s.e||'')}</span></span>
+    <span class="right">${cchip}${right}</span></div>`;
+}
+
+function renderSheet(){
+  const r=compute();
+  // ledger
+  document.getElementById('cpAvail').textContent=r.available;
+  document.getElementById('ledger').innerHTML=`
+    <div class="lrow"><span>Available</span><span class="n">${r.available}</span></div>
+    <div class="lrow"><span>Attributes</span><span>−${r.attrCp}</span></div>
+    <div class="lrow"><span>Headers</span><span>−${r.headerCp}</span></div>
+    <div class="lrow"><span>Skills &amp; spells</span><span>−${r.skillsCp}</span></div>
+    <div class="lrow tot big ${r.remaining<0?'over':''}"><span>${r.remaining<0?'Over by':'Remaining'}</span><span class="n">${r.remaining<0?(-r.remaining):r.remaining}</span></div>`;
+  document.getElementById('vitrow').innerHTML=`
+    <div class="stat vit"><div class="k">Vitality</div><div class="val">${r.vit}</div></div>
+    <div class="stat"><div class="k">Tier</div><div class="val" style="font-size:16px;font-family:var(--mono);padding-top:6px">${r.tier}</div></div>
+    <div class="stat"><div class="k">Spent</div><div class="val">${r.total}</div></div>`;
+  // validation
+  const v=document.getElementById('validation');
+  if(!r.errors.length && !r.warnings.length){ v.innerHTML=`<div class="val-ok">✓ Legal build — ${r.total}/${r.available} CP</div>`; }
+  else v.innerHTML = r.errors.map(e=>`<div class="msg err">${esc(e)}</div>`).join('')
+                   + r.warnings.map(w=>`<div class="msg warn">${esc(w)}</div>`).join('');
+  // printable sheet
+  renderCard(r);
+}
+
+function renderCard(r){
+  const c=document.getElementById('sheetCard');
+  const attrs=ATTRS.map(k=>`<div class="attr" style="--el:${CLR[k]}">
+    <div class="an">${k}</div><div class="as">${SUB[k]}</div>
+    <div class="v" style="font-family:var(--mono);font-size:24px;margin-top:4px">${state.attributes[k]}</div></div>`).join('');
+  const skills = r.resolved.length ? r.resolved.map(({rec,cnt})=>{
+    const sig=rec.sp?'<span class="sig">✦</span>':''; const x=cnt>1?` ×${cnt}`:'';
+    return `<div class="sheet-sk"><div class="st"><span class="nm">${esc(rec.n)}${x}${sig}</span>
+      ${rec.a?chip(rec.a):''}<span class="cp">${rec.c*cnt} CP</span></div>
+      <div class="ee">${esc(rec.e||'')}</div></div>`; }).join('')
+    : '<div class="empty">No skills yet — pick some headers and skills.</div>';
+  const headers = state.headers.length? state.headers.map(h=>`<span class="tag2 hdr">${esc(h)}</span>`).join('') : '<span class="empty">none</span>';
+  c.innerHTML=`
+    <div class="sheet-eyebrow">${esc(state.heritage||'—')} &nbsp;·&nbsp; ${esc(state.faction||'—')}</div>
+    <h2 class="sheet-name">${esc(state.name||'Unnamed Character')}</h2>
+    <div class="attrs" style="margin:14px 0 4px">${attrs}
+      <div class="attr" style="border-top-color:var(--fire)"><div class="an" style="color:var(--fire)">Vitality</div>
+      <div class="as">health</div><div class="v" style="font-family:var(--serif);font-size:26px;margin-top:2px">${r.vit}</div></div></div>
+    <div class="vitrow" style="border-top:1px solid var(--rule)">
+      <div class="stat"><div class="k">Tier</div><div class="val" style="font-size:15px;font-family:var(--mono);padding-top:7px">${r.tier}</div></div>
+      <div class="stat"><div class="k">CP spent</div><div class="val">${r.total}<span style="font-size:13px;color:var(--ink-faint)">/${r.available}</span></div></div>
+      <div class="stat"><div class="k">Headers</div><div class="val" style="font-size:15px;padding-top:7px">${state.headers.length}</div></div>
+    </div>
+    <h3 class="sect" style="margin-top:16px">Skills &amp; Abilities</h3>
+    ${skills}
+    <h3 class="sect" style="margin-top:16px">Headers</h3><div class="tags">${headers}</div>
+    <h3 class="sect" style="margin-top:14px">Traits</h3><div class="tags">${r.traits.map(t=>`<span class="tag2">${esc(t)}</span>`).join('')}</div>`;
+}
+
+function render(){ renderControls(); renderSheet(); }
+
+// ---------- interactions ----------
+document.addEventListener('input', e=>{
+  const t=e.target;
+  if(t.id==='cname'){ state.name=t.value; renderSheet(); }
+  else if(t.dataset.cp){ state.cp[t.dataset.cp]=Math.max(0, +t.value||0); renderSheet(); }
+});
+document.addEventListener('change', e=>{
+  const t=e.target;
+  if(t.id==='her'){ state.heritage=t.value; render(); }
+  else if(t.id==='fac'){ state.faction=t.value;
+    // drop headers now illegal
+    state.headers=state.headers.filter(hn=>{ const h=HDR[hn]; return !(h.fac && norm(h.fac)!==norm(state.faction)); });
+    render(); }
+});
+document.addEventListener('click', e=>{
+  const t=e.target.closest('[data-attr],[data-hdr],[data-sk],[data-rep]');
+  if(!t) return;
+  if(t.dataset.attr){ const k=t.dataset.attr, d=+t.dataset.d;
+    state.attributes[k]=Math.min(10,Math.max(BASE, state.attributes[k]+d)); render(); }
+  else if(t.dataset.hdr){ const h=HDR[t.dataset.hdr];
+    if(h.fac && norm(h.fac)!==norm(state.faction) && !state.headers.includes(h.n)) return; // locked
+    if(state.headers.includes(h.n)){ state.headers=state.headers.filter(x=>x!==h.n); }
+    else state.headers.push(h.n); render(); }
+  else if(t.dataset.sk){ const nm=t.dataset.sk, k=norm(nm); const cat=catalog(); const rec=cat[k]; if(!rec) return;
+    if(state.skills[k]) delete state.skills[k]; else state.skills[k]={name:nm,count:1}; render(); }
+  else if(t.dataset.rep){ const nm=t.dataset.rep, k=norm(nm), d=+t.dataset.d; const cat=catalog(); const rec=cat[k]; if(!rec) return;
+    const cur=state.skills[k]?state.skills[k].count:0; let nv=cur+d; const max=rec.lim||99;
+    nv=Math.min(max,Math.max(0,nv));
+    if(nv<=0) delete state.skills[k]; else state.skills[k]={name:nm,count:nv}; render(); }
+});
+
+// ---------- export / print / reset ----------
+function buildJSON(){
+  const skills=Object.values(state.skills).map(e=> e.count>1?{name:e.name,count:e.count}:{name:e.name});
+  return {name:state.name||"Unnamed", heritage:state.heritage||null, faction:state.faction||null,
+    cp_sources:{...state.cp}, attributes:{...state.attributes},
+    headers:[...state.headers], skills};
+}
+async function copyText(txt){
+  try{ await navigator.clipboard.writeText(txt); return true; }
+  catch(_){ const ta=document.createElement('textarea'); ta.value=txt; ta.style.position='fixed'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.select(); let ok=false; try{ ok=document.execCommand('copy'); }catch(e){} ta.remove(); return ok; }
+}
+function flash(btn,msg){ const old=btn.textContent; btn.textContent=msg; btn.disabled=true;
+  setTimeout(()=>{ btn.textContent=old; btn.disabled=false; }, 1900); }
+
+function shareLink(){ const base=location.href.split('#')[0];
+  return base + '#build=' + encodeURIComponent(JSON.stringify(buildJSON())); }
+
+document.getElementById('copyBtn').addEventListener('click', async e=>{
+  flash(e.currentTarget, (await copyText(JSON.stringify(buildJSON(),null,2)))?'✓ Copied — paste into chat':'⚠ Copy failed');
+});
+document.getElementById('shareBtn').addEventListener('click', async e=>{
+  flash(e.currentTarget, (await copyText(shareLink()))?'✓ Link copied':'⚠ Copy failed');
+});
+document.getElementById('printBtn').addEventListener('click', ()=>window.print());
+document.getElementById('resetBtn').addEventListener('click', ()=>{ if(confirm('Start a new character? This clears the current build.')){ state=fresh(); location.hash=''; render(); }});
+
+// ---------- import (skill -> app) ----------
+function importBuild(o){
+  const s=fresh();
+  s.name = o.name||"";
+  s.heritage = o.heritage||"";           // null -> ""
+  s.faction = o.faction||"";
+  if(o.cp_sources){ Object.keys(s.cp).forEach(k=>{ if(o.cp_sources[k]!=null) s.cp[k]=+o.cp_sources[k]||0; }); }
+  else if(o.available_cp!=null){ s.cp={starting:+o.available_cp||0, history:0, bullets:0, donations:0, playtest:0, earned:0}; }
+  if(o.attributes){ ATTRS.forEach(k=>{ if(o.attributes[k]!=null) s.attributes[k]=Math.max(BASE, +o.attributes[k]||BASE); }); }
+  s.headers = Array.isArray(o.headers)? o.headers.slice() : [];
+  s.skills = {};
+  (o.skills||[]).forEach(x=>{ const nm = typeof x==='string'? x : (x&&x.name); if(!nm) return;
+    s.skills[norm(nm)] = {name:nm, count:(x&&x.count)||1}; });
+  state = s; render();
+}
+function parseAndImport(txt){ importBuild(JSON.parse(txt)); }
+
+const importPanel=document.getElementById('importPanel'), importTA=document.getElementById('importTA'),
+      importErr=document.getElementById('importErr');
+document.getElementById('importBtn').addEventListener('click', ()=>{
+  importPanel.style.display = importPanel.style.display==='none'?'block':'none';
+  importErr.style.display='none'; if(importPanel.style.display==='block'){ importTA.focus(); }
+});
+document.getElementById('importCancel').addEventListener('click', ()=>{ importPanel.style.display='none'; });
+document.getElementById('importLoad').addEventListener('click', ()=>{
+  try{ parseAndImport(importTA.value.trim()); importPanel.style.display='none'; importTA.value=''; }
+  catch(e){ importErr.style.display='block'; importErr.textContent='Could not read that JSON: '+e.message; }
+});
+
+// ---------- seed on load: embedded slot, then #build= hash ----------
+function loadSeed(){
+  const slot=document.getElementById('initial-build');
+  const raw=(slot&&slot.textContent||'').trim();
+  if(raw){ try{ parseAndImport(raw); return true; }catch(e){ console.warn('bad initial-build',e); } }
+  const h=location.hash;
+  if(h && h.indexOf('build=')>-1){
+    try{ parseAndImport(decodeURIComponent(h.slice(h.indexOf('build=')+6))); return true; }
+    catch(e){ console.warn('bad build hash',e); }
+  }
+  return false;
+}
+window.addEventListener('hashchange', ()=>{ loadSeed(); });
+
+if(!loadSeed()) render();
+</script>
+
+<script>
+/* HTTP head: share the builder state with Claude via the local server.
+   Pull on load, subscribe to SSE for pushes (Claude's edits), and POST local edits. */
+(function(){
+  var myId="h"+Math.random().toString(36).slice(2);
+  var applying=false, lastVer=-1, lastSent="";
+  function apply(build){ if(!build) return; applying=true;
+    try{ importBuild(build); lastSent=JSON.stringify(buildJSON()); }
+    finally{ setTimeout(function(){applying=false;},60); } }
+  fetch('/api/build').then(function(r){return r.json();}).then(function(d){
+    if(typeof d.version==='number') lastVer=d.version; apply(d.build); }).catch(function(){});
+  try{ var es=new EventSource('/api/events'); es.onmessage=function(ev){ try{ var d=JSON.parse(ev.data);
+    if(typeof d.version==='number'){ if(d.version<=lastVer) return; lastVer=d.version; }
+    if(d.src===myId) return; apply(d.build); }catch(e){} }; }catch(e){}
+  setInterval(function(){ if(applying) return; var s=JSON.stringify(buildJSON());
+    if(s!==lastSent){ lastSent=s;
+      fetch('/api/build',{method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({build:buildJSON(),src:myId})}).catch(function(){}); } }, 400);
+  document.body.classList.add("http");
+})();
+</script>
+
+</body>
+</html>

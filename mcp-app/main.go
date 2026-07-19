@@ -60,6 +60,12 @@ func main() {
 	}
 	ruleset = rs
 
+	// Opt-in local HTTP head (localhost only): serves the browser builder + a
+	// shared session both Claude (MCP) and the browser edit. Runs alongside stdio.
+	if addr := httpAddr(); addr != "" {
+		go startHTTP(addr)
+	}
+
 	out := bufio.NewWriter(os.Stdout)
 	defer out.Flush()
 	enc := json.NewEncoder(out)
@@ -171,6 +177,16 @@ func toolDefs() []any {
 			"inputSchema": map[string]any{"type": "object", "properties": map[string]any{"name": map[string]any{"type": "string"}}, "required": []string{"name"}},
 		},
 		map[string]any{
+			"name":        "get_current_build",
+			"description": "Read the character in the SHARED live builder session — the one shown in the browser builder head. Use this to see what the player currently has (including edits they made in the browser).",
+			"inputSchema": map[string]any{"type": "object", "properties": map[string]any{}},
+		},
+		map[string]any{
+			"name":        "set_current_build",
+			"description": "Replace the character in the SHARED live builder session with this build. The browser builder head updates live (via SSE) to show it. Returns the validation result. Use this to push a build you've assembled into the player's open builder.",
+			"inputSchema": map[string]any{"type": "object", "properties": map[string]any{"build": buildObj}, "required": []string{"build"}},
+		},
+		map[string]any{
 			"name":        "save_character",
 			"description": "Save an IDD character build to local storage on this machine, by name.",
 			"inputSchema": map[string]any{"type": "object", "properties": map[string]any{"build": buildObj}, "required": []string{"build"}},
@@ -203,6 +219,10 @@ func callTool(params json.RawMessage) (any, *rpcError) {
 		return toolCatalog()
 	case "get_header":
 		return toolGetHeader(p.Arguments)
+	case "get_current_build":
+		return toolGetCurrent()
+	case "set_current_build":
+		return toolSetCurrent(p.Arguments)
 	case "open_character_builder":
 		return toolOpenBuilder(p.Arguments)
 	case "save_character":
@@ -384,6 +404,8 @@ func safeFile(name string) string {
 	}
 	return s + ".json"
 }
+
+func storePath(dir, name string) string { return filepath.Join(dir, safeFile(name)) }
 
 func toolSave(args json.RawMessage) (any, *rpcError) {
 	var a struct {
