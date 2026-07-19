@@ -4,7 +4,7 @@ description: Build, validate, or level up a legal In Darkened Dreams (IDD) LARP 
 license: See scripts/NOTICE.md
 metadata:
   author: verveguy
-  version: "1.0"
+  version: "1.0.1"
 ---
 
 # In Darkened Dreams — Character Builder

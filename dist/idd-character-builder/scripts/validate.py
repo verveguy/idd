@@ -180,16 +180,24 @@ def validate(build, rs):
     else:
         available = sum(v for v in sources.values() if isinstance(v, (int, float)))
 
-    # ---- heritage / faction validity
+    # ---- heritage / faction (both are REQUIRED: every IDD character has a
+    #      heritage, and must belong to exactly one of the four factions)
     heritage = build.get("heritage")
-    if heritage and not any(_norm(heritage) == _norm(h["name"]) or
-                            _norm(heritage) in _norm(h["name"])
-                            for h in rs["heritages"]):
-        errors.append(f"Unknown heritage: {heritage!r}")
+    heritage_names = [h["name"] for h in rs["heritages"]]
+    if not heritage:
+        errors.append(
+            f"Every character must have a heritage. Choose one of: {heritage_names}.")
+    elif not any(_norm(heritage) == _norm(h["name"]) or
+                 _norm(heritage) in _norm(h["name"]) for h in rs["heritages"]):
+        errors.append(f"Unknown heritage: {heritage!r}. Valid: {heritage_names}")
 
     faction = build.get("faction")
     faction_names = [f["name"] for f in rs["factions"]]
-    if faction and not any(_norm(faction) == _norm(fn) for fn in faction_names):
+    if not faction:
+        errors.append(
+            f"Every character must belong to a faction (the game requires it). "
+            f"Choose one of: {faction_names}.")
+    elif not any(_norm(faction) == _norm(fn) for fn in faction_names):
         errors.append(f"Unknown faction: {faction!r}. Valid: {faction_names}")
 
     # ---- attributes
