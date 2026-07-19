@@ -171,12 +171,23 @@
 .mcp-only{display:none}
   body.mcp .mcp-only{display:inline-flex}
   body.mcp .standalone-only{display:none}
+  .modeswitch{gap:5px; margin-bottom:12px}
+  .modeswitch button{width:28px; height:26px; border:1px solid #4a3f6a; background:transparent; color:#b8aede;
+    border-radius:5px; cursor:pointer; font-size:14px; line-height:1; display:grid; place-items:center; padding:0}
+  .modeswitch button:hover{background:#241d33}
+  .modeswitch button.cur{background:var(--accent); color:#efedf4; border-color:var(--accent-2)}
+  .modeswitch button:disabled{opacity:.3; cursor:not-allowed}
 </style>
 </head>
 <body>
 
 
 <div class="wrap">
+  <div class="modeswitch mcp-only" role="group" aria-label="Display mode">
+    <button id="mode-inline" title="Inline">▭</button>
+    <button id="mode-pip" title="Float (picture-in-picture)">❐</button>
+    <button id="mode-fullscreen" title="Fullscreen">⛶</button>
+  </div>
   <div class="topbar">
     <div>
       <span class="eyebrow">In Darkened Dreams</span>
@@ -186,7 +197,6 @@
     <div class="actions">
       <button class="act mcp-only" id="sendBtn">➤ Send to Claude</button>
       <button class="act ghost mcp-only" id="saveBtn">⇩ Save character</button>
-      <button class="act ghost mcp-only" id="fsBtn">⤢ Fullscreen</button>
       <button class="act ghost standalone-only" id="importBtn">⤵ Import JSON</button>
       <button class="act standalone-only" id="shareBtn" title="Copy a link that opens this build">🔗 Copy share link</button>
       <button class="act ghost" id="copyBtn">⧉ Copy build JSON</button>
@@ -605,7 +615,7 @@ if(!loadSeed()) render();
    own MCP tools so the MODEL drives THIS panel (no re-render), plus the explicit
    Send-to-Claude / Save actions. State mutations reuse the app's own functions. */
 (function(){
-  var rpcId=1, pending={}, hostModes=[];
+  var rpcId=1, pending={}, hostModes=[], currentMode="inline";
   function send(m){ m.jsonrpc="2.0"; parent.postMessage(m,"*"); }
   function call(method,params){ return new Promise(function(res,rej){
     var id=rpcId++; pending[id]={res:res,rej:rej}; send({id:id,method:method,params:params||{}}); }); }
@@ -663,6 +673,8 @@ if(!loadSeed()) render();
     switch(m.method){
       case "ui/notifications/tool-result":
         try{ var sc=m.params&&m.params.structuredContent; if(sc&&sc.build) importBuild(sc.build); }catch(e){} break;
+      case "ui/notifications/host-context-changed":
+        try{ if(m.params&&m.params.displayMode){ currentMode=m.params.displayMode; updateModes(); } reportSize(); }catch(e){} break;
       case "tools/list": reply(m.id,{tools:TOOLS}); break;
       case "tools/call":
         try{ var fn=H[m.params&&m.params.name];
@@ -682,8 +694,23 @@ if(!loadSeed()) render();
       if(h && h!==lastH){ lastH=h; notify("ui/notifications/size-changed",{width:w,height:h}); }
     }catch(e){}
   }
+  var MODE_TITLE={inline:"Inline",pip:"Float (picture-in-picture)",fullscreen:"Fullscreen"};
+  function updateModes(){
+    ["inline","pip","fullscreen"].forEach(function(mode){
+      var el=document.getElementById("mode-"+mode); if(!el) return;
+      var avail = mode==="inline" || hostModes.indexOf(mode)>=0;
+      el.disabled=!avail; el.classList.toggle("cur", mode===currentMode);
+      el.title = avail ? MODE_TITLE[mode] : (MODE_TITLE[mode]+" — not supported by this host");
+    });
+  }
+  async function setMode(mode){
+    if(mode!=="inline" && hostModes.indexOf(mode)<0) return;
+    try{ var r=await call("ui/request-display-mode",{mode:mode}); currentMode=(r&&r.mode)||mode; }
+    catch(_){ currentMode=mode; }
+    updateModes(); setTimeout(reportSize,120);
+  }
   function wire(){
-    var sb=document.getElementById("sendBtn"), sv=document.getElementById("saveBtn"), fs=document.getElementById("fsBtn");
+    var sb=document.getElementById("sendBtn"), sv=document.getElementById("saveBtn");
     if(sb) sb.addEventListener("click", async function(e){ var b=buildJSON();
       try{ await call("ui/update-model-context",{structuredContent:{build:b},content:[{type:"text",text:"Current build:\n"+JSON.stringify(b,null,2)}]}); }catch(_){}
       try{ await call("ui/message",{role:"user",content:[{type:"text",text:"Here's my current In Darkened Dreams build from the builder — please review it."}]}); }catch(_){}
@@ -691,19 +718,17 @@ if(!loadSeed()) render();
     if(sv) sv.addEventListener("click", async function(e){
       try{ await call("tools/call",{name:"save_character",arguments:{build:buildJSON()}}); flash(e.currentTarget,"✓ Saved"); }
       catch(_){ flash(e.currentTarget,"⚠ Save failed"); } });
-    if(fs) fs.addEventListener("click", async function(){
-      var mode = hostModes.indexOf("fullscreen")>=0 ? "fullscreen" : (hostModes.indexOf("pip")>=0 ? "pip" : null);
-      if(!mode){ flash(fs,"host: inline only"); return; }
-      try{ await call("ui/request-display-mode",{mode:mode}); }catch(_){}
-      setTimeout(reportSize,120); });
+    [["inline"],["pip"],["fullscreen"]].forEach(function(x){ var el=document.getElementById("mode-"+x[0]);
+      if(el) el.addEventListener("click", function(){ setMode(x[0]); }); });
   }
   (async function connect(){
     try{
       var _r=await call("ui/initialize",{appInfo:{name:"IDD Character Builder",version:"1.0.0"},
         appCapabilities:{tools:{listChanged:true}, availableDisplayModes:["inline","fullscreen","pip"]}, protocolVersion:"2026-01-26"});
       hostModes=(_r&&_r.hostContext&&_r.hostContext.availableDisplayModes)||[];
+      currentMode=(_r&&_r.hostContext&&_r.hostContext.displayMode)||"inline";
       notify("ui/notifications/initialized",{});
-      document.body.classList.add("mcp"); wire();
+      document.body.classList.add("mcp"); wire(); updateModes();
       if(window.ResizeObserver){ new ResizeObserver(function(){ reportSize(); }).observe(document.body); }
       window.addEventListener("load", reportSize);
       reportSize(); setTimeout(reportSize,80); setTimeout(reportSize,350);
