@@ -1,0 +1,33 @@
+{
+  "manifest_version": "0.3",
+  "name": "in-darkened-dreams",
+  "display_name": "In Darkened Dreams Character Builder",
+  "version": "1.0.0",
+  "description": "Unofficial interactive character builder for the In Darkened Dreams LARP — build, validate, and save rules-legal characters, with an in-chat builder UI. Single native binary, no runtime required.",
+  "author": { "name": "verveguy", "url": "https://github.com/verveguy" },
+  "homepage": "https://github.com/verveguy/idd",
+  "repository": { "type": "git", "url": "https://github.com/verveguy/idd" },
+  "keywords": ["larp", "idd", "in-darkened-dreams", "character-builder", "ttrpg"],
+  "server": {
+    "type": "binary",
+    "entry_point": "server/idd-mcp-darwin",
+    "mcp_config": {
+      "command": "${__dirname}/server/idd-mcp-darwin",
+      "args": [],
+      "env": {},
+      "platform_overrides": {
+        "win32": { "command": "${__dirname}/server/idd-mcp-win.exe" },
+        "linux": { "command": "${__dirname}/server/idd-mcp-linux" }
+      }
+    }
+  },
+  "tools": [
+    { "name": "open_character_builder", "description": "Open the interactive In Darkened Dreams character builder UI." },
+    { "name": "validate_character", "description": "Validate an IDD character build against the rules." },
+    { "name": "get_catalog", "description": "List heritages, factions, and headers with costs." },
+    { "name": "save_character", "description": "Save a character build to local storage." },
+    { "name": "load_character", "description": "Load a saved character build." },
+    { "name": "list_characters", "description": "List saved characters." }
+  ],
+  "compatibility": { "platforms": ["darwin", "win32", "linux"] }
+}
