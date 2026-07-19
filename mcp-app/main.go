@@ -106,7 +106,7 @@ func dispatch(req rpcRequest) (any, *rpcError) {
 		}
 		return map[string]any{
 			"protocolVersion": pv,
-			"serverInfo":      map[string]any{"name": "in-darkened-dreams", "version": "1.2.2"},
+			"serverInfo":      map[string]any{"name": "in-darkened-dreams", "version": "1.2.3"},
 			"capabilities":    map[string]any{"tools": map[string]any{}},
 			"instructions":    serverInstructions(),
 		}, nil
@@ -145,7 +145,12 @@ func toolDefs() []any {
 		},
 		map[string]any{
 			"name":        "get_header",
-			"description": "Show the skills inside a single header (or the open skills): each skill's name, CP cost, attribute activation cost, and a one-line effect. Use this to see what a header offers before choosing skills. Pass the header name, or \"Open\" for the open skills.",
+			"description": "Show the skills inside a single header (or the open skills): each skill's name, CP cost, attribute activation cost, and a one-line effect. Use this to see what a header offers before choosing skills. Pass the header name, or \"Open\" for the open skills. If a header grants a Sphere, use get_sphere to see that sphere's spells.",
+			"inputSchema": map[string]any{"type": "object", "properties": map[string]any{"name": map[string]any{"type": "string"}}, "required": []string{"name"}},
+		},
+		map[string]any{
+			"name":        "get_sphere",
+			"description": "List the individually-purchasable SPELLS in one of the six magic spheres (Restoration, Evocation, Illusion, Conjuration, Alteration, Manipulation) — each spell's name, CP cost, per-cast attribute cost, and effect. A caster buys an Arcane header, then a \"The Sphere of X\" skill, then buys spells from that sphere by name (they only become legal once the sphere is owned). Pass the sphere name (\"Evocation\" or \"The Sphere of Evocation\").",
 			"inputSchema": map[string]any{"type": "object", "properties": map[string]any{"name": map[string]any{"type": "string"}}, "required": []string{"name"}},
 		},
 		map[string]any{
@@ -196,6 +201,8 @@ func callTool(params json.RawMessage) (any, *rpcError) {
 		return toolCatalog()
 	case "get_header":
 		return toolGetHeader(p.Arguments)
+	case "get_sphere":
+		return toolGetSphere(p.Arguments)
 	case "get_builder_url":
 		return toolBuilderURL()
 	case "get_current_build":
@@ -290,6 +297,26 @@ func toolCatalog() (any, *rpcError) {
 	return textResult(b.String(), nil), nil
 }
 
+func writeSkill(sb *strings.Builder, s rules.Skill) {
+	line := fmt.Sprintf("  %s (%d CP)", s.Name, s.Cost)
+	if a := attrStr(s.AttributeCost); a != "" {
+		line += " [" + a + "]"
+	}
+	if s.SpellLike {
+		line += " [spell-like]"
+	}
+	if len(s.Prerequisites) > 0 {
+		line += " [needs " + strings.Join(s.Prerequisites, "/") + "]"
+	}
+	if e := eff(s.Description); e != "" {
+		line += " — " + e
+	}
+	if sp := sphereOfU(s.Name); sp != "" {
+		line += "  (→ call get_sphere \"" + sp + "\" to list its purchasable spells)"
+	}
+	sb.WriteString(line + "\n")
+}
+
 func toolGetHeader(args json.RawMessage) (any, *rpcError) {
 	var a struct {
 		Name string `json:"name"`
@@ -297,27 +324,11 @@ func toolGetHeader(args json.RawMessage) (any, *rpcError) {
 	if err := json.Unmarshal(args, &a); err != nil {
 		return nil, &rpcError{Code: -32602, Message: "bad params"}
 	}
-	skillLine := func(sb *strings.Builder, s rules.Skill) {
-		line := fmt.Sprintf("  %s (%d CP)", s.Name, s.Cost)
-		if a := attrStr(s.AttributeCost); a != "" {
-			line += " [" + a + "]"
-		}
-		if s.SpellLike {
-			line += " [spell-like]"
-		}
-		if len(s.Prerequisites) > 0 {
-			line += " [needs " + strings.Join(s.Prerequisites, "/") + "]"
-		}
-		if e := eff(s.Description); e != "" {
-			line += " — " + e
-		}
-		sb.WriteString(line + "\n")
-	}
 	var b strings.Builder
 	if strings.EqualFold(a.Name, "open") {
 		fmt.Fprintf(&b, "OPEN SKILLS (any character may buy these):\n")
 		for _, s := range ruleset.OpenSkills {
-			skillLine(&b, s)
+			writeSkill(&b, s)
 		}
 		return textResult(b.String(), nil), nil
 	}
@@ -340,7 +351,40 @@ func toolGetHeader(args json.RawMessage) (any, *rpcError) {
 	}
 	b.WriteString("\nSkills:\n")
 	for _, s := range h.Skills {
-		skillLine(&b, s)
+		writeSkill(&b, s)
+	}
+	return textResult(b.String(), nil), nil
+}
+
+var reSphereName = regexp.MustCompile(`(?i)\b(the\s+)?sphere\s+of\s+`)
+
+func toolGetSphere(args json.RawMessage) (any, *rpcError) {
+	var a struct {
+		Name string `json:"name"`
+	}
+	if err := json.Unmarshal(args, &a); err != nil {
+		return nil, &rpcError{Code: -32602, Message: "bad params"}
+	}
+	key := strings.TrimSpace(reSphereName.ReplaceAllString(a.Name, ""))
+	var spells []rules.Skill
+	var name string
+	for k, v := range ruleset.Spells {
+		if strings.EqualFold(k, key) || strings.EqualFold(k, a.Name) {
+			spells, name = v, k
+			break
+		}
+	}
+	if spells == nil {
+		var keys []string
+		for k := range ruleset.Spells {
+			keys = append(keys, k)
+		}
+		return textResult(fmt.Sprintf("No sphere named %q. The six spheres are: %s. Casters own a sphere via a skill like \"The Sphere of Evocation\" under an Arcane header.", a.Name, strings.Join(keys, ", ")), nil), nil
+	}
+	var b strings.Builder
+	fmt.Fprintf(&b, "Spells of %s — buy each you want INDIVIDUALLY (add it by name to skills, like any skill). Each is only purchasable once you own \"The Sphere of %s\"; the CP is the buy cost, the [attribute] is what it costs to cast in play:\n", name, name)
+	for _, s := range spells {
+		writeSkill(&b, s)
 	}
 	return textResult(b.String(), nil), nil
 }
@@ -356,6 +400,7 @@ func serverInstructions() string {
 	return "This server powers a LIVE In Darkened Dreams (IDD) LARP character builder that is shared with a web page in the player's browser at " + url + " (call get_builder_url anytime for this exact address — tell the player to open it; it does not open by itself).\n\n" +
 		"How to work with it:\n" +
 		"- Use get_catalog and get_header to see heritages, factions, headers, and their skills. Heritage and Faction are FREE (0 CP); CP is spent only on attributes, headers, and skills/spells.\n" +
+		"- MAGIC: a caster buys an Arcane header, then buys a Sphere skill (e.g. \"The Sphere of Evocation\", ~2 CP), then buys INDIVIDUAL spells from that sphere. Each spell is a separate purchasable skill with its own CP cost (add it to skills by name) and a per-cast attribute cost. Owning the sphere does NOT auto-grant its spells — call get_sphere to list them and buy the ones you want (they only validate once the sphere is owned).\n" +
 		"- Build it STEP BY STEP and let the player watch: after each choice, call patch_build with just what changed (e.g. {\"heritage\":\"Solari\"}, then {\"attributes\":{\"Fire\":4}}, then {\"headers\":[\"Wizard\"]}). Each patch merges into the shared session and the browser updates live. Do this automatically as you decide things; don't wait to be asked. Use set_current_build only to replace the whole sheet at once.\n" +
 		"- Before changing a build, call get_current_build to read what the player may have edited in their browser, so you don't overwrite it.\n" +
 		"- set_current_build returns the validation result; the group uses hard-block rules, so resolve any errors before calling a build final.\n" +
