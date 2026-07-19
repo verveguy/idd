@@ -1,4 +1,12 @@
 {
+  "_notice": {
+    "source": "Derived from 'In Darkened Dreams Rules v1.0.3' (built on the Accelerant LARP system).",
+    "copyright": "Game rules, setting, and content © their respective creators — all rights reserved.",
+    "dataset": "Unofficial, fan-made transcription created as a character-building aid for the In Darkened Dreams play group. Not affiliated with or endorsed by the game's creators. Offered in good faith as transformative, non-commercial fair use.",
+    "tool_software": "© 2026 verveguy.",
+    "see": "NOTICE.md",
+    "contact": "Rights holders with concerns may contact the maintainer to amend or remove this project."
+  },
   "game": "In Darkened Dreams",
   "system": "Accelerant",
   "ruleset_version": "1.0.3",

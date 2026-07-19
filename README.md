@@ -83,5 +83,6 @@ users receive the update.
 
 ---
 
-Ruleset: *In Darkened Dreams Rules v1.0.3*. This tool is a fan-made aid for the
-play group; the rulebook PDF is not distributed here.
+Ruleset: *In Darkened Dreams Rules v1.0.3*. This is an **unofficial, fan-made**
+aid; the rulebook PDF is not distributed here. Game content is © its respective
+creators — see [`NOTICE.md`](NOTICE.md).
