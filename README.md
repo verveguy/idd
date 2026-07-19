@@ -1,22 +1,44 @@
-# In Darkened Dreams — Claude Code Plugin
+# In Darkened Dreams — Character Builder
 
-A Claude Code **plugin marketplace** for the *In Darkened Dreams* (IDD) LARP. It
-installs an interactive **character builder**, **validator**, and **level-up**
-tool that enforce every CP, attribute, header, skill, faction, and spell rule
-against the v1.0.3 ruleset — and hand you a finished, rules-legal character
-sheet.
+An interactive **character builder**, **validator**, and **level-up** tool for the
+*In Darkened Dreams* (IDD) LARP. It enforces every CP, attribute, header, skill,
+faction, and spell rule against the v1.0.3 ruleset and hands you a finished,
+rules-legal character sheet.
 
-## Install (players)
+It installs two ways — pick whichever you use:
 
-You need [Claude Code](https://claude.com/claude-code) installed. Then, in any
-Claude Code session:
+## ▶ Install in Claude Desktop (or claude.ai) — no Claude Code needed
+
+This is the easiest route for most players. It works on **any plan, including
+Free**, as long as code execution is turned on. You don't need to install Python.
+
+1. **Download the skill ZIP:**
+   **https://github.com/verveguy/idd/releases/latest/download/idd-character-builder.zip**
+2. **Turn on code execution:** Claude **Settings → Capabilities → "Code execution
+   and file creation" → ON**. (The builder runs its rules-checker in Claude's
+   sandbox — this is what lets it do that.)
+3. **Add the skill:** Claude **Settings → Skills → Add**, and select the ZIP you
+   downloaded. Toggle it **ON**.
+4. **Use it** — just chat:
+   > "Help me build an In Darkened Dreams character — a sword-and-buckler spellblade."
+
+Claude will walk you through heritage, faction, attributes, headers, skills, and
+spells, and hand you a validated sheet. It also checks existing characters and
+levels them up when you earn CP.
+
+To update later, download the newest ZIP from the same link and re-add it.
+
+## ▶ Install in Claude Code (plugin)
+
+If you use [Claude Code](https://claude.com/claude-code), install it as a plugin
+instead:
 
 ```
 /plugin marketplace add verveguy/idd
 /plugin install idd@idd-marketplace
 ```
 
-That's it. Now use it anywhere:
+Then use it anywhere:
 
 ```
 /idd:build-character      build a new character, step by step
@@ -24,19 +46,14 @@ That's it. Now use it anywhere:
 /idd:level-up             spend newly-earned CP on a character
 ```
 
-You can also just talk to it — *"help me build a sword-and-board healer"* works
-as well as the slash command. No coding required.
-
-To update later when new versions ship:
-
-```
-/plugin marketplace update idd-marketplace
-```
+You can also just talk to it — *"help me build a sword-and-board healer"* works as
+well as the slash command. Update later with `/plugin marketplace update
+idd-marketplace`.
 
 ## What's in the box
 
-The plugin bundles the three skills **and** the full ruleset data, so it works
-offline with no extra setup:
+Either way, it bundles the three skills **and** the full ruleset data, so it works
+with no extra setup:
 
 - **27 headers** (371 skills), **49 spells** across 6 spheres, **12 open
   skills**, **6 heritages**, **4 factions** — all extracted from the rulebook
