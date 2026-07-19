@@ -61,10 +61,12 @@ var (
 func eff(desc string) string {
 	d := strings.TrimSpace(reWSp.ReplaceAllString(desc, " "))
 	if loc := reSentence.FindStringIndex(d); loc != nil {
-		d = strings.TrimSpace(d[:loc[0]+1])
+		// match is <punct><space>; cut before the space (loc[1]-1) so a
+		// multibyte punctuation char (e.g. ”) is kept whole — never split mid-rune.
+		d = strings.TrimSpace(d[:loc[1]-1])
 	}
-	if len(d) > 120 {
-		d = strings.TrimSpace(d[:119]) + "…"
+	if r := []rune(d); len(r) > 120 {
+		d = strings.TrimSpace(string(r[:119])) + "…"
 	}
 	return d
 }

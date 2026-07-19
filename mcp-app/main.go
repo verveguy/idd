@@ -150,20 +150,25 @@ func toolDefs() []any {
 	buildObj := map[string]any{"type": "object", "description": "An IDD character build object."}
 	return []any{
 		map[string]any{
-			"name":        "open_character_builder",
-			"description": "Open the interactive In Darkened Dreams character builder UI, optionally seeded with a build.",
+			"name": "open_character_builder",
+			"description": "Open the interactive character-builder panel. Call this AT MOST ONCE per conversation, and only when the user wants to build visually. The panel then stays open and the user drives it, sending builds back when they click \"Send to Claude\". Do NOT call this again to show changes or seed a build — use get_catalog, get_header, and validate_character to reason about builds in text.",
 			"inputSchema": map[string]any{"type": "object", "properties": map[string]any{"build": buildObj}},
 			"_meta":       uiMeta,
 		},
 		map[string]any{
 			"name":        "validate_character",
-			"description": "Validate an IDD character build against the rules (CP, attributes, headers, skills, faction, prerequisites, exclusions). Returns errors, warnings, CP breakdown, Vitality, tier, and traits.",
+			"description": "Validate an IDD character build against the rules (CP, attributes, headers, skills, faction, prerequisites, exclusions). Returns a full text report: legality, errors, warnings, CP breakdown, Vitality, tier, and traits. Use this before presenting any build as final.",
 			"inputSchema": map[string]any{"type": "object", "properties": map[string]any{"build": buildObj}, "required": []string{"build"}},
 		},
 		map[string]any{
 			"name":        "get_catalog",
-			"description": "List the IDD ruleset options: heritages, factions, and all headers with their CP cost and faction requirement.",
+			"description": "List all IDD ruleset options as readable text: the 6 heritages, 4 factions, and all 27 headers with each header's CP cost, faction requirement (if any), and whether it grants the Arcane or Devout trait. Call this first to see what's available.",
 			"inputSchema": map[string]any{"type": "object", "properties": map[string]any{}},
+		},
+		map[string]any{
+			"name":        "get_header",
+			"description": "Show the skills inside a single header (or the open skills): each skill's name, CP cost, attribute activation cost, and a one-line effect. Use this to see what a header offers before choosing skills. Pass the header name, or \"Open\" for the open skills.",
+			"inputSchema": map[string]any{"type": "object", "properties": map[string]any{"name": map[string]any{"type": "string"}}, "required": []string{"name"}},
 		},
 		map[string]any{
 			"name":        "save_character",
@@ -196,6 +201,8 @@ func callTool(params json.RawMessage) (any, *rpcError) {
 		return toolValidate(p.Arguments)
 	case "get_catalog":
 		return toolCatalog()
+	case "get_header":
+		return toolGetHeader(p.Arguments)
 	case "open_character_builder":
 		return toolOpenBuilder(p.Arguments)
 	case "save_character":
@@ -225,33 +232,38 @@ func toolValidate(args json.RawMessage) (any, *rpcError) {
 		return nil, &rpcError{Code: -32602, Message: "invalid build: " + err.Error()}
 	}
 	res := ruleset.Validate(a.Build)
-	var summary string
+	var b strings.Builder
 	if res.Valid {
-		summary = fmt.Sprintf("VALID — %d/%d CP spent, %d remaining. Vitality %d, %s.",
-			res.Total, res.Available, res.Remaining, res.Vitality, res.Tier)
+		fmt.Fprintf(&b, "VALID BUILD — %d/%d CP spent, %d remaining.\n", res.Total, res.Available, res.Remaining)
 	} else {
-		summary = fmt.Sprintf("INVALID — %d error(s): %s", len(res.Errors), strings.Join(res.Errors, " | "))
+		fmt.Fprintf(&b, "INVALID BUILD — %d error(s):\n", len(res.Errors))
+		for _, e := range res.Errors {
+			fmt.Fprintf(&b, "  • %s\n", e)
+		}
 	}
-	return textResult(summary, res), nil
+	fmt.Fprintf(&b, "CP: attributes %d + headers %d + skills %d = %d of %d.\n",
+		res.AttrCP, res.HeaderCP, res.SkillsCP, res.Total, res.Available)
+	fmt.Fprintf(&b, "Vitality %d · Tier %s.\n", res.Vitality, res.Tier)
+	for _, w := range res.Warnings {
+		fmt.Fprintf(&b, "  warning: %s\n", w)
+	}
+	fmt.Fprintf(&b, "Traits: %s.", strings.Join(res.Traits, ", "))
+	return textResult(b.String(), res), nil
+}
+
+var reMemberT = regexp.MustCompile(`(?i)member of (the [\w' ]+?)(?:\.|$| to)`)
+
+func headerFaction(h *rules.Header) string {
+	for _, p := range h.Prerequisites {
+		if m := reMemberT.FindStringSubmatch(p); m != nil {
+			return strings.TrimSpace(m[1])
+		}
+	}
+	return ""
 }
 
 func toolCatalog() (any, *rpcError) {
-	type hdr struct {
-		Name    string `json:"name"`
-		Cost    int    `json:"cost"`
-		Faction string `json:"faction,omitempty"`
-	}
-	var headers []hdr
-	for i := range ruleset.Headers {
-		h := &ruleset.Headers[i]
-		fac := ""
-		for _, p := range h.Prerequisites {
-			if m := regexp.MustCompile(`(?i)member of (the [\w' ]+?)(?:\.|$| to)`).FindStringSubmatch(p); m != nil {
-				fac = strings.TrimSpace(m[1])
-			}
-		}
-		headers = append(headers, hdr{h.Name, h.HeaderCost, fac})
-	}
+	var b strings.Builder
 	var heritages, factions []string
 	for _, h := range ruleset.Heritages {
 		heritages = append(heritages, h.Name)
@@ -259,8 +271,79 @@ func toolCatalog() (any, *rpcError) {
 	for _, f := range ruleset.Factions {
 		factions = append(factions, f.Name)
 	}
-	cat := map[string]any{"heritages": heritages, "factions": factions, "headers": headers}
-	return textResult(fmt.Sprintf("%d heritages, %d factions, %d headers.", len(heritages), len(factions), len(headers)), cat), nil
+	fmt.Fprintf(&b, "IN DARKENED DREAMS — ruleset options\n\n")
+	fmt.Fprintf(&b, "HERITAGES (free — every character has one): %s\n\n", strings.Join(heritages, ", "))
+	fmt.Fprintf(&b, "FACTIONS (free — every character must join exactly one): %s\n", strings.Join(factions, ", "))
+	fmt.Fprintf(&b, "Each faction unlocks 3 exclusive headers; a header with no faction requirement can be taken by any faction.\n\n")
+	fmt.Fprintf(&b, "HEADERS (buy the header before its skills; then call get_header for its skill list):\n")
+	for i := range ruleset.Headers {
+		h := &ruleset.Headers[i]
+		line := fmt.Sprintf("  %s — %d CP", h.Name, h.HeaderCost)
+		if fac := headerFaction(h); fac != "" {
+			line += " — requires " + fac
+		}
+		if len(h.GrantsTraits) > 0 {
+			line += " — grants " + strings.Join(h.GrantsTraits, "/")
+		}
+		b.WriteString(line + "\n")
+	}
+	fmt.Fprintf(&b, "\nAlso: %d open skills (any character), via get_header \"Open\". Casters buy a Sphere under an Arcane header, then spells in it.", len(ruleset.OpenSkills))
+	return textResult(b.String(), nil), nil
+}
+
+func toolGetHeader(args json.RawMessage) (any, *rpcError) {
+	var a struct {
+		Name string `json:"name"`
+	}
+	if err := json.Unmarshal(args, &a); err != nil {
+		return nil, &rpcError{Code: -32602, Message: "bad params"}
+	}
+	skillLine := func(sb *strings.Builder, s rules.Skill) {
+		line := fmt.Sprintf("  %s (%d CP)", s.Name, s.Cost)
+		if a := attrStr(s.AttributeCost); a != "" {
+			line += " [" + a + "]"
+		}
+		if s.SpellLike {
+			line += " [spell-like]"
+		}
+		if len(s.Prerequisites) > 0 {
+			line += " [needs " + strings.Join(s.Prerequisites, "/") + "]"
+		}
+		if e := eff(s.Description); e != "" {
+			line += " — " + e
+		}
+		sb.WriteString(line + "\n")
+	}
+	var b strings.Builder
+	if strings.EqualFold(a.Name, "open") {
+		fmt.Fprintf(&b, "OPEN SKILLS (any character may buy these):\n")
+		for _, s := range ruleset.OpenSkills {
+			skillLine(&b, s)
+		}
+		return textResult(b.String(), nil), nil
+	}
+	var h *rules.Header
+	for i := range ruleset.Headers {
+		if strings.EqualFold(ruleset.Headers[i].Name, a.Name) {
+			h = &ruleset.Headers[i]
+			break
+		}
+	}
+	if h == nil {
+		return textResult(fmt.Sprintf("No header named %q. Use get_catalog for the list.", a.Name), nil), nil
+	}
+	fmt.Fprintf(&b, "%s — %d CP", h.Name, h.HeaderCost)
+	if fac := headerFaction(h); fac != "" {
+		fmt.Fprintf(&b, " — requires %s", fac)
+	}
+	if len(h.GrantsTraits) > 0 {
+		fmt.Fprintf(&b, " — grants %s", strings.Join(h.GrantsTraits, "/"))
+	}
+	b.WriteString("\nSkills:\n")
+	for _, s := range h.Skills {
+		skillLine(&b, s)
+	}
+	return textResult(b.String(), nil), nil
 }
 
 func toolOpenBuilder(args json.RawMessage) (any, *rpcError) {
