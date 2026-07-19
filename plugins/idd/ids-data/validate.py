@@ -91,6 +91,27 @@ def _all_known_names(rs):
     return names
 
 
+def _skill_index(rs):
+    """norm-name -> {"name": display name, "desc": description} for every skill/spell."""
+    idx = {}
+
+    def put(name, desc):
+        idx.setdefault(_norm(name), {"name": name, "desc": desc or ""})
+
+    for s in rs["open_skills"]:
+        put(s["name"], s.get("description"))
+    for h in rs["heritages"]:
+        for s in h.get("heritage_skills", []):
+            put(s["name"], s.get("description"))
+    for h in rs["headers"]:
+        for s in h["skills"]:
+            put(s["name"], s.get("description"))
+    for _sphere, spells in rs.get("spells", {}).items():
+        for s in spells:
+            put(s["name"], s.get("description"))
+    return idx
+
+
 def _norm(s):
     """Normalize a name for tolerant matching (case, quotes, punctuation)."""
     s = (s or "").strip().lower()
@@ -307,6 +328,30 @@ def validate(build, rs):
             warnings.append(
                 f"Skill {rec['name']!r} lists prerequisite {prereqs[0]!r} that "
                 f"couldn't be auto-verified — check the rulebook.")
+
+    # ---- mutual exclusions ("You cannot purchase this skill if you have X or Y")
+    # Parsed from descriptions so new exclusions are caught automatically.
+    index = _skill_index(rs)   # norm-name -> {"name": display, "desc": text}
+    reported = set()
+    for rec, _count in resolved_skills:
+        self_norm = _norm(rec["name"])
+        text = index.get(self_norm, {}).get("desc", "")
+        m = re.search(r"cannot purchase this (?:skill|spell)"
+                      r"(?:,[^,]+,)? if you (?:have|already have|possess) (.+?)\.",
+                      text, re.I)
+        if not m:
+            continue
+        for cand in re.split(r",|\bor\b|\band\b", m.group(1)):
+            cn = _norm(cand)
+            if cn and cn != self_norm and cn in purchased:
+                pair = frozenset((self_norm, cn))
+                if pair in reported:
+                    continue
+                reported.add(pair)
+                other = index.get(cn, {}).get("name", cand.strip())
+                errors.append(
+                    f"Skills {rec['name']!r} and {other!r} are mutually exclusive "
+                    f"— a character may have only one.")
 
     total_spent = attr_cp + header_cp + skills_cp
     if total_spent > available:

@@ -4,7 +4,7 @@ description: Build, validate, or level up a legal In Darkened Dreams (IDD) LARP 
 license: See scripts/NOTICE.md
 metadata:
   author: verveguy
-  version: "1.0.1"
+  version: "1.0.2"
 ---
 
 # In Darkened Dreams — Character Builder
@@ -37,8 +37,14 @@ working build to a temp file (e.g. `build.json`) and validate it.
 - **5 attributes** (Air, Earth, Fire, Water, Void), all start at **2**. Raising an
   attribute to level N costs N CP (2→3 = 3, 3→4 = 4, …).
 - **Vitality = ⌈(Earth + Void) / 2⌉**.
-- **Heritage** (6) and **Faction** (4) are required; one faction only. Each faction
-  unlocks 3 exclusive headers; many headers require a specific faction.
+- **Heritage** (6) and **Faction** (4) are **required** — every character MUST have
+  a heritage and belong to exactly one faction. Never build a factionless character;
+  always have the player choose one of the four factions.
+- Each faction unlocks 3 exclusive headers, and many headers require a specific
+  faction. Headers with **no** faction prerequisite (e.g. Sorcerer, Warrior,
+  Wizard) can be bought by a member of **any** faction — being an "open" /
+  "faction-free" header means it isn't restricted to one faction, **not** that the
+  character is factionless. A Sorcerer still belongs to one of the four factions.
 - **Skills** sit under **Headers** — buy a header (its CP cost) before its skills.
   **Open skills** need no header.
 - **Magic**: caster headers let you buy a **Sphere** (~2 CP); owning a sphere lets
@@ -46,6 +52,10 @@ working build to a temp file (e.g. `build.json`) and validate it.
 - No duplicate purchases; `*` skills are repeatable (respect limits). Some
   skills/headers have prerequisites. Attribute costs printed on skills are spent
   *during play* (refreshed each event) — they are NOT part of the CP build cost.
+- **Mutual exclusions**: some skills can't be combined — notably the three Auras
+  (*Aura of Healing*, *Aura of the Herald*, *Aura of Vengeance*) are mutually
+  exclusive; a character may take at most one. Don't propose combining
+  mutually-exclusive skills; the validator hard-blocks them.
 
 ## Build JSON format
 

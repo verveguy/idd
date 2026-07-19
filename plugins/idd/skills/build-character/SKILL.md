@@ -22,10 +22,11 @@ Read the JSON files directly when you need skill descriptions or options: `rules
 - Start with **30 CP**, +5 when character history is approved. IDD grants more via bullets, donations, playtest, and earned CP. Ask the player their **total available CP** (or itemize the sources).
 - **5 attributes** (Air, Earth, Fire, Water, Void), all start at **2**. Raising an attribute to level N costs N CP (2→3 costs 3, 3→4 costs 4, ...).
 - **Vitality = ⌈(Earth + Void) / 2⌉**.
-- **Heritage** (6 options) and **Faction** (4 options) are required. Each faction unlocks **3 exclusive headers**; many headers require a specific faction. *A character may belong to only one faction.*
+- **Heritage** (6 options) and **Faction** (4 options) are **required** — every character MUST have a heritage and belong to exactly **one** faction. Never build a factionless character. Each faction unlocks **3 exclusive headers**, and many headers require a specific faction. Headers with **no** faction prerequisite (e.g. Sorcerer, Warrior, Wizard) can be bought by a member of **any** faction — "faction-free" means the header isn't restricted to one faction, **not** that the character is factionless.
 - **Skills** sit under **Headers** — you must buy a header (its listed CP cost) before any skill under it. **Open skills** need no header.
 - **Magic**: caster headers let you buy a **Sphere** (e.g. The Sphere of Conjuration, ~2 CP). Owning a sphere lets you buy individual **spells** from that sphere (each has its own CP cost). See `spells.json`.
 - No duplicate purchases; `*` skills are repeatable (respect purchase limits). Some skills/headers have prerequisites.
+- **Mutual exclusions**: some skills can't be combined — notably the three Auras (*Aura of Healing*, *Aura of the Herald*, *Aura of Vengeance*) are mutually exclusive; a character may take at most one. Don't propose combining mutually-exclusive skills; the validator hard-blocks them.
 - Attribute costs printed on skills are spent *during play*, refreshed each event — they do **not** cost CP at build time.
 
 ## The interactive flow
