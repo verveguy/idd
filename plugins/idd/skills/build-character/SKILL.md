@@ -68,6 +68,24 @@ Write to a scratch file, then validate:
 
 Skill names are matched case-insensitively (curly quotes/trailing ellipses tolerated). For weapon skills that specify a type (e.g. "Melee Weapon"), use the catalog name; note the chosen type in the character sheet notes.
 
+## Companion builder app (optional handoff)
+
+An interactive web builder lives at
+**https://v3rv.com/idd/dist/character-builder-app.html** (dropdowns, attribute
+steppers, live CP ledger, printable sheet). It's a separate sandboxed page —
+**no automatic live sync**; moving a build across is copy/paste or a pre-filled
+link. Offer it when a player wants to tinker visually.
+
+- **Hand a build TO the app:** URL-encode the build JSON as a hash — in the code
+  tool, `"https://v3rv.com/idd/dist/character-builder-app.html#build="+urllib.parse.quote(json.dumps(build))`
+  — and give the player that link (opens the app pre-filled). Or, if the app is
+  open, have them click **Import JSON** and paste the build.
+- **Read a build back FROM the app:** ask the player to click **Copy build JSON**
+  and paste it into chat; transcribe and validate as usual.
+
+You cannot inject into or read a running app directly — it's link/paste in,
+copy/paste out.
+
 ## Style
 
 - Explain *why* a choice matters (e.g. "low Void means fewer refreshes, and it also lowers your Vitality").

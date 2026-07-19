@@ -52,6 +52,18 @@ idd-marketplace`.
 
 ## What's in the box
 
+## ▶ Companion web builder (optional)
+
+Prefer clicking to typing? There's a visual builder at
+**https://v3rv.com/idd/dist/character-builder-app.html** — dropdowns for
+heritage/faction, attribute steppers, header/skill pickers, a **live CP ledger +
+validation**, and a printable sheet. It runs fully in your browser (no install).
+Use **Copy build JSON** to paste a build into a chat with the skill, or **Import
+JSON** to load one the skill made. It pairs with the skill; the skill's validator
+is still the final word.
+
+## What's in the box
+
 Either way, it bundles the three skills **and** the full ruleset data, so it works
 with no extra setup:
 

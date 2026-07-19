@@ -4,7 +4,7 @@ description: Build, validate, or level up a legal In Darkened Dreams (IDD) LARP 
 license: See scripts/NOTICE.md
 metadata:
   author: verveguy
-  version: "1.0.4"
+  version: "1.0.5"
 ---
 
 # In Darkened Dreams — Character Builder
@@ -121,6 +121,28 @@ Load the existing build, add newly-earned CP to `cp_sources`, propose upgrades
 within the new budget (attributes, a new header, skills, or a Sphere + spells),
 apply them, and re-validate. Leveling up is additive — don't remove prior
 purchases unless the player wants a rebuild.
+
+## Companion builder app (optional handoff)
+
+There's an interactive web builder at
+**https://v3rv.com/idd/dist/character-builder-app.html** that mirrors this skill
+(dropdowns, attribute steppers, live CP ledger, printable sheet). It's a separate
+sandboxed page, so there is **no automatic live sync** — moving a build across is
+copy/paste or a pre-filled link. Offer it when a player wants to tinker visually.
+
+- **Hand your current build TO the app.** Two ways:
+  1. **Pre-filled link** — URL-encode the build JSON and append it as a hash. In
+     the code tool: `import json,urllib.parse;
+     "https://v3rv.com/idd/dist/character-builder-app.html#build="+urllib.parse.quote(json.dumps(build))`.
+     Give the player that link; opening it in a browser loads the app pre-filled.
+  2. **Paste** — if the app is already open, give the player the build JSON and
+     tell them to click **Import JSON** in the app and paste it.
+- **Read a build back FROM the app.** Ask the player to click **Copy build JSON**
+  in the app and paste it into the chat; then transcribe it into a `build.json`
+  and validate as usual. (The app can't send its state back on its own.)
+
+Be honest about the loop: link/paste in, copy/paste out — you cannot inject into
+or read a running app directly.
 
 ## Style
 

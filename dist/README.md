@@ -39,14 +39,22 @@ levels them up when you earn CP.
 ## Companion builder app (`character-builder-app.html`)
 
 A standalone, offline interactive builder — a visual companion to the skill.
-Open it in any browser (or as a Claude artifact): pick heritage/faction from
+**Live at https://v3rv.com/idd/dist/character-builder-app.html** (GitHub Pages),
+or open the file / a Claude artifact directly. Pick heritage/faction from
 dropdowns, step attributes up and down, toggle headers and skills, and watch the
 **CP ledger, Vitality, tier, traits, and legality update live**. It embeds the
 full ruleset and a JavaScript port of the validator (verified to match the Python
 validator's CP math), so it needs no server and no Python.
 
 - **Copy build JSON** → paste into a chat with the skill for the authoritative check / to save.
+- **Import JSON** → paste a build from the chat/skill to load it.
 - **Save sheet as PDF** → prints just the character sheet, one clean page.
+
+**Handoff with the skill.** The page is sandboxed, so there's no live sync — it's
+copy/paste or a pre-filled link:
+- *Skill → app:* open a deep link `…character-builder-app.html#build=<url-encoded
+  JSON>` (the app loads pre-filled), or paste into **Import JSON**.
+- *App → skill:* click **Copy build JSON** and paste it into the chat.
 
 The app's embedded ruleset is regenerated from the master by `dist/build-app.py`
 (run automatically by `./build.sh`), so it never drifts from the validator.
