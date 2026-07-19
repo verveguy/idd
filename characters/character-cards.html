@@ -129,15 +129,21 @@
 
   /* ---------- print: clean, one card per page ---------- */
   @media print{
-    @page{size:letter portrait; margin:0.5in}
+    @page{size:letter portrait; margin:0.3in}
     html,body{background:#fff!important}
     body{padding:0}
     .pdf,.masthead{display:none!important}
     .deck{gap:0}
     .leaf{width:100%; max-width:100%; box-shadow:none; border:1px solid #bbb;
+      padding:20px 26px 16px;
       break-after:page; page-break-after:always; -webkit-print-color-adjust:exact; print-color-adjust:exact}
     .leaf:last-child{break-after:auto; page-break-after:auto}
-    .leaf::after{border-color:#ddd}
+    .leaf::after{inset:7px; border-color:#ddd}
+    .band-rule{margin:12px 0}
+    .body{margin-top:14px; gap:22px}
+    .ab{padding:6px 0 6px}
+    .ab-eff{margin-top:3px}
+    .leaf-foot{margin-top:14px; padding-top:8px}
   }
 </style>
 
