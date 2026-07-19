@@ -107,7 +107,7 @@ func dispatch(req rpcRequest) (any, *rpcError) {
 		}
 		return map[string]any{
 			"protocolVersion": pv,
-			"serverInfo":      map[string]any{"name": "in-darkened-dreams", "version": "1.2.4"},
+			"serverInfo":      map[string]any{"name": "in-darkened-dreams", "version": "1.2.5"},
 			"capabilities":    map[string]any{"tools": map[string]any{}},
 			"instructions":    serverInstructions(),
 		}, nil
@@ -131,7 +131,7 @@ func toolDefs() []any {
 	return []any{
 		map[string]any{
 			"name":        "validate_character",
-			"description": "Validate an IDD character build against the rules (CP, attributes, headers, skills, faction, prerequisites, exclusions). Returns a full text report: legality, errors, warnings, CP breakdown, Vitality, tier, and traits. Use this before presenting any build as final.",
+			"description": "STATELESS legality check of an IDD build — full text report: legality, errors, warnings, CP breakdown, Vitality, tier, traits. IMPORTANT: this does NOT touch the player's live browser view. When a live builder session exists (the normal case), do NOT use this to check a build mid-construction — use patch_build instead, which validates AND shows the player. Reserve validate_character for when there is no live session, or a pure one-off check of an external build object.",
 			"inputSchema": map[string]any{"type": "object", "properties": map[string]any{"build": buildObj}, "required": []string{"build"}},
 		},
 		map[string]any{
@@ -176,7 +176,7 @@ func toolDefs() []any {
 		},
 		map[string]any{
 			"name":        "patch_build",
-			"description": "Apply a PARTIAL character sheet to the SHARED live session — deep-merged into the current build, so the player's browser updates live. Best for building step by step: push {\"heritage\":\"Solari\"}, then {\"faction\":\"The Veilward Enclave\"}, then {\"attributes\":{\"Fire\":4}}, then {\"headers\":[\"Wizard\"]}, then {\"skills\":[{\"name\":\"Force Bolts\"}]} — each shows up live. Objects merge (e.g. one attribute at a time); arrays (headers, skills) and scalars replace. Prefer this over set_current_build so the player can watch the character come together. Returns the merged build's validation.",
+			"description": "Apply a PARTIAL character sheet to the SHARED live session — deep-merged into the current build, so the player's browser updates live AND you get the merged build's validation back. THIS IS YOUR PRIMARY BUILD TOOL: call it the moment you decide each piece, starting the instant you have a name+heritage — don't wait until the character is complete. Push {\"name\":\"Moonbeam\",\"heritage\":\"Solari\"}, then {\"faction\":\"...\"}, then {\"headers\":[\"Warrior\"]}, then {\"skills\":[{\"name\":\"Heart of the Lion\"}]}, then {\"attributes\":{\"Fire\":4}} — each shows up live as you go. Objects merge (patch one attribute at a time); arrays (headers, skills) and scalars replace. The live session already has a default 35 CP budget, so you can patch into it from empty. Use this instead of validate_character during a build.",
 			"inputSchema": map[string]any{"type": "object", "properties": map[string]any{"patch": map[string]any{"type": "object", "description": "A partial IDD build: any subset of name, heritage, faction, cp_sources, attributes, headers, skills."}}, "required": []string{"patch"}},
 		},
 		map[string]any{
@@ -598,14 +598,20 @@ func serverInstructions() string {
 		url = "(the local browser builder is disabled on this install)"
 	}
 	return "This server powers a LIVE In Darkened Dreams (IDD) LARP character builder that is shared with a web page in the player's browser at " + url + " (call get_builder_url anytime for this exact address — tell the player to open it; it does not open by itself).\n\n" +
-		"How to work with it:\n" +
-		"- Use get_catalog and get_header to see heritages, factions, headers, and their skills. Heritage and Faction are FREE (0 CP); CP is spent only on attributes, headers, and skills/spells. Raising an attribute to level N costs N CP cumulatively (2→5 = 3+4+5 = 12).\n" +
+		"WORK LIVE — this is the most important rule. The player is watching that browser page, so build IN THE OPEN, not silently. The MOMENT you decide any piece of the character, call patch_build with just that piece so it appears on their screen. Do NOT research everything, assemble the whole sheet in your head, and push it once at the end — that leaves the player staring at an empty page the whole time. Concretely, in this order as you go:\n" +
+		"    1. As soon as you have the name + heritage, patch_build {\"name\":\"...\",\"heritage\":\"...\"}. Do this BEFORE you research skills.\n" +
+		"    2. Patch the faction once chosen.\n" +
+		"    3. Patch each header the moment you pick it: {\"headers\":[...]}.\n" +
+		"    4. Patch skills/spells as you add them: {\"skills\":[{\"name\":\"...\"}]}.\n" +
+		"    5. Patch attributes as you allocate them: {\"attributes\":{\"Fire\":4}}.\n" +
+		"  Interleave these patches with your discovery calls (get_header, find_ability, get_sphere): decide a piece → patch it → research the next piece. The live session already starts with a sensible default budget (30 starting + 5 history = 35 CP) and every attribute at 2, so you can patch into it from empty with no setup — you do NOT need cp_sources to start.\n" +
+		"- patch_build both VALIDATES (it returns the merged build's validation) AND updates the player's view, so during a build you never need validate_character — that one is a STATELESS check the player cannot see. Do not do your legality-checking with the invisible tool and then surprise the player with a finished sheet; let each patch be the check. (Objects merge — patch one attribute at a time; arrays like headers/skills and scalars replace. set_current_build replaces the whole sheet at once — use it only to load a saved character.)\n" +
+		"- Before changing an EXISTING build, call get_current_build first to read what the player may have edited in the browser, so you don't overwrite it.\n" +
+		"- The group uses hard-block rules, so resolve any errors a patch reports before calling a build final. There is NO in-chat builder panel — if the player wants to see it, tell them to open " + url + " in a browser (it does not open by itself).\n\n" +
+		"Reference (use the discovery tools; don't recite from memory):\n" +
+		"- get_catalog and get_header show heritages, factions, headers, and skills. Heritage and Faction are FREE (0 CP); CP is spent only on attributes, headers, and skills/spells. Raising an attribute to level N costs N CP cumulatively (2→5 = 3+4+5 = 12).\n" +
 		"- CONCEPT → MECHANICS: when the player wants a themed ability (\"lightning\", \"heal\", \"stealth\"), call find_ability with that keyword — it tells you which header or sphere the ability lives in and what to buy first. Abilities are scattered across headers AND spheres; don't assume a theme maps to a sphere (e.g. lightning is a Storm Caller header skill, not a spell). Use get_heritage to see a heritage's drawback + buyable skills.\n" +
-		"- MAGIC: a caster buys an Arcane header, then buys a Sphere skill (e.g. \"The Sphere of Evocation\", ~2 CP), then buys INDIVIDUAL spells from that sphere. Each spell is a separate purchasable skill with its own CP cost (add it to skills by name) and a per-cast attribute cost. Owning the sphere does NOT auto-grant its spells — call get_sphere to list them and buy the ones you want (they only validate once the sphere is owned).\n" +
-		"- Build it STEP BY STEP and let the player watch: after each choice, call patch_build with just what changed (e.g. {\"heritage\":\"Solari\"}, then {\"attributes\":{\"Fire\":4}}, then {\"headers\":[\"Wizard\"]}). Each patch merges into the shared session and the browser updates live. Do this automatically as you decide things; don't wait to be asked. Use set_current_build only to replace the whole sheet at once.\n" +
-		"- Before changing a build, call get_current_build to read what the player may have edited in their browser, so you don't overwrite it.\n" +
-		"- set_current_build returns the validation result; the group uses hard-block rules, so resolve any errors before calling a build final.\n" +
-		"- There is NO in-chat builder panel. If the player wants to see or edit the builder visually, tell them to open " + url + " in a browser (it does not open by itself)."
+		"- MAGIC: a caster buys an Arcane header, then buys a Sphere skill (e.g. \"The Sphere of Evocation\", ~2 CP), then buys INDIVIDUAL spells from that sphere. Each spell is a separate purchasable skill with its own CP cost (add it to skills by name) and a per-cast attribute cost. Owning the sphere does NOT auto-grant its spells — call get_sphere to list them and buy the ones you want (they only validate once the sphere is owned)."
 }
 
 // ---------- persistence ----------
