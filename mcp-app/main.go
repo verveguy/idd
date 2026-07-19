@@ -19,15 +19,8 @@ import (
 	"github.com/verveguy/idd/mcp-app/rules"
 )
 
-const (
-	defaultProtocol = "2025-11-25" // core MCP protocol version (fallback for negotiation)
-	uiExtensionName = "io.modelcontextprotocol/ui"
-	uiResourceURI   = "ui://idd/builder"
-	uiMimeType      = "text/html;profile=mcp-app"
-)
-
-//go:embed ui/builder.html
-var builderHTML string
+// defaultProtocol is the core MCP protocol version we fall back to in negotiation.
+const defaultProtocol = "2025-11-25"
 
 var ruleset *rules.Ruleset
 
@@ -114,26 +107,14 @@ func dispatch(req rpcRequest) (any, *rpcError) {
 		}
 		return map[string]any{
 			"protocolVersion": pv,
-			"serverInfo":      map[string]any{"name": "in-darkened-dreams", "version": "1.0.0"},
-			"capabilities": map[string]any{
-				"tools":     map[string]any{},
-				"resources": map[string]any{},
-				// declare MCP Apps (UI) support so the host will render ui:// resources
-				"extensions": map[string]any{
-					uiExtensionName: map[string]any{"mimeTypes": []string{uiMimeType}},
-				},
-			},
+			"serverInfo":      map[string]any{"name": "in-darkened-dreams", "version": "1.2.1"},
+			"capabilities":    map[string]any{"tools": map[string]any{}},
+			"instructions":    serverInstructions(),
 		}, nil
 	case "ping":
 		return map[string]any{}, nil
 	case "tools/list":
 		return map[string]any{"tools": toolDefs()}, nil
-	case "resources/list":
-		return map[string]any{"resources": []any{
-			map[string]any{"uri": uiResourceURI, "name": "IDD Character Builder", "mimeType": uiMimeType},
-		}}, nil
-	case "resources/read":
-		return readResource(req.Params)
 	case "tools/call":
 		return callTool(req.Params)
 	case "notifications/initialized", "notifications/cancelled":
@@ -146,21 +127,8 @@ func dispatch(req rpcRequest) (any, *rpcError) {
 // ---------- tools ----------
 
 func toolDefs() []any {
-	uiMeta := map[string]any{
-		"ui": map[string]any{
-			"resourceUri": uiResourceURI,
-			"visibility":  []string{"model", "app"},
-		},
-		"ui/resourceUri": uiResourceURI, // legacy compat
-	}
 	buildObj := map[string]any{"type": "object", "description": "An IDD character build object."}
 	return []any{
-		map[string]any{
-			"name": "open_character_builder",
-			"description": "Open the interactive character-builder panel. Call this AT MOST ONCE per conversation. Once it is open, the panel exposes its own tools — set_heritage, set_faction, set_attribute, add_header/remove_header, add_skill/remove_skill, get_character, validate_build — use THOSE to change or read the live panel (they update the one open panel; they never open a new one). Do NOT call open_character_builder again to show changes. The user can also drive the panel directly and click \"Send to Claude\".",
-			"inputSchema": map[string]any{"type": "object", "properties": map[string]any{"build": buildObj}},
-			"_meta":       uiMeta,
-		},
 		map[string]any{
 			"name":        "validate_character",
 			"description": "Validate an IDD character build against the rules (CP, attributes, headers, skills, faction, prerequisites, exclusions). Returns a full text report: legality, errors, warnings, CP breakdown, Vitality, tier, and traits. Use this before presenting any build as final.",
@@ -183,7 +151,7 @@ func toolDefs() []any {
 		},
 		map[string]any{
 			"name":        "set_current_build",
-			"description": "Replace the character in the SHARED live builder session with this build. The browser builder head updates live (via SSE) to show it. Returns the validation result. Use this to push a build you've assembled into the player's open builder.",
+			"description": "Push the whole build to the SHARED live session — the player's browser page (see the server instructions for the URL) updates live via SSE. ALWAYS call this after you assemble or change a character, automatically, so the player sees your work; don't wait to be asked. Returns the validation result (hard-block rules).",
 			"inputSchema": map[string]any{"type": "object", "properties": map[string]any{"build": buildObj}, "required": []string{"build"}},
 		},
 		map[string]any{
@@ -223,8 +191,6 @@ func callTool(params json.RawMessage) (any, *rpcError) {
 		return toolGetCurrent()
 	case "set_current_build":
 		return toolSetCurrent(p.Arguments)
-	case "open_character_builder":
-		return toolOpenBuilder(p.Arguments)
 	case "save_character":
 		return toolSave(p.Arguments)
 	case "load_character":
@@ -366,19 +332,22 @@ func toolGetHeader(args json.RawMessage) (any, *rpcError) {
 	return textResult(b.String(), nil), nil
 }
 
-func toolOpenBuilder(args json.RawMessage) (any, *rpcError) {
-	var a struct {
-		Build json.RawMessage `json:"build"`
+// serverInstructions is sent in the initialize result — it tells the model how
+// to use this server: build via the tools, push to the shared session so the
+// browser updates live, and point players at the browser URL (no in-chat panel).
+func serverInstructions() string {
+	addr := httpAddr()
+	url := "http://" + addr + "/"
+	if addr == "" {
+		url = "(the local browser builder is disabled on this install)"
 	}
-	_ = json.Unmarshal(args, &a)
-	structured := map[string]any{}
-	if len(a.Build) > 0 {
-		var b any
-		if json.Unmarshal(a.Build, &b) == nil {
-			structured["build"] = b
-		}
-	}
-	return textResult("Opening the In Darkened Dreams character builder.", structured), nil
+	return "This server powers a LIVE In Darkened Dreams (IDD) LARP character builder that is shared with a web page in the player's browser at " + url + ".\n\n" +
+		"How to work with it:\n" +
+		"- Use get_catalog and get_header to see heritages, factions, headers, and their skills. Heritage and Faction are FREE (0 CP); CP is spent only on attributes, headers, and skills/spells.\n" +
+		"- As you assemble or CHANGE the character, ALWAYS call set_current_build to push the whole build to the shared session — the player's browser page updates live. Do this automatically after each change; do not wait to be asked.\n" +
+		"- Before changing a build, call get_current_build to read what the player may have edited in their browser, so you don't overwrite it.\n" +
+		"- set_current_build returns the validation result; the group uses hard-block rules, so resolve any errors before calling a build final.\n" +
+		"- There is NO in-chat builder panel. If the player wants to see or edit the builder visually, tell them to open " + url + " in a browser (it does not open by itself)."
 }
 
 // ---------- persistence ----------
@@ -466,18 +435,3 @@ func toolListCharacters() (any, *rpcError) {
 
 // ---------- ui resource ----------
 
-func readResource(params json.RawMessage) (any, *rpcError) {
-	var p struct {
-		URI string `json:"uri"`
-	}
-	if err := json.Unmarshal(params, &p); err != nil {
-		return nil, &rpcError{Code: -32602, Message: "bad params"}
-	}
-	if p.URI != uiResourceURI {
-		return nil, &rpcError{Code: -32002, Message: "resource not found: " + p.URI}
-	}
-	html := strings.Replace(builderHTML, "/*__IDD_DATA__*/", uiDataJSON(), 1)
-	return map[string]any{"contents": []any{
-		map[string]any{"uri": uiResourceURI, "mimeType": uiMimeType, "text": html},
-	}}, nil
-}
