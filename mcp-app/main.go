@@ -54,10 +54,9 @@ func main() {
 	ruleset = rs
 
 	// Opt-in local HTTP head (localhost only): serves the browser builder + a
-	// shared session both Claude (MCP) and the browser edit. Runs alongside stdio.
-	if addr := httpAddr(); addr != "" {
-		go startHTTP(addr)
-	}
+	// shared session both Claude (MCP) and the browser edit. Binds synchronously
+	// (so builderURL is known before initialize) then serves alongside stdio.
+	startHTTP()
 
 	out := bufio.NewWriter(os.Stdout)
 	defer out.Flush()
@@ -107,7 +106,7 @@ func dispatch(req rpcRequest) (any, *rpcError) {
 		}
 		return map[string]any{
 			"protocolVersion": pv,
-			"serverInfo":      map[string]any{"name": "in-darkened-dreams", "version": "1.2.1"},
+			"serverInfo":      map[string]any{"name": "in-darkened-dreams", "version": "1.2.2"},
 			"capabilities":    map[string]any{"tools": map[string]any{}},
 			"instructions":    serverInstructions(),
 		}, nil
@@ -135,6 +134,11 @@ func toolDefs() []any {
 			"inputSchema": map[string]any{"type": "object", "properties": map[string]any{"build": buildObj}, "required": []string{"build"}},
 		},
 		map[string]any{
+			"name":        "get_builder_url",
+			"description": "Return the exact URL of THIS chat's live browser builder (the page served by this server instance). Tell the player to open it to see/edit the character. Use this instead of assuming a port — it may not be the default if another instance was already running.",
+			"inputSchema": map[string]any{"type": "object", "properties": map[string]any{}},
+		},
+		map[string]any{
 			"name":        "get_catalog",
 			"description": "List all IDD ruleset options as readable text: the 6 heritages, 4 factions, and all 27 headers with each header's CP cost, faction requirement (if any), and whether it grants the Arcane or Devout trait. Call this first to see what's available.",
 			"inputSchema": map[string]any{"type": "object", "properties": map[string]any{}},
@@ -151,8 +155,13 @@ func toolDefs() []any {
 		},
 		map[string]any{
 			"name":        "set_current_build",
-			"description": "Push the whole build to the SHARED live session — the player's browser page (see the server instructions for the URL) updates live via SSE. ALWAYS call this after you assemble or change a character, automatically, so the player sees your work; don't wait to be asked. Returns the validation result (hard-block rules).",
+			"description": "Push the WHOLE build to the SHARED live session — the player's browser page (see the server instructions for the URL) updates live via SSE. Use this to set/replace the entire character. Returns the validation result (hard-block rules).",
 			"inputSchema": map[string]any{"type": "object", "properties": map[string]any{"build": buildObj}, "required": []string{"build"}},
+		},
+		map[string]any{
+			"name":        "patch_build",
+			"description": "Apply a PARTIAL character sheet to the SHARED live session — deep-merged into the current build, so the player's browser updates live. Best for building step by step: push {\"heritage\":\"Solari\"}, then {\"faction\":\"The Veilward Enclave\"}, then {\"attributes\":{\"Fire\":4}}, then {\"headers\":[\"Wizard\"]}, then {\"skills\":[{\"name\":\"Force Bolts\"}]} — each shows up live. Objects merge (e.g. one attribute at a time); arrays (headers, skills) and scalars replace. Prefer this over set_current_build so the player can watch the character come together. Returns the merged build's validation.",
+			"inputSchema": map[string]any{"type": "object", "properties": map[string]any{"patch": map[string]any{"type": "object", "description": "A partial IDD build: any subset of name, heritage, faction, cp_sources, attributes, headers, skills."}}, "required": []string{"patch"}},
 		},
 		map[string]any{
 			"name":        "save_character",
@@ -187,10 +196,14 @@ func callTool(params json.RawMessage) (any, *rpcError) {
 		return toolCatalog()
 	case "get_header":
 		return toolGetHeader(p.Arguments)
+	case "get_builder_url":
+		return toolBuilderURL()
 	case "get_current_build":
 		return toolGetCurrent()
 	case "set_current_build":
 		return toolSetCurrent(p.Arguments)
+	case "patch_build":
+		return toolPatch(p.Arguments)
 	case "save_character":
 		return toolSave(p.Arguments)
 	case "load_character":
@@ -336,15 +349,14 @@ func toolGetHeader(args json.RawMessage) (any, *rpcError) {
 // to use this server: build via the tools, push to the shared session so the
 // browser updates live, and point players at the browser URL (no in-chat panel).
 func serverInstructions() string {
-	addr := httpAddr()
-	url := "http://" + addr + "/"
-	if addr == "" {
+	url := builderURL
+	if url == "" {
 		url = "(the local browser builder is disabled on this install)"
 	}
-	return "This server powers a LIVE In Darkened Dreams (IDD) LARP character builder that is shared with a web page in the player's browser at " + url + ".\n\n" +
+	return "This server powers a LIVE In Darkened Dreams (IDD) LARP character builder that is shared with a web page in the player's browser at " + url + " (call get_builder_url anytime for this exact address — tell the player to open it; it does not open by itself).\n\n" +
 		"How to work with it:\n" +
 		"- Use get_catalog and get_header to see heritages, factions, headers, and their skills. Heritage and Faction are FREE (0 CP); CP is spent only on attributes, headers, and skills/spells.\n" +
-		"- As you assemble or CHANGE the character, ALWAYS call set_current_build to push the whole build to the shared session — the player's browser page updates live. Do this automatically after each change; do not wait to be asked.\n" +
+		"- Build it STEP BY STEP and let the player watch: after each choice, call patch_build with just what changed (e.g. {\"heritage\":\"Solari\"}, then {\"attributes\":{\"Fire\":4}}, then {\"headers\":[\"Wizard\"]}). Each patch merges into the shared session and the browser updates live. Do this automatically as you decide things; don't wait to be asked. Use set_current_build only to replace the whole sheet at once.\n" +
 		"- Before changing a build, call get_current_build to read what the player may have edited in their browser, so you don't overwrite it.\n" +
 		"- set_current_build returns the validation result; the group uses hard-block rules, so resolve any errors before calling a build final.\n" +
 		"- There is NO in-chat builder panel. If the player wants to see or edit the builder visually, tell them to open " + url + " in a browser (it does not open by itself)."

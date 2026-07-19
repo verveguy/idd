@@ -373,6 +373,10 @@ function compute(){
 function chip(attr){ const el=elOf(attr); return el?`<span class="chip" style="--el:${CLR[el]}">${esc(attr)}</span>`:""; }
 
 function renderControls(){
+  // keep the name input in sync with state (e.g. after an incoming push) —
+  // full render() only runs on non-name edits, so this won't disrupt typing.
+  const cn=document.getElementById('cname');
+  if(cn && cn.value!==(state.name||'')) cn.value=state.name||'';
   // heritage / faction selects
   const her=document.getElementById('her');
   her.innerHTML='<option value="">— choose heritage —</option>'+DATA.heritages.map(h=>`<option ${h.n===state.heritage?'selected':''}>${esc(h.n)}</option>`).join('');

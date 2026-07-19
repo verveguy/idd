@@ -4,8 +4,10 @@ import (
 	_ "embed"
 	"encoding/json"
 	"fmt"
+	"net"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
 	"sync"
 
@@ -71,6 +73,48 @@ func (h *hub) set(build map[string]any, src string) int {
 	return v
 }
 
+func clone(m map[string]any) map[string]any {
+	b, _ := json.Marshal(m)
+	var c map[string]any
+	_ = json.Unmarshal(b, &c)
+	return c
+}
+
+// deepMerge merges src into dst: nested objects merge recursively; arrays and
+// scalars replace. This is how a partial character sheet is applied.
+func deepMerge(dst, src map[string]any) {
+	for k, v := range src {
+		if sv, ok := v.(map[string]any); ok {
+			if dv, ok := dst[k].(map[string]any); ok {
+				deepMerge(dv, sv)
+				continue
+			}
+		}
+		dst[k] = v
+	}
+}
+
+func (h *hub) patch(p map[string]any, src string) (int, map[string]any) {
+	h.mu.Lock()
+	deepMerge(h.build, p)
+	h.version++
+	v := h.version
+	merged := clone(h.build)
+	msg, _ := json.Marshal(map[string]any{"version": v, "src": src, "build": h.build})
+	subs := make([]chan string, 0, len(h.subs))
+	for c := range h.subs {
+		subs = append(subs, c)
+	}
+	h.mu.Unlock()
+	for _, c := range subs {
+		select {
+		case c <- string(msg):
+		default:
+		}
+	}
+	return v, merged
+}
+
 func (h *hub) subscribe() chan string {
 	ch := make(chan string, 8)
 	h.mu.Lock()
@@ -102,10 +146,16 @@ func summaryText(res rules.Result) string {
 
 // ---- MCP tools that read/write the shared session (browser head sees changes live) ----
 
-func toolGetCurrent() (any, *rpcError) {
-	m := session.get()
+// Each server instance is self-contained: it owns its own port + session, and
+// reports its actual URL so Claude can tell the player exactly which page to open
+// (the one served by THIS instance — the same process handling these tool calls).
+func curResult(m map[string]any, prefix string) map[string]any {
 	b, _ := json.MarshalIndent(m, "", "  ")
-	return textResult("Current shared build:\n"+string(b)+"\n\n"+summaryText(validateMap(m)), m), nil
+	return textResult(prefix+string(b)+"\n\n"+summaryText(validateMap(m)), m)
+}
+
+func toolGetCurrent() (any, *rpcError) {
+	return curResult(session.get(), "Current shared build:\n"), nil
 }
 
 func toolSetCurrent(args json.RawMessage) (any, *rpcError) {
@@ -116,7 +166,25 @@ func toolSetCurrent(args json.RawMessage) (any, *rpcError) {
 		return nil, &rpcError{Code: -32602, Message: "invalid build"}
 	}
 	session.set(a.Build, "claude")
-	return textResult("Pushed to the live builder. "+summaryText(validateMap(a.Build)), a.Build), nil
+	return curResult(a.Build, "Pushed to the live builder ("+builderURL+"):\n"), nil
+}
+
+func toolPatch(args json.RawMessage) (any, *rpcError) {
+	var a struct {
+		Patch map[string]any `json:"patch"`
+	}
+	if err := json.Unmarshal(args, &a); err != nil || a.Patch == nil {
+		return nil, &rpcError{Code: -32602, Message: "invalid patch (expected a partial character sheet under \"patch\")"}
+	}
+	_, merged := session.patch(a.Patch, "claude")
+	return curResult(merged, "Patched the live builder ("+builderURL+"):\n"), nil
+}
+
+func toolBuilderURL() (any, *rpcError) {
+	if builderURL == "" {
+		return textResult("The local browser builder is disabled on this install.", nil), nil
+	}
+	return textResult("The character builder is open at "+builderURL+" — share this exact URL with the player.", map[string]any{"url": builderURL}), nil
 }
 
 // ---- HTTP server (opt-in, localhost only) ----
@@ -132,19 +200,56 @@ func httpAddr() string {
 	return a
 }
 
-func startHTTP(addr string) {
+// builderURL is the actual URL this instance's browser head is served at (set once
+// the listener is bound, possibly on a fallback port if the preferred one is taken).
+var builderURL string
+
+// listenWithFallback binds the preferred addr, or the next free port after it, so
+// a second instance (e.g. a stale process holding the port) still gets a working
+// head on its own port instead of silently having none.
+func listenWithFallback(addr string) (net.Listener, error) {
+	host, portStr, err := net.SplitHostPort(addr)
+	if err != nil {
+		return net.Listen("tcp", addr)
+	}
+	base, err := strconv.Atoi(portStr)
+	if err != nil {
+		return net.Listen("tcp", addr)
+	}
+	var lastErr error
+	for i := 0; i < 20; i++ {
+		if l, e := net.Listen("tcp", net.JoinHostPort(host, strconv.Itoa(base+i))); e == nil {
+			return l, nil
+		} else {
+			lastErr = e
+		}
+	}
+	return nil, lastErr
+}
+
+// startHTTP binds synchronously (so builderURL is known before initialize is
+// answered) and serves in the background.
+func startHTTP() {
+	addr := httpAddr()
+	if addr == "" {
+		return
+	}
+	ln, err := listenWithFallback(addr)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "[idd] http disabled: %v\n", err)
+		return
+	}
+	builderURL = "http://" + ln.Addr().String() + "/"
+	fmt.Fprintf(os.Stderr, "[idd] builder at %s\n", builderURL)
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", serveHead)
 	mux.HandleFunc("/api/build", apiBuild)
+	mux.HandleFunc("/api/patch", apiPatch)
 	mux.HandleFunc("/api/events", apiEvents)
 	mux.HandleFunc("/api/validate", apiValidate)
 	mux.HandleFunc("/api/catalog", apiCatalog)
 	mux.HandleFunc("/api/characters", apiCharacters)
-	fmt.Fprintf(os.Stderr, "[idd] http head on http://%s\n", addr)
-	if err := (&http.Server{Addr: addr, Handler: mux}).ListenAndServe(); err != nil {
-		// graceful: port already taken (another instance) — stdio/MCP still works.
-		fmt.Fprintf(os.Stderr, "[idd] http disabled: %v\n", err)
-	}
+	go func() { _ = http.Serve(ln, mux) }()
 }
 
 func cors(w http.ResponseWriter) {
@@ -184,6 +289,24 @@ func apiBuild(w http.ResponseWriter, r *http.Request) {
 	default:
 		http.Error(w, "method", 405)
 	}
+}
+
+func apiPatch(w http.ResponseWriter, r *http.Request) {
+	cors(w)
+	if r.Method == http.MethodOptions {
+		return
+	}
+	var body struct {
+		Patch map[string]any `json:"patch"`
+		Src   string         `json:"src"`
+	}
+	if err := json.NewDecoder(r.Body).Decode(&body); err != nil || body.Patch == nil {
+		http.Error(w, "bad patch", 400)
+		return
+	}
+	v, merged := session.patch(body.Patch, body.Src)
+	w.Header().Set("Content-Type", "application/json")
+	_ = json.NewEncoder(w).Encode(map[string]any{"ok": true, "version": v, "build": merged})
 }
 
 func apiEvents(w http.ResponseWriter, r *http.Request) {
