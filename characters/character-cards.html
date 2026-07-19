@@ -1,0 +1,285 @@
+<title>In Darkened Dreams — Character Cards</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root{
+    color-scheme: light;
+    --desk:#141019; --desk-2:#1d1826;
+    --vellum:#efedf4; --panel:#e7e4ee; --panel-2:#eae7f1;
+    --ink:#211a2e; --ink-soft:#574f68; --ink-faint:#8b8499;
+    --rule:#d6d1e1; --rule-strong:#c3bcd4;
+    --accent:#5a4a8c; --gold:#8f7327;
+    --air:#3e6591; --earth:#77632f; --fire:#a83f24; --water:#1d7178; --void:#6a559c;
+    --serif:"Iowan Old Style","Palatino Linotype","Book Antiqua",Palatino,Georgia,serif;
+    --mono:ui-monospace,"SF Mono","Cascadia Mono",Menlo,"Roboto Mono",monospace;
+    --leaf-w:7.6in;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0; background:
+      radial-gradient(120% 80% at 50% -10%, #241d33 0%, var(--desk) 60%) fixed;
+    font-family:var(--serif); color:var(--ink);
+    padding:36px 18px 80px;
+  }
+  .deck{display:flex; flex-direction:column; align-items:center; gap:34px}
+  .masthead{
+    text-align:center; color:#cfc7e0; max-width:var(--leaf-w); width:100%;
+    margin-bottom:2px;
+  }
+  .masthead b{
+    font-family:var(--mono); font-size:11px; letter-spacing:.42em; font-weight:500;
+    text-transform:uppercase; color:#9b90bd;
+  }
+  .masthead p{margin:8px 0 0; font-style:italic; color:#8177a0; font-size:14px}
+
+  /* ---------- the leaf (one printable card) ---------- */
+  .leaf{
+    width:var(--leaf-w); max-width:100%; background:var(--vellum);
+    color:var(--ink); border:1px solid var(--rule-strong);
+    box-shadow:0 1px 0 #fff inset, 0 24px 60px -30px #000, 0 8px 22px -18px #000;
+    padding:30px 34px 26px; position:relative;
+  }
+  .leaf::after{ /* inner hairline frame */
+    content:""; position:absolute; inset:9px; border:1px solid var(--rule);
+    pointer-events:none;
+  }
+  .leaf > *{position:relative}
+
+  /* header */
+  .head{display:flex; justify-content:space-between; align-items:flex-start; gap:16px}
+  .eyebrow{font-family:var(--mono); font-size:10.5px; letter-spacing:.24em;
+    text-transform:uppercase; color:var(--accent); font-weight:600}
+  .name{font-size:33px; line-height:1.02; margin:5px 0 0; font-weight:600;
+    letter-spacing:.005em; text-wrap:balance}
+  .tier{font-family:var(--mono); font-size:10px; letter-spacing:.18em; text-transform:uppercase;
+    color:var(--ink-soft); border:1px solid var(--rule-strong); border-radius:2px;
+    padding:5px 9px; white-space:nowrap; background:var(--panel)}
+
+  .band-rule{height:0; border-top:1px solid var(--rule-strong);
+    border-bottom:1px solid var(--rule); margin:16px 0}
+
+  /* attributes + vitality */
+  .stats{display:grid; grid-template-columns:repeat(5,1fr) auto; gap:10px; align-items:end}
+  .attr{border-top:2.5px solid var(--el); padding-top:6px}
+  .attr .lbl{font-family:var(--mono); font-size:9.5px; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--el); font-weight:600}
+  .attr .sub{font-size:10px; color:var(--ink-faint); font-style:italic; margin-top:1px}
+  .attr .val{font-family:var(--mono); font-size:30px; line-height:1; margin-top:5px;
+    font-variant-numeric:tabular-nums; color:var(--ink)}
+  .vit{border-left:1px solid var(--rule-strong); padding-left:16px; text-align:center}
+  .vit .lbl{font-family:var(--mono); font-size:9.5px; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--fire); font-weight:600}
+  .vit .val{font-family:var(--serif); font-size:34px; line-height:1; margin-top:3px;
+    font-variant-numeric:tabular-nums; font-weight:600}
+  .vit .frm{font-size:9px; color:var(--ink-faint); margin-top:2px}
+
+  /* body two columns */
+  .body{display:grid; grid-template-columns:1fr 210px; gap:26px; margin-top:20px}
+  .sect-h{font-family:var(--mono); font-size:10px; letter-spacing:.2em; text-transform:uppercase;
+    color:var(--ink-faint); margin:0 0 10px; padding-bottom:5px;
+    border-bottom:1px solid var(--rule)}
+
+  /* abilities */
+  .ab{padding:8px 0 9px; border-bottom:1px solid var(--rule)}
+  .ab:last-child{border-bottom:0}
+  .ab-top{display:flex; align-items:baseline; gap:8px}
+  .ab-name{font-size:15px; font-weight:600; letter-spacing:.004em}
+  .sigil{color:var(--gold); font-size:12px; margin-left:1px}
+  .ab-cp{margin-left:auto; font-family:var(--mono); font-size:10px; color:var(--ink-faint);
+    font-variant-numeric:tabular-nums; white-space:nowrap}
+  .chip{font-family:var(--mono); font-size:9.5px; letter-spacing:.04em; padding:2px 6px;
+    border:1px solid var(--el); color:var(--el); border-radius:2px; white-space:nowrap;
+    background:color-mix(in srgb, var(--el) 8%, transparent); text-transform:uppercase}
+  .ab-eff{font-size:12.5px; color:var(--ink-soft); line-height:1.4; margin-top:4px}
+
+  /* rail */
+  .rail{display:flex; flex-direction:column; gap:20px}
+  .ledger{font-family:var(--mono); font-size:11.5px; font-variant-numeric:tabular-nums}
+  .ledger .row{display:flex; justify-content:space-between; padding:3px 0; color:var(--ink-soft)}
+  .ledger .row.tot{border-top:1px solid var(--rule-strong); margin-top:4px; padding-top:6px;
+    color:var(--ink); font-weight:600}
+  .ledger .row .n{color:var(--ink)}
+  .tags{display:flex; flex-wrap:wrap; gap:6px}
+  .tag{font-family:var(--mono); font-size:10px; letter-spacing:.03em; padding:3px 8px;
+    border-radius:2px; background:var(--panel); border:1px solid var(--rule-strong); color:var(--ink-soft)}
+  .tag.hdr{border-color:var(--accent); color:var(--accent); background:color-mix(in srgb,var(--accent) 8%,transparent)}
+
+  .leaf-foot{display:flex; justify-content:space-between; align-items:center; gap:12px;
+    margin-top:20px; padding-top:10px; border-top:1px solid var(--rule);
+    font-family:var(--mono); font-size:9px; letter-spacing:.06em; color:var(--ink-faint);
+    text-transform:uppercase}
+  .legend{display:flex; gap:14px; flex-wrap:wrap}
+  .legend span{display:inline-flex; align-items:center; gap:4px}
+
+  /* print button */
+  .pdf{position:fixed; right:22px; bottom:22px; z-index:9; font-family:var(--mono);
+    font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:#efedf4;
+    background:var(--accent); border:1px solid #6f5da5; border-radius:4px;
+    padding:11px 16px; cursor:pointer; box-shadow:0 10px 30px -12px #000}
+  .pdf:hover{background:#6a57a3}
+  .pdf:focus-visible{outline:2px solid #cfc7e0; outline-offset:2px}
+
+  @media (max-width:720px){
+    .body{grid-template-columns:1fr}
+    .stats{grid-template-columns:repeat(3,1fr)}
+    .vit{grid-column:1/-1; border-left:0; border-top:1px solid var(--rule-strong);
+      padding-left:0; padding-top:10px; text-align:left; display:flex; align-items:baseline; gap:10px}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+  /* ---------- print: clean, one card per page ---------- */
+  @media print{
+    @page{size:letter portrait; margin:0.5in}
+    html,body{background:#fff!important}
+    body{padding:0}
+    .pdf,.masthead{display:none!important}
+    .deck{gap:0}
+    .leaf{width:100%; max-width:100%; box-shadow:none; border:1px solid #bbb;
+      break-after:page; page-break-after:always; -webkit-print-color-adjust:exact; print-color-adjust:exact}
+    .leaf:last-child{break-after:auto; page-break-after:auto}
+    .leaf::after{border-color:#ddd}
+  }
+</style>
+
+<button class="pdf" onclick="window.print()">⎙ Save as PDF</button>
+
+<div class="deck">
+  <div class="masthead">
+    <b>In Darkened Dreams</b>
+    <p>Character cards — five elements, one Road through the dark.</p>
+  </div>
+  <div id="cards-out"></div>
+</div>
+
+<script id="card-data" type="application/json">
+[
+  {"name":"Twin Fangs","heritage":"Solari","faction":"The Veilward Enclave","vitality":4,"tier":"Initiate",
+   "attributes":{"Air":2,"Earth":4,"Fire":2,"Water":4,"Void":3},
+   "cp":{"available":35,"attr":17,"headers":4,"skills":14,"remaining":0},
+   "headers":["Warrior"],"traits":["Living","Solari","The Veilward Enclave","Warrior","Initiate"],
+   "skills":[
+     {"name":"Melee Weapon","cost":1,"attr":"","spell":false,"effect":"Use one type of melee weapon to attack and to block melee and missile attacks."},
+     {"name":"A Little Something Extra","cost":2,"attr":"","spell":false,"effect":"Fight with a medium melee weapon in your off-hand while your primary hand wields a 46″ weapon."},
+     {"name":"Critical Strike","cost":2,"attr":"1 Earth","spell":false,"effect":"Spend 1 Earth to make a melee attack for “5 Damage.”"},
+     {"name":"A Flurry of Strikes","cost":2,"attr":"1 Water","spell":false,"effect":"Spend 1 Water to gain 2 melee attacks for “2 Damage.”"},
+     {"name":"A Crippling Blow","cost":1,"attr":"2 Earth","spell":false,"effect":"Spend 2 Earth to make a melee attack for “Maim” to a limb."},
+     {"name":"Resilience","cost":2,"attr":"1 Water","spell":false,"effect":"Focus 3 seconds and spend 1 Water to call “Heal 3 to Self.”"},
+     {"name":"Last Stand","cost":1,"attr":"","spell":false,"effect":"Once per event, call “Resist by Will” to negate a melee attack."},
+     {"name":"Shrug It Off","cost":1,"attr":"","spell":false,"effect":"Once per event, call “Resist and Refresh 2 Earth to Self.”"},
+     {"name":"The Will To Live","cost":1,"attr":"","spell":false,"effect":"Once per event, call “Reduce” a Death effect and fall Unstable instead."},
+     {"name":"Heart of the Lion","cost":1,"attr":"1 Fire","spell":false,"effect":"Spend 1 Fire to call “Resist” to negate a Fear attack."}
+   ]},
+  {"name":"Veilward Spellblade","heritage":"Solari","faction":"The Veilward Enclave","vitality":4,"tier":"Initiate",
+   "attributes":{"Air":2,"Earth":4,"Fire":2,"Water":3,"Void":3},
+   "cp":{"available":35,"attr":13,"headers":3,"skills":19,"remaining":0},
+   "headers":["Investigator"],"traits":["Living","Solari","The Veilward Enclave","Investigator","Arcane","Initiate"],
+   "skills":[
+     {"name":"Melee Weapon","cost":1,"attr":"","spell":false,"effect":"Use one type of melee weapon to attack and to block melee and missile attacks."},
+     {"name":"A Little Something Extra","cost":2,"attr":"","spell":false,"effect":"Fight with a medium melee weapon in your off-hand while your primary hand wields a 46″ weapon."},
+     {"name":"A Flurry of Strikes","cost":2,"attr":"1 Water","spell":false,"effect":"Spend 1 Water to gain 2 melee attacks for “2 Damage.”"},
+     {"name":"Blade of the Arcane","cost":3,"attr":"","spell":false,"effect":"Hold and use a one-handed sword while casting — overrides the empty-hands casting restriction."},
+     {"name":"The Sphere of Conjuration","cost":2,"attr":"","spell":false,"effect":"Unlocks the ability to purchase spells from the Conjuration sphere."},
+     {"name":"Thorn Lash","cost":2,"attr":"1 Air","spell":false,"effect":"Spend 1 Air to make a packet attack for “5 Damage by Thorns.”"},
+     {"name":"Crushing Bonds","cost":1,"attr":"1 Earth","spell":false,"effect":"Spend 1 Earth to make a packet attack for “Root by Force.”"},
+     {"name":"Life Steal","cost":3,"attr":"1 Earth","spell":true,"effect":"Spend 1 Earth: packet “2 Damage by Cold”; if it lands, bank a mote to “Heal 2 to Self.”"},
+     {"name":"Daring","cost":2,"attr":"1 Fire","spell":false,"effect":"Spend 1 Fire to “Resist” Fear/Madness; or 2 Fire to “Resist” a Stress attack."},
+     {"name":"Hardened Psyche","cost":1,"attr":"","spell":false,"effect":"Once per event, call “Purge Mental and Refresh 2 Fire.”"}
+   ]},
+  {"name":"Veilward Spellblade (Celerity)","heritage":"Solari","faction":"The Veilward Enclave","vitality":4,"tier":"Initiate",
+   "attributes":{"Air":2,"Earth":4,"Fire":2,"Water":3,"Void":3},
+   "cp":{"available":35,"attr":13,"headers":3,"skills":19,"remaining":0},
+   "headers":["Investigator"],"traits":["Living","Solari","The Veilward Enclave","Investigator","Arcane","Initiate"],
+   "skills":[
+     {"name":"Melee Weapon","cost":1,"attr":"","spell":false,"effect":"Use one type of melee weapon to attack and to block melee and missile attacks."},
+     {"name":"A Little Something Extra","cost":2,"attr":"","spell":false,"effect":"Fight with a medium melee weapon in your off-hand while your primary hand wields a 46″ weapon."},
+     {"name":"A Flurry of Strikes","cost":2,"attr":"1 Water","spell":false,"effect":"Spend 1 Water to gain 2 melee attacks for “2 Damage.”"},
+     {"name":"Blade of the Arcane","cost":3,"attr":"","spell":false,"effect":"Hold and use a one-handed sword while casting — overrides the empty-hands casting restriction."},
+     {"name":"The Sphere of Conjuration","cost":2,"attr":"","spell":false,"effect":"Unlocks the ability to purchase spells from the Conjuration sphere."},
+     {"name":"Thorn Lash","cost":2,"attr":"1 Air","spell":false,"effect":"Spend 1 Air to make a packet attack for “5 Damage by Thorns.”"},
+     {"name":"Life Steal","cost":3,"attr":"1 Earth","spell":true,"effect":"Spend 1 Earth: packet “2 Damage by Cold”; if it lands, bank a mote to “Heal 2 to Self.”"},
+     {"name":"Daring","cost":2,"attr":"1 Fire","spell":false,"effect":"Spend 1 Fire to “Resist” Fear/Madness; or 2 Fire to “Resist” a Stress attack."},
+     {"name":"Celerity","cost":2,"attr":"","spell":false,"effect":"Focus 1 minute to gain 2 non-physical armor points; Focus again to refresh them."}
+   ]}
+]
+</script>
+
+<script>
+  const DATA = JSON.parse(document.getElementById('card-data').textContent);
+  const SUB = {Air:"mind",Earth:"stamina",Fire:"drive",Water:"agility",Void:"restore"};
+  const CLR = {Air:"var(--air)",Earth:"var(--earth)",Fire:"var(--fire)",Water:"var(--water)",Void:"var(--void)"};
+  const ORD = ["Air","Earth","Fire","Water","Void"];
+  const esc = s => String(s).replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+  const elOf = attr => (attr.match(/Air|Earth|Fire|Water|Void/)||[null])[0];
+
+  function ability(s){
+    const el = s.attr ? elOf(s.attr) : null;
+    const chip = s.attr && el
+      ? `<span class="chip" style="--el:${CLR[el]}">${esc(s.attr)}</span>` : "";
+    const sig = s.spell ? `<span class="sigil" title="Spell-like Ability">✦</span>` : "";
+    return `<div class="ab">
+      <div class="ab-top">
+        <span class="ab-name">${esc(s.name)}${sig}</span>
+        ${chip}
+        <span class="ab-cp">${s.cost} CP</span>
+      </div>
+      <div class="ab-eff">${esc(s.effect)}</div>
+    </div>`;
+  }
+
+  function leaf(c){
+    const attrs = ORD.map(k => `
+      <div class="attr" style="--el:${CLR[k]}">
+        <div class="lbl">${k}</div><div class="sub">${SUB[k]}</div>
+        <div class="val">${c.attributes[k]}</div>
+      </div>`).join("");
+    const cp = c.cp;
+    const ledger = `
+      <div class="ledger">
+        <div class="row"><span>Character Points</span><span class="n">${cp.available}</span></div>
+        <div class="row"><span>Attributes</span><span>−${cp.attr}</span></div>
+        <div class="row"><span>Headers</span><span>−${cp.headers}</span></div>
+        <div class="row"><span>Skills &amp; spells</span><span>−${cp.skills}</span></div>
+        <div class="row tot"><span>Unspent</span><span>${cp.remaining}</span></div>
+      </div>`;
+    const headers = c.headers.map(h => `<span class="tag hdr">${esc(h)}</span>`).join("");
+    const traits = c.traits.map(t => `<span class="tag">${esc(t)}</span>`).join("");
+    const hasSpell = c.skills.some(s => s.spell);
+    const legend = hasSpell ? `<span><span class="sigil">✦</span> Spell-like Ability</span>` : "";
+    return `<article class="leaf">
+      <div class="head">
+        <div>
+          <div class="eyebrow">${esc(c.heritage)} &nbsp;·&nbsp; ${esc(c.faction)}</div>
+          <h2 class="name">${esc(c.name)}</h2>
+        </div>
+        <div class="tier">${esc(c.tier)}</div>
+      </div>
+      <div class="band-rule"></div>
+      <div class="stats">
+        ${attrs}
+        <div class="vit">
+          <div class="lbl">Vitality</div>
+          <div class="val">${c.vitality}</div>
+          <div class="frm">⌈(E+V)/2⌉</div>
+        </div>
+      </div>
+      <div class="body">
+        <div>
+          <h3 class="sect-h">Skills &amp; Abilities</h3>
+          ${c.skills.map(ability).join("")}
+        </div>
+        <aside class="rail">
+          <div><h3 class="sect-h">Build</h3>${ledger}</div>
+          <div><h3 class="sect-h">Headers</h3><div class="tags">${headers}</div></div>
+          <div><h3 class="sect-h">Traits</h3><div class="tags">${traits}</div></div>
+        </aside>
+      </div>
+      <div class="leaf-foot">
+        <div class="legend">${legend}<span>Attribute cost = spent in play, refreshed each event</span></div>
+        <div>In Darkened Dreams</div>
+      </div>
+    </article>`;
+  }
+
+  document.getElementById('cards-out').innerHTML =
+    `<div class="deck">${DATA.map(leaf).join("")}</div>`;
+</script>
