@@ -1,0 +1,20 @@
+{
+  "name": "Veilward Spellblade",
+  "heritage": "Solari",
+  "faction": "The Veilward Enclave",
+  "cp_sources": {"starting": 30, "history": 5},
+  "attributes": {"Air": 2, "Earth": 4, "Fire": 2, "Water": 3, "Void": 3},
+  "headers": ["Investigator"],
+  "skills": [
+    {"name": "Melee Weapon"},
+    {"name": "A Little Something Extra"},
+    {"name": "A Flurry of Strikes"},
+    {"name": "Blade of the Arcane"},
+    {"name": "The Sphere of Conjuration"},
+    {"name": "Thorn Lash"},
+    {"name": "Crushing Bonds"},
+    {"name": "Life Steal"},
+    {"name": "Daring"},
+    {"name": "Hardened Psyche"}
+  ]
+}
