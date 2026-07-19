@@ -2,7 +2,7 @@
   "manifest_version": "0.3",
   "name": "in-darkened-dreams",
   "display_name": "In Darkened Dreams Character Builder",
-  "version": "1.2.5",
+  "version": "1.2.6",
   "description": "Unofficial interactive character builder for the In Darkened Dreams LARP — build, validate, and save rules-legal characters, with an in-chat builder UI. Single native binary, no runtime required.",
   "author": { "name": "verveguy", "url": "https://github.com/verveguy" },
   "homepage": "https://github.com/verveguy/idd",

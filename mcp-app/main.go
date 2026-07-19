@@ -16,6 +16,7 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
+	"time"
 
 	"github.com/verveguy/idd/mcp-app/rules"
 )
@@ -47,6 +48,10 @@ type rpcResponse struct {
 }
 
 func main() {
+	// Capture our launcher's PID first thing, before any slow init, so the orphan
+	// watcher can detect specifically when THAT parent dies (reparenting changes it).
+	origPPID := os.Getppid()
+
 	rs, err := rules.Load()
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "fatal: load ruleset:", err)
@@ -58,6 +63,12 @@ func main() {
 	// shared session both Claude (MCP) and the browser edit. Binds synchronously
 	// (so builderURL is known before initialize) then serves alongside stdio.
 	startHTTP()
+
+	// Don't squat the HTTP port after our launcher (Claude Desktop) is gone. Normally
+	// stdin EOF ends the read loop below and the process exits; this backstops the
+	// case where the parent dies without closing our stdin (force-kill, reparenting) —
+	// which is exactly how a stale server ends up holding :7777 for the next session.
+	go watchParent(origPPID)
 
 	out := bufio.NewWriter(os.Stdout)
 	defer out.Flush()
@@ -91,6 +102,24 @@ func main() {
 	}
 }
 
+// watchParent exits the process once our original launcher (orig) has died — when
+// the parent dies we're reparented, so getppid() no longer equals orig. This frees
+// the HTTP port for the next instance instead of leaving a stale builder squatting
+// it. If we were already orphaned at startup (orig==1, e.g. launched detached on
+// purpose), there's nothing to watch.
+func watchParent(orig int) {
+	if orig <= 1 {
+		return
+	}
+	for {
+		time.Sleep(2 * time.Second)
+		if os.Getppid() != orig {
+			fmt.Fprintln(os.Stderr, "[idd] launcher exited; releasing port and shutting down")
+			os.Exit(0)
+		}
+	}
+}
+
 func dispatch(req rpcRequest) (any, *rpcError) {
 	switch req.Method {
 	case "initialize":
@@ -107,7 +136,7 @@ func dispatch(req rpcRequest) (any, *rpcError) {
 		}
 		return map[string]any{
 			"protocolVersion": pv,
-			"serverInfo":      map[string]any{"name": "in-darkened-dreams", "version": "1.2.5"},
+			"serverInfo":      map[string]any{"name": "in-darkened-dreams", "version": "1.2.6"},
 			"capabilities":    map[string]any{"tools": map[string]any{}},
 			"instructions":    serverInstructions(),
 		}, nil
@@ -598,6 +627,9 @@ func serverInstructions() string {
 		url = "(the local browser builder is disabled on this install)"
 	}
 	return "This server powers a LIVE In Darkened Dreams (IDD) LARP character builder that is shared with a web page in the player's browser at " + url + " (call get_builder_url anytime for this exact address — tell the player to open it; it does not open by itself).\n\n" +
+		"WELCOME FIRST — before anything else, your VERY FIRST message in an IDD builder conversation must greet the player and give them this exact URL, e.g.:\n" +
+		"    \"Welcome to the In Darkened Dreams character builder! 🎲 Open " + url + " in your browser to watch your character come together live as we build it. What character do you have in mind?\"\n" +
+		"  Use the EXACT url above (it may not be the default port if another builder was already running — do not guess :7777). If the player says the page looks empty or stale, it's almost certainly open on the wrong port: re-send them this exact URL and have them confirm the address bar matches. Then proceed.\n\n" +
 		"WORK LIVE — this is the most important rule. The player is watching that browser page, so build IN THE OPEN, not silently. The MOMENT you decide any piece of the character, call patch_build with just that piece so it appears on their screen. Do NOT research everything, assemble the whole sheet in your head, and push it once at the end — that leaves the player staring at an empty page the whole time. Concretely, in this order as you go:\n" +
 		"    1. As soon as you have the name + heritage, patch_build {\"name\":\"...\",\"heritage\":\"...\"}. Do this BEFORE you research skills.\n" +
 		"    2. Patch the faction once chosen.\n" +

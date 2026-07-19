@@ -29,6 +29,10 @@
   .topbar .eyebrow{font-family:var(--mono); font-size:10px; letter-spacing:.36em;
     text-transform:uppercase; color:#9b90bd; display:block; margin-bottom:5px}
   .topbar p{margin:4px 0 0; font-style:italic; color:#8177a0; font-size:13px}
+  .connstat{font-style:normal; font-family:var(--mono); font-size:11px; letter-spacing:.02em}
+  .connstat .dot{display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:5px; vertical-align:middle}
+  .connstat.ok{color:#7fbf9c} .connstat.ok .dot{background:var(--good); box-shadow:0 0 6px #2f7d55}
+  .connstat.off{color:#c99a4e} .connstat.off .dot{background:var(--warn)}
   .actions{display:flex; gap:8px; flex-wrap:wrap}
   button.act{font-family:var(--mono); font-size:11px; letter-spacing:.06em; text-transform:uppercase;
     color:#efedf4; background:var(--accent); border:1px solid var(--accent-2); border-radius:4px;
@@ -178,7 +182,8 @@
     <div>
       <span class="eyebrow">In Darkened Dreams</span>
       <h1>Character Builder</h1>
-      <p>Live shared session — edits sync with your Claude conversation.</p>
+      <p>Live shared session — edits sync with your Claude conversation.<br>
+        <span id="connstat" class="connstat off"><span class="dot"></span><span class="txt">connecting…</span></span></p>
     </div>
     <div class="actions">
       <button class="act ghost" id="importBtn">⤵ Import JSON</button>
@@ -603,13 +608,29 @@ if(!loadSeed()) render();
    Pull on load, subscribe to SSE for pushes (Claude's edits), and POST local edits. */
 (function(){
   var myId="h"+Math.random().toString(36).slice(2);
-  var applying=false, lastVer=-1, lastSent="";
-  function apply(build){ if(!build) return; applying=true;
+  var applying=false, lastVer=-1, lastSent="", lastPush=0;
+  var host=location.host||'localhost';
+  var statEl=document.getElementById('connstat');
+  function setStat(ok, msg){ if(!statEl) return;
+    statEl.className='connstat '+(ok?'ok':'off');
+    statEl.querySelector('.txt').textContent=msg; }
+  function refreshStat(){
+    if(lastPush===0){ setStat(false, host+' · connecting…'); return; }
+    var secs=Math.round((Date.now()-lastPush)/1000);
+    var ago = secs<3 ? 'just now' : secs<60 ? secs+'s ago' : Math.round(secs/60)+'m ago';
+    setStat(true, 'live on '+host+' · updated '+ago);
+  }
+  setStat(false, host+' · connecting…');
+  setInterval(refreshStat, 1000);
+  function apply(build){ if(!build) return; applying=true; lastPush=Date.now(); refreshStat();
     try{ importBuild(build); lastSent=JSON.stringify(buildJSON()); }
     finally{ setTimeout(function(){applying=false;},60); } }
   fetch('/api/build').then(function(r){return r.json();}).then(function(d){
     if(typeof d.version==='number') lastVer=d.version; apply(d.build); }).catch(function(){});
-  try{ var es=new EventSource('/api/events'); es.onmessage=function(ev){ try{ var d=JSON.parse(ev.data);
+  try{ var es=new EventSource('/api/events');
+    es.onopen=function(){ if(lastPush===0){ lastPush=Date.now(); } refreshStat(); };
+    es.onerror=function(){ setStat(false, host+' · reconnecting…'); };
+    es.onmessage=function(ev){ try{ var d=JSON.parse(ev.data);
     if(typeof d.version==='number'){ if(d.version<=lastVer) return; lastVer=d.version; }
     if(d.src===myId) return; apply(d.build); }catch(e){} }; }catch(e){}
   setInterval(function(){ if(applying) return; var s=JSON.stringify(buildJSON());
