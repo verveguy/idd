@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "idd",
+  "displayName": "In Darkened Dreams Character Builder",
+  "version": "1.0.0",
+  "description": "Interactive character builder, validator, and level-up tool for the In Darkened Dreams (Accelerant) LARP. Enforces all CP, attribute, header, skill, faction, and spell rules against the v1.0.3 ruleset.",
+  "author": {
+    "name": "verveguy"
+  },
+  "homepage": "https://github.com/verveguy/idd",
+  "repository": "https://github.com/verveguy/idd",
+  "keywords": ["larp", "idd", "in-darkened-dreams", "accelerant", "character-builder", "ttrpg"]
+}

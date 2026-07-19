@@ -9,11 +9,11 @@ You are guiding a player through building a legal character for the **In Darkene
 
 ## The ruleset data
 
-All rules live as JSON in `.claude/ids-data/` (relative to the project root). The **source of truth for legality is the validator** — never hand-compute CP or eyeball prerequisites; run the script:
+All rules live as JSON bundled with this plugin under `${CLAUDE_PLUGIN_ROOT}/ids-data/` (`${CLAUDE_PLUGIN_ROOT}` is expanded by the shell to the plugin's install location). The **source of truth for legality is the validator** — never hand-compute CP or eyeball prerequisites; run the script:
 
-- `python3 .claude/ids-data/validate.py --catalog` — list heritages, factions, all 27 headers with costs.
-- `python3 .claude/ids-data/validate.py --sheet <build.json>` — validate a build and print a sheet.
-- `python3 .claude/ids-data/validate.py <build.json>` — validate only (exit code 0 = legal, 2 = illegal).
+- `python3 ${CLAUDE_PLUGIN_ROOT}/ids-data/validate.py --catalog` — list heritages, factions, all 27 headers with costs.
+- `python3 ${CLAUDE_PLUGIN_ROOT}/ids-data/validate.py --sheet <build.json>` — validate a build and print a sheet.
+- `python3 ${CLAUDE_PLUGIN_ROOT}/ids-data/validate.py <build.json>` — validate only (exit code 0 = legal, 2 = illegal).
 
 Read the JSON files directly when you need skill descriptions or options: `rules.json`, `heritages.json`, `factions.json`, `open-skills.json`, `headers-a/b/c.json`, `magic.json`, `spells.json`.
 

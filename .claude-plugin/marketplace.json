@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-marketplace.json",
+  "name": "idd-marketplace",
+  "description": "In Darkened Dreams LARP tools",
+  "owner": {
+    "name": "verveguy"
+  },
+  "plugins": [
+    {
+      "name": "idd",
+      "source": "./plugins/idd",
+      "description": "Interactive character builder, validator, and level-up tool for the In Darkened Dreams LARP.",
+      "version": "1.0.0",
+      "author": {
+        "name": "verveguy"
+      },
+      "homepage": "https://github.com/verveguy/idd",
+      "keywords": ["larp", "idd", "character-builder"]
+    }
+  ]
+}

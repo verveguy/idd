@@ -9,10 +9,10 @@ Check an existing IDD character build against the rules and report every violati
 
 ## How to run it
 
-The deterministic engine is `.claude/ids-data/validate.py`. Never hand-compute CP or judge prerequisites yourself — run the script; it is authoritative.
+The deterministic engine is `${CLAUDE_PLUGIN_ROOT}/ids-data/validate.py`. Never hand-compute CP or judge prerequisites yourself — run the script; it is authoritative.
 
 1. Get the build. If the player has a saved `*.character.json`, use it. If they describe it in prose or paste a spreadsheet, transcribe it into the build JSON format (below) first.
-2. Run: `python3 .claude/ids-data/validate.py --sheet <build.json>`
+2. Run: `python3 ${CLAUDE_PLUGIN_ROOT}/ids-data/validate.py --sheet <build.json>`
    - Exit code 0 = legal; 2 = illegal.
    - It prints a character sheet (if legal) plus a report of ERRORs (hard rule breaks) and warns (things to check manually, e.g. prose prerequisites the engine couldn't auto-resolve).
 3. Explain the result plainly. For each ERROR, name the rule and suggest a concrete fix (e.g. "you're 3 CP over — drop Buckler, or lower Fire from 3 to 2"). For each warning, tell the player what to eyeball.

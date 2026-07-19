@@ -11,7 +11,7 @@ A player earns more CP as they play IDD. This skill helps them spend newly-earne
 
 1. **Load the character.** Use their saved `*.character.json` if they have one. Otherwise reconstruct the current build into the build JSON format (see `build-character` or `validate-character`) and confirm it with the player before changing anything.
 2. **Confirm the new CP.** Ask how much CP they earned and add it to `cp_sources` (e.g. bump `earned`, or add a new source). Show the new total available and current remaining.
-3. **Baseline check.** Run `python3 .claude/ids-data/validate.py --sheet <build.json>` on the *current* build first, so you both agree on the starting point and remaining CP.
+3. **Baseline check.** Run `python3 ${CLAUDE_PLUGIN_ROOT}/ids-data/validate.py --sheet <build.json>` on the *current* build first, so you both agree on the starting point and remaining CP.
 4. **Propose upgrades** within the remaining budget, tailored to how they play the character:
    - Raise an attribute (remember: each level up costs its new value; Earth/Void also raise Vitality).
    - Buy a new header (unlocks its skill tree; check faction gating).
@@ -25,4 +25,4 @@ A player earns more CP as they play IDD. This skill helps them spend newly-earne
 
 - Never remove previously-purchased skills unless the player explicitly wants a rebuild — leveling up is additive.
 - Keep a clear before/after: old total vs new total, CP spent this session, CP remaining.
-- The validator (`.claude/ids-data/validate.py`) is the source of truth for all CP math and legality. Don't hand-compute.
+- The validator (`${CLAUDE_PLUGIN_ROOT}/ids-data/validate.py`) is the source of truth for all CP math and legality. Don't hand-compute.
