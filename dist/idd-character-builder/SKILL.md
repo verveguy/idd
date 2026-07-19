@@ -4,7 +4,7 @@ description: Build, validate, or level up a legal In Darkened Dreams (IDD) LARP 
 license: See scripts/NOTICE.md
 metadata:
   author: verveguy
-  version: "1.0.5"
+  version: "1.0.6"
 ---
 
 # In Darkened Dreams — Character Builder
@@ -139,7 +139,10 @@ copy/paste or a pre-filled link. Offer it when a player wants to tinker visually
      tell them to click **Import JSON** in the app and paste it.
 - **Read a build back FROM the app.** Ask the player to click **Copy build JSON**
   in the app and paste it into the chat; then transcribe it into a `build.json`
-  and validate as usual. (The app can't send its state back on its own.)
+  and validate as usual. (The app can't send its state back on its own.) The
+  player may instead paste a **share link** (from the app's *Copy share link*
+  button) — decode the build from its `#build=` fragment:
+  `json.loads(urllib.parse.unquote(link.split('#build=',1)[1]))`.
 
 Be honest about the loop: link/paste in, copy/paste out — you cannot inject into
 or read a running app directly.

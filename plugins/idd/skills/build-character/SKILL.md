@@ -81,7 +81,9 @@ link. Offer it when a player wants to tinker visually.
   — and give the player that link (opens the app pre-filled). Or, if the app is
   open, have them click **Import JSON** and paste the build.
 - **Read a build back FROM the app:** ask the player to click **Copy build JSON**
-  and paste it into chat; transcribe and validate as usual.
+  and paste it into chat; transcribe and validate as usual. They may instead paste
+  a **share link** (the app's *Copy share link* button) — decode it with
+  `json.loads(urllib.parse.unquote(link.split('#build=',1)[1]))`.
 
 You cannot inject into or read a running app directly — it's link/paste in,
 copy/paste out.

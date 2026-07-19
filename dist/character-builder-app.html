@@ -175,7 +175,8 @@
     </div>
     <div class="actions">
       <button class="act ghost" id="importBtn">⤵ Import JSON</button>
-      <button class="act" id="copyBtn">⧉ Copy build JSON</button>
+      <button class="act" id="shareBtn" title="Copy a link that opens this exact build">🔗 Copy share link</button>
+      <button class="act ghost" id="copyBtn">⧉ Copy build JSON</button>
       <button class="act ghost" id="printBtn">⎙ Save sheet as PDF</button>
       <button class="act ghost" id="resetBtn">↺ Reset</button>
     </div>
@@ -520,12 +521,22 @@ function buildJSON(){
     cp_sources:{...state.cp}, attributes:{...state.attributes},
     headers:[...state.headers], skills};
 }
-document.getElementById('copyBtn').addEventListener('click', async ()=>{
-  const txt=JSON.stringify(buildJSON(),null,2); const btn=document.getElementById('copyBtn');
-  try{ await navigator.clipboard.writeText(txt); }catch(_){
-    const ta=document.createElement('textarea'); ta.value=txt; document.body.appendChild(ta); ta.select();
-    try{document.execCommand('copy');}catch(e){} ta.remove(); }
-  const old=btn.textContent; btn.textContent='✓ Copied — paste into chat'; setTimeout(()=>btn.textContent=old,1900);
+async function copyText(txt){
+  try{ await navigator.clipboard.writeText(txt); return true; }
+  catch(_){ const ta=document.createElement('textarea'); ta.value=txt; ta.style.position='fixed'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.select(); let ok=false; try{ ok=document.execCommand('copy'); }catch(e){} ta.remove(); return ok; }
+}
+function flash(btn,msg){ const old=btn.textContent; btn.textContent=msg; btn.disabled=true;
+  setTimeout(()=>{ btn.textContent=old; btn.disabled=false; }, 1900); }
+
+function shareLink(){ const base=location.href.split('#')[0];
+  return base + '#build=' + encodeURIComponent(JSON.stringify(buildJSON())); }
+
+document.getElementById('copyBtn').addEventListener('click', async e=>{
+  flash(e.currentTarget, (await copyText(JSON.stringify(buildJSON(),null,2)))?'✓ Copied — paste into chat':'⚠ Copy failed');
+});
+document.getElementById('shareBtn').addEventListener('click', async e=>{
+  flash(e.currentTarget, (await copyText(shareLink()))?'✓ Link copied':'⚠ Copy failed');
 });
 document.getElementById('printBtn').addEventListener('click', ()=>window.print());
 document.getElementById('resetBtn').addEventListener('click', ()=>{ if(confirm('Start a new character? This clears the current build.')){ state=fresh(); location.hash=''; render(); }});
