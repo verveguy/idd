@@ -605,7 +605,7 @@ if(!loadSeed()) render();
    own MCP tools so the MODEL drives THIS panel (no re-render), plus the explicit
    Send-to-Claude / Save actions. State mutations reuse the app's own functions. */
 (function(){
-  var rpcId=1, pending={};
+  var rpcId=1, pending={}, hostModes=[];
   function send(m){ m.jsonrpc="2.0"; parent.postMessage(m,"*"); }
   function call(method,params){ return new Promise(function(res,rej){
     var id=rpcId++; pending[id]={res:res,rej:rej}; send({id:id,method:method,params:params||{}}); }); }
@@ -692,13 +692,16 @@ if(!loadSeed()) render();
       try{ await call("tools/call",{name:"save_character",arguments:{build:buildJSON()}}); flash(e.currentTarget,"✓ Saved"); }
       catch(_){ flash(e.currentTarget,"⚠ Save failed"); } });
     if(fs) fs.addEventListener("click", async function(){
-      try{ await call("ui/request-display-mode",{mode:"fullscreen"}); }catch(_){}
+      var mode = hostModes.indexOf("fullscreen")>=0 ? "fullscreen" : (hostModes.indexOf("pip")>=0 ? "pip" : null);
+      if(!mode){ flash(fs,"host: inline only"); return; }
+      try{ await call("ui/request-display-mode",{mode:mode}); }catch(_){}
       setTimeout(reportSize,120); });
   }
   (async function connect(){
     try{
-      await call("ui/initialize",{appInfo:{name:"IDD Character Builder",version:"1.0.0"},
-        appCapabilities:{tools:{listChanged:true}}, protocolVersion:"2026-01-26"});
+      var _r=await call("ui/initialize",{appInfo:{name:"IDD Character Builder",version:"1.0.0"},
+        appCapabilities:{tools:{listChanged:true}, availableDisplayModes:["inline","fullscreen","pip"]}, protocolVersion:"2026-01-26"});
+      hostModes=(_r&&_r.hostContext&&_r.hostContext.availableDisplayModes)||[];
       notify("ui/notifications/initialized",{});
       document.body.classList.add("mcp"); wire();
       if(window.ResizeObserver){ new ResizeObserver(function(){ reportSize(); }).observe(document.body); }
