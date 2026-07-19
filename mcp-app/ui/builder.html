@@ -186,6 +186,7 @@
     <div class="actions">
       <button class="act mcp-only" id="sendBtn">➤ Send to Claude</button>
       <button class="act ghost mcp-only" id="saveBtn">⇩ Save character</button>
+      <button class="act ghost mcp-only" id="fsBtn">⤢ Fullscreen</button>
       <button class="act ghost standalone-only" id="importBtn">⤵ Import JSON</button>
       <button class="act standalone-only" id="shareBtn" title="Copy a link that opens this build">🔗 Copy share link</button>
       <button class="act ghost" id="copyBtn">⧉ Copy build JSON</button>
@@ -672,8 +673,17 @@ if(!loadSeed()) render();
     }
   });
 
+  // autoResize: tell the host our true content height so the panel isn't clipped short.
+  var lastH=0;
+  function reportSize(){
+    try{
+      var h=Math.ceil(Math.max(document.documentElement.scrollHeight, document.body.scrollHeight, document.body.offsetHeight));
+      var w=Math.ceil(document.documentElement.scrollWidth);
+      if(h && h!==lastH){ lastH=h; notify("ui/notifications/size-changed",{width:w,height:h}); }
+    }catch(e){}
+  }
   function wire(){
-    var sb=document.getElementById("sendBtn"), sv=document.getElementById("saveBtn");
+    var sb=document.getElementById("sendBtn"), sv=document.getElementById("saveBtn"), fs=document.getElementById("fsBtn");
     if(sb) sb.addEventListener("click", async function(e){ var b=buildJSON();
       try{ await call("ui/update-model-context",{structuredContent:{build:b},content:[{type:"text",text:"Current build:\n"+JSON.stringify(b,null,2)}]}); }catch(_){}
       try{ await call("ui/message",{role:"user",content:[{type:"text",text:"Here's my current In Darkened Dreams build from the builder — please review it."}]}); }catch(_){}
@@ -681,6 +691,9 @@ if(!loadSeed()) render();
     if(sv) sv.addEventListener("click", async function(e){
       try{ await call("tools/call",{name:"save_character",arguments:{build:buildJSON()}}); flash(e.currentTarget,"✓ Saved"); }
       catch(_){ flash(e.currentTarget,"⚠ Save failed"); } });
+    if(fs) fs.addEventListener("click", async function(){
+      try{ await call("ui/request-display-mode",{mode:"fullscreen"}); }catch(_){}
+      setTimeout(reportSize,120); });
   }
   (async function connect(){
     try{
@@ -688,6 +701,9 @@ if(!loadSeed()) render();
         appCapabilities:{tools:{listChanged:true}}, protocolVersion:"2026-01-26"});
       notify("ui/notifications/initialized",{});
       document.body.classList.add("mcp"); wire();
+      if(window.ResizeObserver){ new ResizeObserver(function(){ reportSize(); }).observe(document.body); }
+      window.addEventListener("load", reportSize);
+      reportSize(); setTimeout(reportSize,80); setTimeout(reportSize,350);
     }catch(e){}
   })();
 })();
