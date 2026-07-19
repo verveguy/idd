@@ -38,16 +38,23 @@ levels them up when you earn CP.
 
 ## Rebuilding the ZIP (maintainers)
 
-If you update the data or `SKILL.md`, rebuild the package from the repo root:
+The master copy of the validator + data lives in `plugins/idd/ids-data/`. Never
+edit the copies under `dist/idd-character-builder/scripts/` by hand — they're
+overwritten on every build. Just run the build script from the repo root:
 
 ```bash
-cp plugins/idd/ids-data/*.json plugins/idd/ids-data/validate.py plugins/idd/ids-data/NOTICE.md dist/idd-character-builder/scripts/
-cd dist && zip -rq idd-character-builder.zip idd-character-builder -x '*.DS_Store'
+./build.sh                 # sync master -> bundle, build the zip, smoke-test it
+./build.sh --version 1.0.3 # also stamp 1.0.3 into plugin.json, marketplace.json, SKILL.md
 ```
 
-The `scripts/` folder must contain `validate.py` **and** the JSON data files
-together — the validator loads its data from its own directory. Keep the top-level
-folder name (`idd-character-builder/`) matching the `name:` in `SKILL.md`.
+`build.sh` syncs the master data into the bundle, (optionally) bumps the version
+everywhere, builds `dist/idd-character-builder.zip`, and smoke-tests the packaged
+validator (catalog loads, a legal build passes, an illegal build is rejected). The
+`.zip` is a build artifact — it's git-ignored and distributed via GitHub Releases:
+
+```bash
+gh release create v1.0.3 --title "..." --notes "..." dist/idd-character-builder.zip
+```
 
 ---
 

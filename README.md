@@ -77,9 +77,19 @@ claude plugin validate ./plugins/idd
 claude plugin validate .
 ```
 
-If you fix a data error, edit the relevant file in `plugins/idd/ids-data/` and
-**bump the `version`** in both `plugin.json` and `marketplace.json` so installed
-users receive the update.
+If you fix a data error, edit the relevant file in `plugins/idd/ids-data/` (the
+single source of truth) and **bump the `version`** so installed users receive the
+update. To rebuild the Claude Desktop Skill ZIP from that master, run the build
+script — it syncs the data, stamps the version everywhere, builds the zip, and
+smoke-tests it:
+
+```bash
+./build.sh --version 1.0.3
+```
+
+See [`dist/README.md`](dist/README.md) for the full Desktop-Skill build/release
+flow. The built `.zip` is git-ignored (a build artifact); distribute it via GitHub
+Releases.
 
 ---
 
