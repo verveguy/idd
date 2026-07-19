@@ -20,7 +20,8 @@ import (
 )
 
 const (
-	protocolVersion = "2026-01-26"
+	defaultProtocol = "2025-11-25" // core MCP protocol version (fallback for negotiation)
+	uiExtensionName = "io.modelcontextprotocol/ui"
 	uiResourceURI   = "ui://idd/builder"
 	uiMimeType      = "text/html;profile=mcp-app"
 )
@@ -94,12 +95,27 @@ func main() {
 func dispatch(req rpcRequest) (any, *rpcError) {
 	switch req.Method {
 	case "initialize":
+		// Echo the client's core protocol version (negotiation); fall back to a
+		// known-good default. NOTE: this is the CORE MCP version (e.g. 2025-11-25),
+		// not the MCP Apps extension date (2026-01-26).
+		var ip struct {
+			ProtocolVersion string `json:"protocolVersion"`
+		}
+		_ = json.Unmarshal(req.Params, &ip)
+		pv := ip.ProtocolVersion
+		if pv == "" {
+			pv = defaultProtocol
+		}
 		return map[string]any{
-			"protocolVersion": protocolVersion,
+			"protocolVersion": pv,
 			"serverInfo":      map[string]any{"name": "in-darkened-dreams", "version": "1.0.0"},
 			"capabilities": map[string]any{
 				"tools":     map[string]any{},
 				"resources": map[string]any{},
+				// declare MCP Apps (UI) support so the host will render ui:// resources
+				"extensions": map[string]any{
+					uiExtensionName: map[string]any{"mimeTypes": []string{uiMimeType}},
+				},
 			},
 		}, nil
 	case "ping":
