@@ -125,3 +125,11 @@ Releases.
 Ruleset: *In Darkened Dreams Rules v1.0.3*. This is an **unofficial, fan-made**
 aid; the rulebook PDF is not distributed here. Game content is © its respective
 creators — see [`NOTICE.md`](NOTICE.md).
+
+## License
+
+The **tool software** in this repo is © 2026 verveguy and released under the
+[MIT License](LICENSE) — use it, fork it, adapt it freely. The MIT grant covers
+the software only; the *In Darkened Dreams* game content and the transcribed
+ruleset data are **not** MIT-licensed and remain © their respective creators
+(see [`NOTICE.md`](NOTICE.md)).
