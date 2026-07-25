@@ -35,6 +35,26 @@
     padding:9px 13px; cursor:pointer}
   button.act.ghost{background:transparent; color:#b8aede; border-color:#4a3f6a}
 
+  /* library disclosure — its own full-width control so the saved-character list
+     is obviously a separate thing from the current character's tools below it */
+  .disclose{display:flex; align-items:center; gap:11px; width:100%; text-align:left; cursor:pointer;
+    font-family:var(--mono); font-size:11px; letter-spacing:.16em; text-transform:uppercase;
+    color:#cfc7e0; background:rgba(255,255,255,.05); border:1px solid #4a3f6a;
+    border-radius:5px; padding:13px 16px; margin-bottom:14px}
+  .disclose:hover{background:rgba(255,255,255,.1); border-color:#6a57a3; color:#efe9fb}
+  .disclose:focus-visible{outline:2px solid #cfc7e0; outline-offset:2px}
+  .disclose .chev{display:inline-block; font-size:9px; color:#9b90bd; transition:transform .15s ease}
+  .disclose[aria-expanded="true"]{background:rgba(255,255,255,.1); border-color:#6a57a3;
+    border-bottom-left-radius:0; border-bottom-right-radius:0; margin-bottom:0}
+  .disclose[aria-expanded="true"] .chev{transform:rotate(90deg)}
+  .disclose .cnt{margin-left:auto; color:#9b90bd; letter-spacing:.08em}
+  #cloudPanel.attached{border-top-left-radius:0; border-top-right-radius:0; margin-top:0}
+
+  /* "this character" toolbar — sits BELOW the library so its scope is obvious */
+  .actions.curactions{justify-content:flex-start; align-items:center; margin-bottom:18px}
+  .actions-label{font-family:var(--mono); font-size:9.5px; letter-spacing:.2em; text-transform:uppercase;
+    color:#7d739b; margin-right:4px}
+
   /* account control — the classic top-right avatar; visually separate from the
      action buttons so signing in is discoverable rather than looking like a tool */
   .acct{display:inline-flex; align-items:center; gap:8px; cursor:pointer;
@@ -197,11 +217,6 @@
       <p>Pick, spend, and see it tally — a companion to the builder skill.</p>
     </div>
     <div class="actions">
-      <button class="act ghost" id="importBtn">⤵ Import JSON</button>
-      <button class="act" id="shareBtn" title="Copy a link that opens this exact build">🔗 Copy share link</button>
-      <button class="act ghost" id="copyBtn">⧉ Copy build JSON</button>
-      <button class="act ghost" id="printBtn">⎙ Save sheet as PDF</button>
-      <button class="act ghost" id="resetBtn">↺ Reset</button>
       <button class="acct" id="cloudBtn" title="Sign in to save characters to your private cloud library">
         <span class="ava" id="cloudAva" aria-hidden="true">
           <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor">
@@ -213,17 +228,12 @@
     </div>
   </div>
 
-  <div id="importPanel" class="card no-print" style="display:none; margin-bottom:18px">
-    <h2 class="sect">Import a build <span class="hint">paste the JSON from your chat / the skill</span></h2>
-    <textarea id="importTA" rows="6" spellcheck="false"
-      style="width:100%; font-family:var(--mono); font-size:12px; color:var(--ink); background:var(--field);
-      border:1px solid var(--rule-strong); border-radius:3px; padding:9px" placeholder='{ "name": "…", "heritage": "…", … }'></textarea>
-    <div id="importErr" class="msg err" style="display:none"></div>
-    <div style="display:flex; gap:8px; margin-top:10px">
-      <button class="act" id="importLoad">Load build</button>
-      <button class="act ghost" id="importCancel">Cancel</button>
-    </div>
-  </div>
+  <!-- library disclosure: folds down the saved-character list (signed-in only) -->
+  <button class="disclose" id="libToggle" aria-expanded="false" aria-controls="cloudPanel" style="display:none">
+    <span class="chev" aria-hidden="true">▶</span>
+    <span>My characters</span>
+    <span class="cnt" id="libCount"></span>
+  </button>
 
   <style>
     .cloudrow{display:flex; align-items:center; gap:12px; padding:10px 0; border-bottom:1px solid var(--rule)}
@@ -240,7 +250,7 @@
     #cloudPanel .loaded{color:var(--accent-2); font-style:italic}
   </style>
   <div id="cloudPanel" class="card no-print" style="display:none; margin-bottom:18px">
-    <h2 class="sect">My characters <span class="hint" id="cloudWho">a private cloud library — sign in to save &amp; sync across devices</span></h2>
+    <h2 class="sect"><span id="cloudWho">a private cloud library — sign in to save &amp; sync across devices</span></h2>
 
     <!-- signed out: magic-code sign in -->
     <div id="cloudAuth">
@@ -272,6 +282,28 @@
       </div>
       <div id="cloudSaveMsg" class="msg" style="display:none; margin-bottom:10px"></div>
       <div id="cloudList"></div>
+    </div>
+  </div>
+
+  <!-- actions for the CHARACTER CURRENTLY OPEN below (not the saved library above) -->
+  <div class="actions curactions no-print">
+    <span class="actions-label">This character</span>
+    <button class="act ghost" id="importBtn">⤵ Import JSON</button>
+    <button class="act" id="shareBtn" title="Copy a link that opens this exact build">🔗 Copy share link</button>
+    <button class="act ghost" id="copyBtn">⧉ Copy build JSON</button>
+    <button class="act ghost" id="printBtn">⎙ Save sheet as PDF</button>
+    <button class="act ghost" id="resetBtn">↺ Reset</button>
+  </div>
+
+  <div id="importPanel" class="card no-print" style="display:none; margin-bottom:18px">
+    <h2 class="sect">Import a build <span class="hint">paste the JSON from your chat / the skill</span></h2>
+    <textarea id="importTA" rows="6" spellcheck="false"
+      style="width:100%; font-family:var(--mono); font-size:12px; color:var(--ink); background:var(--field);
+      border:1px solid var(--rule-strong); border-radius:3px; padding:9px" placeholder='{ "name": "…", "heritage": "…", … }'></textarea>
+    <div id="importErr" class="msg err" style="display:none"></div>
+    <div style="display:flex; gap:8px; margin-top:10px">
+      <button class="act" id="importLoad">Load build</button>
+      <button class="act ghost" id="importCancel">Cancel</button>
     </div>
   </div>
 
@@ -707,11 +739,19 @@ window.IDD = {
   let unsub = null;     // active query subscription
   let pendingEmail = "";
 
-  // ---- panel toggle ----
-  $("cloudBtn").addEventListener("click", () => {
-    const p = $("cloudPanel");
-    p.style.display = p.style.display === "none" ? "block" : "none";
-  });
+  // ---- panel disclosure ----
+  // Two entry points, one panel: the avatar (account / sign in) and the
+  // "My characters" disclosure (the saved library, signed-in only).
+  function setPanel(open) {
+    $("cloudPanel").style.display = open ? "block" : "none";
+    const t = $("libToggle");
+    t.setAttribute("aria-expanded", open ? "true" : "false");
+    // when the list is open right under the toggle, join them into one surface
+    $("cloudPanel").classList.toggle("attached", open && t.style.display !== "none");
+  }
+  const panelOpen = () => $("cloudPanel").style.display !== "none";
+  $("cloudBtn").addEventListener("click", () => setPanel(!panelOpen()));
+  $("libToggle").addEventListener("click", () => setPanel(!panelOpen()));
 
   // ---- auth state ----
   db.subscribeAuth((res) => { me = (res && res.user) || null; renderAuth(); });
@@ -721,13 +761,17 @@ window.IDD = {
     $("cloudAuth").style.display = authed ? "none" : "block";
     $("cloudLib").style.display = authed ? "block" : "none";
     $("cloudWho").textContent = authed
-      ? "signed in as " + me.email
+      ? "signed in as " + (me.email || "a guest session on this device")
       : "a private cloud library — sign in to save & sync across devices";
     renderAccount();
+    // the library disclosure only makes sense once there's a library to disclose
+    $("libToggle").style.display = authed ? "flex" : "none";
     if (authed) { watchChars(); }
     else {
       if (unsub) { unsub(); unsub = null; }
       chars = []; loadedId = null;
+      $("libCount").textContent = "";
+      setPanel(panelOpen());
       $("cloudEmailStep").style.display = "block";
       $("cloudCodeStep").style.display = "none";
       authMsg("");
@@ -813,8 +857,9 @@ window.IDD = {
       if (resp.error) { saveMsg("Couldn't load your library: " + (resp.error.message || ""), true); return; }
       chars = (resp.data && resp.data.characters) || [];
       if (me) {
-        const who = (me.email || "").split("@")[0] || "Account";
-        $("cloudLabel").textContent = who + (chars.length ? " · " + chars.length : "");
+        $("cloudLabel").textContent = (me.email || "").split("@")[0] || "Account";
+        $("libCount").textContent = chars.length ? chars.length + " saved" : "none yet";
+        setPanel(panelOpen());
       }
       renderList();
     });
