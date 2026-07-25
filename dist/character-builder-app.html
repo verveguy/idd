@@ -34,6 +34,23 @@
     color:#efedf4; background:var(--accent); border:1px solid var(--accent-2); border-radius:4px;
     padding:9px 13px; cursor:pointer}
   button.act.ghost{background:transparent; color:#b8aede; border-color:#4a3f6a}
+
+  /* account control — the classic top-right avatar; visually separate from the
+     action buttons so signing in is discoverable rather than looking like a tool */
+  .acct{display:inline-flex; align-items:center; gap:8px; cursor:pointer;
+    font-family:var(--mono); font-size:11px; letter-spacing:.04em;
+    color:#cfc7e0; background:rgba(255,255,255,.05); border:1px solid #4a3f6a;
+    border-radius:999px; padding:4px 13px 4px 4px; margin-left:10px}
+  .acct:hover{background:rgba(255,255,255,.1); border-color:#6a57a3; color:#efe9fb}
+  .acct:focus-visible{outline:2px solid #cfc7e0; outline-offset:2px}
+  .acct .ava{display:inline-flex; align-items:center; justify-content:center;
+    width:26px; height:26px; border-radius:50%; overflow:hidden; flex:0 0 26px;
+    background:var(--accent); color:#efedf4; font-family:var(--serif); font-size:12px; font-weight:600}
+  .acct .ava img{width:100%; height:100%; object-fit:cover; display:block}
+  .acct.out .ava{background:#3a3150; color:#9b90bd}
+  /* gentle nudge so a signed-out player notices they can save */
+  .acct.out{border-color:#6a57a3}
+  .acct.out .acct-label{color:#cbbff0}
   button.act:hover{background:var(--accent-2)}
   button.act.ghost:hover{background:#241d33}
   button.act:focus-visible{outline:2px solid #cfc7e0; outline-offset:2px}
@@ -180,12 +197,19 @@
       <p>Pick, spend, and see it tally — a companion to the builder skill.</p>
     </div>
     <div class="actions">
-      <button class="act" id="cloudBtn" title="Sign in to save characters to your private cloud library">☁ My characters</button>
       <button class="act ghost" id="importBtn">⤵ Import JSON</button>
       <button class="act" id="shareBtn" title="Copy a link that opens this exact build">🔗 Copy share link</button>
       <button class="act ghost" id="copyBtn">⧉ Copy build JSON</button>
       <button class="act ghost" id="printBtn">⎙ Save sheet as PDF</button>
       <button class="act ghost" id="resetBtn">↺ Reset</button>
+      <button class="acct" id="cloudBtn" title="Sign in to save characters to your private cloud library">
+        <span class="ava" id="cloudAva" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor">
+            <path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10Zm0 2c-4.4 0-8 2.5-8 5.5V22h16v-2.5c0-3-3.6-5.5-8-5.5Z"/>
+          </svg>
+        </span>
+        <span class="acct-label" id="cloudLabel">Sign in</span>
+      </button>
     </div>
   </div>
 
@@ -699,6 +723,7 @@ window.IDD = {
     $("cloudWho").textContent = authed
       ? "signed in as " + me.email
       : "a private cloud library — sign in to save & sync across devices";
+    renderAccount();
     if (authed) { watchChars(); }
     else {
       if (unsub) { unsub(); unsub = null; }
@@ -708,6 +733,42 @@ window.IDD = {
       authMsg("");
     }
   }
+
+  // ---- account chip: gravatar (SHA-256, the modern Gravatar hash) w/ initial fallback ----
+  const PERSON_SVG = '<svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor">' +
+    '<path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10Zm0 2c-4.4 0-8 2.5-8 5.5V22h16v-2.5c0-3-3.6-5.5-8-5.5Z"/></svg>';
+
+  async function sha256Hex(s) {
+    const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s));
+    return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, "0")).join("");
+  }
+
+  async function renderAccount() {
+    const btn = $("cloudBtn"), ava = $("cloudAva"), label = $("cloudLabel");
+    if (!me) {
+      btn.classList.add("out");
+      btn.title = "Sign in to save characters to your private cloud library";
+      label.textContent = "Sign in";
+      ava.innerHTML = PERSON_SVG;
+      return;
+    }
+    btn.classList.remove("out");
+    const email = (me.email || "").trim().toLowerCase();
+    const who = email.split("@")[0] || "Account";
+    label.textContent = who;
+    btn.title = "Signed in as " + me.email + " — your private character library";
+    // initial monogram first, then upgrade to the gravatar if one exists (d=404
+    // makes the request fail when the address has no avatar, so we keep initials)
+    ava.textContent = (who[0] || "?").toUpperCase();
+    try {
+      const hash = await sha256Hex(email);
+      const img = new Image();
+      img.onload = () => { ava.textContent = ""; ava.appendChild(img); };
+      img.alt = "";
+      img.src = "https://gravatar.com/avatar/" + hash + "?s=64&d=404";
+    } catch (e) { /* no crypto.subtle (insecure origin) — keep the monogram */ }
+  }
+  renderAccount();
 
   // ---- magic code flow ----
   $("cloudSendCode").addEventListener("click", async () => {
@@ -751,6 +812,10 @@ window.IDD = {
     unsub = db.subscribeQuery({ characters: { $: { order: { updatedAt: "desc" } } } }, (resp) => {
       if (resp.error) { saveMsg("Couldn't load your library: " + (resp.error.message || ""), true); return; }
       chars = (resp.data && resp.data.characters) || [];
+      if (me) {
+        const who = (me.email || "").split("@")[0] || "Account";
+        $("cloudLabel").textContent = who + (chars.length ? " · " + chars.length : "");
+      }
       renderList();
     });
   }
