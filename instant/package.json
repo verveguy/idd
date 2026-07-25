@@ -1,0 +1,9 @@
+{
+  "name": "idd-instant",
+  "version": "1.0.0",
+  "private": true,
+  "description": "InstantDB schema + permissions for the In Darkened Dreams character builder",
+  "dependencies": {
+    "@instantdb/core": "^1.0.52"
+  }
+}

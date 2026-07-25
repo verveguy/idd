@@ -1,3 +1,7 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
 <title>In Darkened Dreams — Character Builder</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
@@ -165,6 +169,8 @@
     .card + .card{margin-top:10px}
   }
 </style>
+</head>
+<body>
 
 <div class="wrap">
   <div class="topbar">
@@ -174,6 +180,7 @@
       <p>Pick, spend, and see it tally — a companion to the builder skill.</p>
     </div>
     <div class="actions">
+      <button class="act" id="cloudBtn" title="Sign in to save characters to your private cloud library">☁ My characters</button>
       <button class="act ghost" id="importBtn">⤵ Import JSON</button>
       <button class="act" id="shareBtn" title="Copy a link that opens this exact build">🔗 Copy share link</button>
       <button class="act ghost" id="copyBtn">⧉ Copy build JSON</button>
@@ -191,6 +198,56 @@
     <div style="display:flex; gap:8px; margin-top:10px">
       <button class="act" id="importLoad">Load build</button>
       <button class="act ghost" id="importCancel">Cancel</button>
+    </div>
+  </div>
+
+  <style>
+    .cloudrow{display:flex; align-items:center; gap:12px; padding:10px 0; border-bottom:1px solid var(--rule)}
+    .cloudrow:last-child{border-bottom:none}
+    .cloudrow .meta{flex:1; min-width:0}
+    .cloudrow .nm{font-weight:600; color:var(--ink)}
+    .cloudrow .sub{font-family:var(--mono); font-size:11px; color:var(--ink-faint); margin-top:2px}
+    .act.mini{padding:5px 9px; font-size:10px}
+    .cbadge{display:inline-block; font-family:var(--mono); font-size:9.5px; letter-spacing:.06em; text-transform:uppercase;
+      padding:1px 6px; border-radius:3px; margin-right:4px}
+    .cbadge.ok{background:rgba(47,125,85,.16); color:var(--good)}
+    .cbadge.bad{background:rgba(165,53,47,.14); color:var(--bad)}
+    .msg.ok{color:var(--good)}
+    #cloudPanel .loaded{color:var(--accent-2); font-style:italic}
+  </style>
+  <div id="cloudPanel" class="card no-print" style="display:none; margin-bottom:18px">
+    <h2 class="sect">My characters <span class="hint" id="cloudWho">a private cloud library — sign in to save &amp; sync across devices</span></h2>
+
+    <!-- signed out: magic-code sign in -->
+    <div id="cloudAuth">
+      <div id="cloudEmailStep">
+        <div class="row" style="align-items:flex-end">
+          <div class="f" style="max-width:300px"><label class="fl" for="cloudEmail">Email</label>
+            <input type="email" id="cloudEmail" placeholder="you@example.com" autocomplete="email"></div>
+          <button class="act" id="cloudSendCode">Email me a code</button>
+        </div>
+      </div>
+      <div id="cloudCodeStep" style="display:none">
+        <div class="row" style="align-items:flex-end">
+          <div class="f" style="max-width:220px"><label class="fl" for="cloudCode">6-digit code</label>
+            <input type="text" id="cloudCode" inputmode="numeric" placeholder="123456" autocomplete="one-time-code"></div>
+          <button class="act" id="cloudVerify">Sign in</button>
+          <button class="act ghost" id="cloudBackToEmail">Use a different email</button>
+        </div>
+      </div>
+      <div id="cloudAuthMsg" class="msg" style="display:none; margin-top:10px"></div>
+    </div>
+
+    <!-- signed in: library -->
+    <div id="cloudLib" style="display:none">
+      <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:12px">
+        <button class="act" id="cloudSave">💾 Save current</button>
+        <button class="act ghost" id="cloudSaveNew">＋ Save as new</button>
+        <span style="flex:1"></span>
+        <button class="act ghost" id="cloudSignOut">Sign out</button>
+      </div>
+      <div id="cloudSaveMsg" class="msg" style="display:none; margin-bottom:10px"></div>
+      <div id="cloudList"></div>
     </div>
   </div>
 
@@ -585,4 +642,183 @@ function loadSeed(){
 window.addEventListener('hashchange', ()=>{ loadSeed(); });
 
 if(!loadSeed()) render();
+
+// ---------- bridge for the cloud module (see the InstantDB <script type="module"> below) ----------
+// The builder is plain global JS; expose just what the cloud library needs so the
+// module script can read the current build, load a saved one, and show CP/validity.
+window.IDD = {
+  buildJSON,                          // -> canonical build object
+  importBuild,                        // (obj) -> load a build into the UI
+  currentName: () => state.name || 'Unnamed',
+  summary: () => { const c = compute(); return { valid: c.errors.length === 0, cpSpent: c.total, cpAvailable: c.available }; },
+};
 </script>
+
+<!-- ============ CLOUD LIBRARY (InstantDB, vanilla @instantdb/core — no framework) ============ -->
+<script type="module">
+  // Loaded from a CDN as an ES module. If it fails (offline / CDN blocked), the
+  // rest of the builder still works — we just hide the cloud button.
+  let init, id;
+  try {
+    ({ init, id } = await import("https://esm.sh/@instantdb/core@1.0.52"));
+  } catch (e) {
+    console.warn("[idd] cloud library unavailable:", e);
+    const b = document.getElementById("cloudBtn"); if (b) b.style.display = "none";
+    throw e;
+  }
+
+  const APP_ID = "5b6fa3d8-d86a-4142-ace3-6ab913121ef3"; // public app id — safe to embed
+  const db = init({ appId: APP_ID });
+  const $ = (x) => document.getElementById(x);
+  const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, (c) =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const fmt = (ms) => { try { const d = new Date(ms);
+    return d.toLocaleDateString(undefined, { month: "short", day: "numeric" }) + " " +
+           d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" }); } catch { return ""; } };
+  const errText = (e) => (e && (e.body?.message || e.message)) || "Something went wrong.";
+
+  let me = null;        // signed-in user (or null)
+  let loadedId = null;  // id of the character currently loaded from the library
+  let chars = [];       // this user's saved characters
+  let unsub = null;     // active query subscription
+  let pendingEmail = "";
+
+  // ---- panel toggle ----
+  $("cloudBtn").addEventListener("click", () => {
+    const p = $("cloudPanel");
+    p.style.display = p.style.display === "none" ? "block" : "none";
+  });
+
+  // ---- auth state ----
+  db.subscribeAuth((res) => { me = (res && res.user) || null; renderAuth(); });
+
+  function renderAuth() {
+    const authed = !!me;
+    $("cloudAuth").style.display = authed ? "none" : "block";
+    $("cloudLib").style.display = authed ? "block" : "none";
+    $("cloudWho").textContent = authed
+      ? "signed in as " + me.email
+      : "a private cloud library — sign in to save & sync across devices";
+    if (authed) { watchChars(); }
+    else {
+      if (unsub) { unsub(); unsub = null; }
+      chars = []; loadedId = null;
+      $("cloudEmailStep").style.display = "block";
+      $("cloudCodeStep").style.display = "none";
+      authMsg("");
+    }
+  }
+
+  // ---- magic code flow ----
+  $("cloudSendCode").addEventListener("click", async () => {
+    const email = $("cloudEmail").value.trim();
+    if (!email) return authMsg("Enter your email first.", true);
+    try {
+      await db.auth.sendMagicCode({ email });
+      pendingEmail = email;
+      $("cloudEmailStep").style.display = "none";
+      $("cloudCodeStep").style.display = "block";
+      authMsg("We emailed a 6-digit code to " + email + ".");
+      $("cloudCode").focus();
+    } catch (e) { authMsg(errText(e), true); }
+  });
+  $("cloudVerify").addEventListener("click", async () => {
+    const code = $("cloudCode").value.trim();
+    if (!code) return authMsg("Enter the code from your email.", true);
+    try { await db.auth.signInWithMagicCode({ email: pendingEmail, code }); authMsg(""); $("cloudCode").value = ""; }
+    catch (e) { authMsg(errText(e), true); }
+  });
+  $("cloudBackToEmail").addEventListener("click", () => {
+    $("cloudCodeStep").style.display = "none"; $("cloudEmailStep").style.display = "block"; authMsg("");
+  });
+  $("cloudSignOut").addEventListener("click", () => db.auth.signOut());
+
+  function authMsg(t, err) {
+    const m = $("cloudAuthMsg");
+    if (!t) { m.style.display = "none"; return; }
+    m.style.display = "block"; m.textContent = t; m.className = "msg " + (err ? "err" : "ok");
+  }
+  function saveMsg(t, err) {
+    const m = $("cloudSaveMsg");
+    if (!t) { m.style.display = "none"; return; }
+    m.style.display = "block"; m.textContent = t; m.className = "msg " + (err ? "err" : "ok");
+    if (!err) setTimeout(() => { m.style.display = "none"; }, 2600);
+  }
+
+  // ---- my characters: live query (owner-only perms already scope this to me) ----
+  function watchChars() {
+    if (unsub) return;
+    unsub = db.subscribeQuery({ characters: { $: { order: { updatedAt: "desc" } } } }, (resp) => {
+      if (resp.error) { saveMsg("Couldn't load your library: " + (resp.error.message || ""), true); return; }
+      chars = (resp.data && resp.data.characters) || [];
+      renderList();
+    });
+  }
+
+  function renderList() {
+    const wrap = $("cloudList");
+    if (!chars.length) {
+      wrap.innerHTML = '<p class="hint" style="margin:6px 0">No saved characters yet — build one, then “Save current”.</p>';
+      return;
+    }
+    wrap.innerHTML = chars.map((c) => {
+      const badge = c.valid ? '<span class="cbadge ok">legal</span>' : '<span class="cbadge bad">illegal</span>';
+      const cp = (c.cpSpent != null && c.cpAvailable != null) ? (c.cpSpent + "/" + c.cpAvailable + " CP") : "";
+      const cur = c.id === loadedId ? ' · <span class="loaded">loaded</span>' : "";
+      return `<div class="cloudrow" data-id="${c.id}">
+        <div class="meta"><div class="nm">${esc(c.name || "Unnamed")}</div>
+          <div class="sub">${badge}${cp} · ${esc(c.heritage || "—")} / ${esc(c.faction || "—")} · ${fmt(c.updatedAt)}${cur}</div></div>
+        <div style="display:flex; gap:6px">
+          <button class="act ghost mini" data-act="load">Load</button>
+          <button class="act ghost mini" data-act="rename">Rename</button>
+          <button class="act ghost mini" data-act="del">Delete</button>
+        </div></div>`;
+    }).join("");
+  }
+
+  $("cloudList").addEventListener("click", async (e) => {
+    const btn = e.target.closest("button[data-act]"); if (!btn) return;
+    const row = e.target.closest(".cloudrow"); const c = chars.find((x) => x.id === (row && row.dataset.id));
+    if (!c) return;
+    const act = btn.dataset.act;
+    if (act === "load") {
+      window.IDD.importBuild(c.data); loadedId = c.id; renderList();
+      $("cloudPanel").style.display = "none";
+    } else if (act === "rename") {
+      const nn = prompt("Rename character:", c.name || "");
+      if (nn == null) return;
+      try { await db.transact(db.tx.characters[c.id].update({ name: nn.trim() || "Unnamed", updatedAt: Date.now() })); }
+      catch (err) { saveMsg(errText(err), true); }
+    } else if (act === "del") {
+      if (!confirm(`Delete “${c.name || "Unnamed"}” from your library? This cannot be undone.`)) return;
+      try { await db.transact(db.tx.characters[c.id].delete()); if (loadedId === c.id) loadedId = null; }
+      catch (err) { saveMsg(errText(err), true); }
+    }
+  });
+
+  // ---- save current build ----
+  async function save(asNew) {
+    if (!me) return;
+    const build = window.IDD.buildJSON();
+    const s = window.IDD.summary();
+    const now = Date.now();
+    const creating = asNew || !loadedId;
+    const cid = creating ? id() : loadedId;
+    const fields = {
+      name: build.name || "Unnamed", data: build,
+      heritage: build.heritage || "", faction: build.faction || "",
+      valid: s.valid, cpSpent: s.cpSpent, cpAvailable: s.cpAvailable, updatedAt: now,
+    };
+    if (creating) fields.createdAt = now;
+    try {
+      await db.transact(db.tx.characters[cid].update(fields).link({ owner: me.id }));
+      loadedId = cid;
+      saveMsg(`Saved “${fields.name}”.`);
+    } catch (e) { saveMsg(errText(e), true); }
+  }
+  $("cloudSave").addEventListener("click", () => save(false));
+  $("cloudSaveNew").addEventListener("click", () => save(true));
+</script>
+
+</body>
+</html>

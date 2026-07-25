@@ -18,3 +18,9 @@ dist/*.zip
 # Scratch / temp
 *.tmp
 scratch/
+
+# InstantDB local secrets / deps (admin token must never be committed)
+instant/.env
+instant/.env.*
+instant/node_modules/
+instant/package-lock.json
